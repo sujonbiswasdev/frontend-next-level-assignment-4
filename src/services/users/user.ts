@@ -1,15 +1,17 @@
 import { revalidateTag } from 'next/cache';
 import { env } from "@/env"
-import { UsersData } from "@/types/user/user"
 import { cookies } from "next/headers"
+import { TUpdateUserInput, TUser } from '@/types/user/user';
+import { ApiErrorResponse, ApiResponse } from '@/types/response.type';
 
 const api_url=env.API_URL
 
 export const userService={
-    updateUser:async(updateUser:UsersData)=>{  
+    updateUser:async(updateUser:TUpdateUserInput)=>{  
+      console.log(updateUser,'userdatas')
   try {
     const cookieStore = await cookies()
-    const res = await fetch(`${api_url}/api/users/profile/update`, {
+    const res = await fetch(`${api_url}/api/user/profile/update`, {
       method: "PUT",
       credentials:"include",
       headers: {
@@ -18,12 +20,14 @@ export const userService={
       },
       body: JSON.stringify(updateUser),
     });
-    revalidateTag("userdata",'page')
-    const data = await res.json();
+    revalidateTag("userdata",'max')
+    const data= await res.json();
+    const result =data as ApiResponse<TUser> 
     if (!res.ok) {
-       return { success: false, error: data.result?.message || "An error occurred while updating" }
+      const error=data as ApiErrorResponse
+       return { message: error.message || "An error occurred while updating" }
     }
-    return { success: true, message: "user updated successfully", data };
+    return { success: true, message: "user updated successfully", result };
   } catch (error: any) {
     console.error(error);
     return { success: false, error: error.message || "An error occurred while updating" };
@@ -32,7 +36,7 @@ export const userService={
      DeleteUserown: async () => {
             try {
                 const cookieStore = await cookies()
-                const res = await fetch(`${api_url}/api/users/profile/own`, {
+                const res = await fetch(`${api_url}/api/user/profile/own`, {
                     method:"DELETE",
                     credentials: "include",
                     headers: {
@@ -43,11 +47,14 @@ export const userService={
                     }
                 })
                 const body = await res.json()
-             if(!res.ok){
-                   return { success: false, error: body.error || "user delete failed" }
-             }
-             cookieStore.delete("__Secure-assignment-4.session_tokens")
-             return {data:body,message:"user deleted successfully"}
+                const result = body as ApiResponse<TUser>
+                if(!res.ok){
+                  const error= body as ApiErrorResponse
+                  return {
+                    message:error.message || "user deleted successfully"
+                  }
+                }
+             return {result,message: result.message||"user deleted successfully"}
             } catch (error: any) {
                 return {
                     data: null,

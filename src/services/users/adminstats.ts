@@ -68,7 +68,6 @@ export const adminService = {
         credentials: "include",
       })
       const data = await response.json()
-      console.log(data,'datasss')
       if (!response.ok) throw new Error(`Error fetching revenue stats: ${response.statusText}`)
       return { data, error: null }
     } catch (error) {
@@ -103,7 +102,6 @@ export const adminService = {
         credentials: "include",
       })
       const data = await response.json()
-      console.log(data,'dkdkd')
       if (!response.ok) throw new Error(`Error fetching category stats: ${response.statusText}`)
       return data
     } catch (error) {

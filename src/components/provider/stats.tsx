@@ -1,6 +1,6 @@
 "use client"
 
-import { OrderStatsApiResponse, OrderStatsResult } from "@/types/order/orderstats"
+import { OrderStatsApiResponse, OrderStatsResult } from "@/types/order/order.type.stats"
 import { ArrowTrendingUpIcon } from "@heroicons/react/24/solid"
 
 type RevenueAggregation = {

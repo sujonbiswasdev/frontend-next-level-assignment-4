@@ -22,7 +22,6 @@ export const ReviewItem = ({
   totalLength: number
 }) => {
   const router = useRouter()
-  console.log(meal.provider.image, 'res')
   const [comment,setcomment]=useState<{comment:string}>({comment:""})
   if (meal == null || meal == undefined) {
     return (
@@ -64,8 +63,7 @@ export const ReviewItem = ({
     const handleupdate = async () => {
 
     const res = await reviewUpdate(review.id, comment.comment);
-    console.log(res,'resdata')
-
+  
     if (res.success) {
       alert("Review updated!");
       router.refresh()

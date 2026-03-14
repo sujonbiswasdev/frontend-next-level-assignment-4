@@ -1,5 +1,7 @@
-import { getSession } from "@/services/service";
 import { NextRequest, NextResponse } from "next/server";
+import { getSession } from "./services/users/auth.service";
+import { ApiResponse } from "./types/response.type";
+import { TUser } from "./types/user/user";
 
 enum Roles {
   Admin = "Admin",
@@ -7,13 +9,14 @@ enum Roles {
   Customer = "Customer"
 }
 async function proxy(request: NextRequest) {
-  const { data } = await getSession();
+  const  data= await getSession();
+ const userinfo= data?.data as ApiResponse<TUser>
   const pathname = request.nextUrl.pathname;
-  if (!data?.success) {
+  if (!userinfo.success) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
-  const role = data?.result?.role;
-  if (data.result.status === 'suspend') {
+  const role = userinfo.data.role;
+  if (userinfo.data.status === 'suspend') {
     return NextResponse.redirect(new URL("/login", request.url));
   }
   if ((role === Roles.Admin || role === Roles.Provider) && pathname.startsWith("/orders")) {

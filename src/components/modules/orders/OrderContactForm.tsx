@@ -26,17 +26,14 @@ export function OrderForm({
         quantity: item.quantity
     }))
 
-    console.log(items,'items')
     const formData = {
         ...orderdata,
         items
     }
-    console.log(formData,'formdata')
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault()
         const toastid = toast.loading("order creating.....")
         const response = await CreateOrder(formData as ICreateOrderPayload)
-        console.log(response,'responsedata')
         if (response.error) {
             toast.dismiss(toastid)
            toast.error(`order creation failed ${response.error}`)

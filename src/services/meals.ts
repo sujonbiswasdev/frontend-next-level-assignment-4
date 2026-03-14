@@ -14,7 +14,6 @@ export interface GetMealsParams {
 
 export const mealsService={
      createMeals:async (mealsdata:MealData) => {
-      console.log(JSON.stringify(mealsdata),'dlkjdksjfjsdatatata')
       const cookieStore = await cookies()
      try {
       const res = await fetch(`${api_url}/api/provider/meals`, {
@@ -63,7 +62,7 @@ getmeals:async(params?:any,options?:ServiceOptionds)=>{
 
          
       const data = await res.json();
-      console.log(data,'data')
+
 
        return safeData(data,{})
  } catch (error) {

@@ -1,5 +1,6 @@
 import { getCategory } from "@/actions/categories/category"
 import CategoryTable from "@/components/category/categorytable"
+import { Category } from "@/types/category";
 
 const CreateCategory = async() => {
   const category=await getCategory()
@@ -12,7 +13,7 @@ const CreateCategory = async() => {
   }
   return (
     <div>
-      <CategoryTable categorydata={category}/>
+      <CategoryTable categorydata={category.data as Category[]}/>
     </div>
   )
 }

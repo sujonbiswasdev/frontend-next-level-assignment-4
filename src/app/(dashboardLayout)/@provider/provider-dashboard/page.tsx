@@ -1,6 +1,6 @@
 import { getownorderstats, getprovidermealsStats, getrevenueStats } from "@/actions/provider/stats"
 import RevenueStats from "@/components/provider/stats"
-import { OrderStatsApiResponse, OrderStatsResult } from "@/types/order/orderstats"
+import { OrderStatsApiResponse, OrderStatsResult } from "@/types/order/order.type.stats"
 
 const ProviderPage = async() => {
   const revenuedata=await getrevenueStats()

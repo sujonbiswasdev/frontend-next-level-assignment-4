@@ -13,7 +13,6 @@ import ReviewForm from '../modules/review/reviewform'
 import { ReviewItem } from '../modules/review/reviewitem'
 import { User } from '@/types/user/user'
 const SignleMealByid = ({ meal }: { meal: MealData }) => {
-  console.log(meal.provider.image, 'dkjfkdjf')
   const addToCart = manageCartStore((state) => state.addToCart)
   const router = useRouter()
   const defaultIamge = 'https://res.cloudinary.com/drmeagmkl/image/upload/v1771962102/default_meal_kgc6mv.png'

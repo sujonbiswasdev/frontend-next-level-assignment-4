@@ -24,7 +24,6 @@ const GetMeals = async ({ searchParams }: PageProps) => {
 
 const { data, pagination } = response;
   const categorydata = await getCategory()
-  console.log(categorydata,'csategory')
     if (!categorydata) {
     return (
       <div className="p-4 text-red-500">

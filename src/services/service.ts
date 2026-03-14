@@ -7,7 +7,7 @@ const api_url = env.API_URL
 export async function getSession() {
   try {
     const cookieStore = await cookies();
-    const res = await fetch("http://localhost:5000/api/auth/me", {
+    const res = await fetch(`${api_url}/api/auth/me`, {
       credentials: "include",
       headers: {
         Cookie: cookieStore.toString(),
@@ -29,7 +29,7 @@ export async function loginUser(userdata: any) {
 
   try {
     const storeCookies = await cookies();
-    const response = await fetch('http://localhost:5000/api/auth/login', {
+    const response = await fetch(`${api_url}/api/auth/login`, {
       method: "POST",
       headers: { 'Content-Type': 'application/json', Cookie: storeCookies.toString() },
       cache:"no-store",

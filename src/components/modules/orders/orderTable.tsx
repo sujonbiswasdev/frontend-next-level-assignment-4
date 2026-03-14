@@ -3,8 +3,8 @@ import Link from "next/link";
 import { MouseEventHandler, useState } from "react";
 import { Eye, Pen, Trash, X } from "lucide-react";
 import { toast } from "react-toastify";
-import { OrderStatsData } from "@/types/order/orderstats";
-import { OrderType } from "@/types/order/orderTable";
+import { OrderStatsData } from "@/types/order/order.type.stats";
+import { OrderType } from "@/types/order/order.type.table";
 import { Status, StatusIndicator, StatusLabel } from "@/components/ui/status";
 import { updateorderstatus } from "@/actions/order.action";
 

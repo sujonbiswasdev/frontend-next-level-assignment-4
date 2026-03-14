@@ -9,8 +9,6 @@ const AdminPage = async() => {
   const ordersStats=await getOrdersStats()
    const revenuestats=await getRevenueStats()
      const categoriesStats=await getCategoryStats()
-
-   console.log(categoriesStats,'dd')
      if (!userstats) {
     return (
       <div className="p-4 text-red-500">

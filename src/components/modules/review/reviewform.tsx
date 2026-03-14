@@ -33,7 +33,6 @@ export default function ReviewForm({
       parentId:parentId
     };
     const res = await createReviewAction(mealId, data);
-    console.log(res,'sdjkfsdf')
 
     if (!res.success) {
        toast.error( res.message||"Failed to add review");

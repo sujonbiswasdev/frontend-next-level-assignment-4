@@ -1,5 +1,4 @@
 'use client'
-
 import { useState } from "react"
 import { Menu, Bell, Edit2, Pencil, Save } from "lucide-react"
 import Image from "next/image"
@@ -17,7 +16,6 @@ export default function ProviderProfilePage({ userdata }: { userdata: User }) {
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const router = useRouter()
     const [access, setaccess] = useState<string>("profile")
-    console.log(userdata, 'data')
     const [inputvalue, setinputvalue] = useState<Partial<UpdateUserInput>>({})
     const [editfield, seteditfield] = useState<string | boolean | 'bgimage' | 'name' | 'phone' | 'isActive'>('')
     const getDate = new Date(userdata.updatedAt)
@@ -47,7 +45,7 @@ export default function ProviderProfilePage({ userdata }: { userdata: User }) {
         }
         try {
             const toastid = toast.loading(`"user ${field} updating...."`, { theme: "dark", position: "bottom-right", autoClose: 2000 })
-            const res = await fetch(`http://localhost:5000/api/users/profile/update`, {
+            const res = await fetch(`${api_url}/api/users/profile/update`, {
                 method: "PUT",
                 credentials: "include",
                 headers: {
@@ -221,7 +219,7 @@ export default function ProviderProfilePage({ userdata }: { userdata: User }) {
 
 
                                             <div className="shadow-sm ">
-                                                <InfoRow label="role" value={userinfo.role} />
+                                                <InfoRow label="role" value={userinfo.role as string} />
 
                                             </div>
 

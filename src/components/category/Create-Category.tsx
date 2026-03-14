@@ -58,7 +58,7 @@ export function CreateCategoryForm() {
 
       try {
         // Using native fetch
-        const response = await fetch("http://localhost:5000/api/admin/category", {
+        const response = await fetch(`${api_url}/api/admin/category`, {
           method: "POST",
           credentials:"include",
           headers: {
@@ -68,7 +68,6 @@ export function CreateCategoryForm() {
         });
 
         const data = await response.json();
-        console.log(data,'kdkdd')
 
         toast.dismiss(toastId);
 

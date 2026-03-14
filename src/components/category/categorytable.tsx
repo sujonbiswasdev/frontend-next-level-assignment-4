@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-export default function CategoryTable({categorydata}:{categorydata:any}) {
+export default function CategoryTable({categorydata}:{categorydata:Category[]}) {
     const router =useRouter()
     const handleDelete=async(id:string)=>{
         const res=await deleteCategory(id)
@@ -49,7 +49,7 @@ export default function CategoryTable({categorydata}:{categorydata:any}) {
                     {/* Body */}
                     <tbody>
 
-                        {categorydata.map((item:Category,index:number)=>{
+                        {categorydata?.map((item:Category,index:number)=>{
                             return   <tr key={index} className="border-b hover:bg-gray-50 transition duration-300">
 
                             

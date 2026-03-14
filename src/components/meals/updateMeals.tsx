@@ -42,7 +42,6 @@ const UpdateMeal = ({ mealId }: { mealId: string }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const data = await updateMeal(mealId, parsedata.data!)
-    console.log(data.error, 'kdljf')
     if (!data) {
       toast.error("Failed to update meal");
     } else {

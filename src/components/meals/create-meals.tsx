@@ -86,7 +86,6 @@ export function MealsForm() {
       }
       try {
         const res = await createmeals(mealsdData as any)
-        console.log(res.error,'djfsjfkjsldf')
         if (res.error) {
           toast.dismiss(toastid)
           toast.error(res.error)
@@ -106,7 +105,6 @@ export function MealsForm() {
   useEffect(() => {
     const fetchCategory = async () => {
       const categorydata = await getCategory()
-      console.log(categorydata, 'categyrodf')
       setcategory(categorydata)
     }
     fetchCategory()

@@ -10,7 +10,6 @@ export default function OrderDetails({ orderdetails }: { orderdetails: SingleOrd
     const order = orderdetails;
     const defaultProfile = 'https://res.cloudinary.com/drmeagmkl/image/upload/v1766941482/chatgpt_m8tmep.png'
     const orderdata = order.result.result
-    console.log(orderdata, 'orderdata')
     if (!order) return notFound();
     return (
         <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-xl border border-gray-200">

@@ -14,7 +14,6 @@ import { Button } from '../ui/button';
 import { pagination } from '@/types/meals/pagination';
 const PaginationPage = ({ pagination }: { pagination: pagination }) => {
   const { total, page=1, limit, totalpage=1} = pagination
-  console.log(total,totalpage,totalpage,'sdjfs')
 
   const searchParams = useSearchParams()
   const router = useRouter();

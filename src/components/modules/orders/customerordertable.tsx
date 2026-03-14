@@ -15,7 +15,6 @@ const CustomerOrderTable = ({ initialorder }: CustomerOrderTableProps) => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [orders, setOrders] = useState(initialorder);
   const [status, setStatus] = useState({ status: "" });
-  console.log(orders, 'orddjfkldjfkldsjfdsjfdordrer')
 
   const handleUpdate = async (id: string, data: any) => {
     try {

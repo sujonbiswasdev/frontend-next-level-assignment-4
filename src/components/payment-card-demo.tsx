@@ -17,9 +17,7 @@ export function PaymentCardDemo() {
       feature2="Priority Support"
       feature2description="Get dedicated customer support with faster response times and direct access to our technical team for any issues."
       onPay={async ({ cardNumber, expiry, cvc }) => {
-        console.log(
-          `Payment Processed! ${cardNumber}, exp ${expiry}, cvc ${cvc}`,
-        );
+
       }}
     />
   );

@@ -9,7 +9,7 @@ export default function MealReviews({ mealId }: { mealId: string }) {
 
   const fetchReviews = async () => {
     const res = await fetch(
-      `http://localhost:5000/api/meals/${mealId}`
+      `https://backend-next-level-assignment-4.vercel.app/api/meals/${mealId}`
     );
     const data = await res.json();
     if (data.success) setReviews(data.data.reviews);

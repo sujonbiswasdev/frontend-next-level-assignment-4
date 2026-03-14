@@ -29,8 +29,6 @@ import { Route } from "@/types"
 export function NavProjects({siteManu}: {siteManu:Route[]}) {
   const { isMobile } = useSidebar()
 
-  console.log(siteManu.map((item)=>item.title))
-
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>Projects</SidebarGroupLabel>

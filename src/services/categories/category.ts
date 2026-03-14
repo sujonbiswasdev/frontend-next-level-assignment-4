@@ -25,7 +25,6 @@ export const CategoriesService = {
       const data = await res.json()
       return data
     } catch (error) {
-      console.log(error)
     }
   },
   createCategory: async (value: any) => {

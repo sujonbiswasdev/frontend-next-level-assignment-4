@@ -8,7 +8,6 @@ import { useRouter } from 'next/navigation';
 
 const Singlecategory = ({ meal }: { meal: any }) => {
   const router = useRouter()
-  console.log(meal, 'mealsdata')
   const [isOpen, setIsOpen] = useState(false);
   const [priceRange, setPriceRange] = useState([1, 1000]);
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
@@ -148,7 +147,6 @@ const Singlecategory = ({ meal }: { meal: any }) => {
             {/* 4. Provider Rating */}
             <div className="gap-2 mb-6 ">
               {[5, 4, 3, 2, 1].map(r => {
-                console.log(r,'rr')
                 return <label key={r} className="flex items-center gap-1 cursor-pointer">
                   <input
                     type="radio"
@@ -186,8 +184,6 @@ const Singlecategory = ({ meal }: { meal: any }) => {
         <div className='mt-10'>
           <MealCard filterData={filteredMeals} />
         </div>
-
-
       </div>
     </div>
   );

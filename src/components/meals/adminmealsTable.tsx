@@ -29,7 +29,7 @@ const AdminMealsTable = ({ initialmeals }: { initialmeals: any[] }) => {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/provider/meals/${id}`,
+        `https://backend-next-level-assignment-4.vercel.app/api/provider/meals/${id}`,
         { method: "DELETE", credentials: "include" }
       );
       const data = await res.json();

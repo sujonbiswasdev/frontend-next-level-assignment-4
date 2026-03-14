@@ -12,7 +12,6 @@ const api_url = env.API_URL;
 
 export const reviewService = {
   createReview: async (mealid:string,data:any) => {
-    console.log(data,'mealdsjfsdf')
     try {
       const cookieStore = await cookies()
 
@@ -27,7 +26,6 @@ export const reviewService = {
         cache: "no-store",
       });
        const result = await res.json();
-       console.log(result,'resultdata')
       if(!res.ok){
 
         return {

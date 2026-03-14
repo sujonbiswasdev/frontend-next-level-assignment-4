@@ -27,9 +27,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { authClient } from "@/lib/authClient";
-import { useState } from "react";
 import ProfileCard from "./ProfileCard";
-import { manageCartStore } from "@/store/CartStore";
 import { CartModal } from "../Cardmodel";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -63,6 +61,7 @@ interface Navbar1Props {
       url: string;
     };
   };
+  user:User | null
 }
 
 const Navbar = ({
@@ -82,7 +81,7 @@ const Navbar = ({
     login: { title: "Login", url: "/login" },
     signup: { title: "Sign up", url: "/register" },
   },
-  className,
+  className,user
 }: Navbar1Props) => {
   const { data: session } = authClient.useSession()
   return (
@@ -116,7 +115,7 @@ const Navbar = ({
             <CartModal />
             {session?.user ? (<>
 
-              <ProfileCard profile={session.user as User} />
+              <ProfileCard profile={user as User} />
             </>) :
 
               (<div className="flex gap-2">

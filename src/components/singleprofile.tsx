@@ -42,7 +42,7 @@ function SingleProfile(user: any) {
           <p className="text-gray-900">{singleuser.phone || "N/A"}</p>
         </div>
 
-        <InfoRow label="Role" value={singleuser.role} />
+        <InfoRow label="Role" value={singleuser.role as string} />
 
         <div className="flex justify-between items-center px-6 py-2">
                <label className="text-sm text-gray-600 font-semibold">status</label>

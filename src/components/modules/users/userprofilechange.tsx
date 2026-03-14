@@ -8,7 +8,6 @@ import { toast } from 'react-toastify'
 const UserUpdate = ({ userid }: { userid: string }) => {
     const [userdata, setuserdata] = useState<Partial<Updateuserdata>>({});
       const parsedata = Updateuserschema.safeParse(userdata);
-      console.log(parsedata,'parsedata')
      const handleSubmit = async (e: React.FormEvent) => {
        e.preventDefault();
        const data = await updateuserdata(userid,parsedata.data!)

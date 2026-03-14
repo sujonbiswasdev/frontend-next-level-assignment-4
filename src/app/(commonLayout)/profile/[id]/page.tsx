@@ -5,8 +5,6 @@ import React from 'react'
 const UserProfile = async ({ params }: { params: Promise<{ id: string }> }) => {
     const id = await params
     const userprofile = await AdminService.getuserbyid(id.id)
-    console.log(userprofile,'userdfsldj')
- 
     const userdata=userprofile
        if (!userdata.data || userdata.error) {
         return (

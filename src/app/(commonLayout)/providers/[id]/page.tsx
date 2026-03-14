@@ -12,7 +12,6 @@ const SignleProviderwithMenu = async ({params}:{params:Promise<{id:string}>}) =>
     );
   }
     const providerData = res.data;
-    console.log(providerData,'providerdata')
 
   return (
     <div>

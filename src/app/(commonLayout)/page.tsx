@@ -12,7 +12,6 @@ import { getAlluserProvider } from "@/actions/provider.action";
 import { ProviderProfile } from "@/types/user/user";
 export default async function HomePage() {
   const categories = await getCategory()
-  console.log(categories,'categorydata')
     const response = await getMeals();
     const {data,providerRating}=await getAlluserProvider()
   if (!categories || categories==null || categories==undefined) {
@@ -25,7 +24,7 @@ export default async function HomePage() {
   return (
     <div className="">
       <HeroSlider />
-      <FoodCategories categories={categories.data as Category[]} />
+      {/* <FoodCategories categories={categories.data as Category[]} />
       <div className="space-y-8">
        
          <div className="mb-2 mx-auto">
@@ -50,7 +49,7 @@ export default async function HomePage() {
        <Marquee pauseOnClick direction="left">
        <TestimonialSection testomonialdata={data as ProviderProfile[]} providerRating={providerRating as providerRating}/>
       </Marquee>
-     </div>
+     </div> */}
       
     </div>
   );

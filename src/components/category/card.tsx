@@ -18,7 +18,6 @@ export default function FoodCategories({categories}:{categories:Category[]}) {
             Discover the best restaurants and dishes carefully selected to satisfy your cravings.
           </p>
         </div>
-
         {/* Categories Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
 

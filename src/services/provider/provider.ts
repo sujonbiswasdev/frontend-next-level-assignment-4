@@ -18,8 +18,6 @@ export const providerService = {
         );
       }
 
-      console.log("FULL RESPONSE:", body);
-
       return {
         data: body.result,
       };

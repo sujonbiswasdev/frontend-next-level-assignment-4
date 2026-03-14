@@ -1,10 +1,9 @@
 "use server"
 
 import { userService } from "@/services/users/user"
-import { UsersData } from "@/types/user/user"
+import { TUpdateUserInput } from "@/types/user/user"
 
-
-export const updateUser=async(userdata:UsersData)=>{
+export const updateUser=async(userdata:TUpdateUserInput)=>{
   return await userService.updateUser(userdata)
 }
 

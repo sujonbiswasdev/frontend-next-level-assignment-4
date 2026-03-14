@@ -1,5 +1,5 @@
 import { env } from "@/env"
-import { OrderStatsApiResponse, OrderStatsResult } from "@/types/order/orderstats"
+import { OrderStatsApiResponse, OrderStatsResult } from "@/types/order/order.type.stats"
 import { cookies } from "next/headers"
 
 const api_url=env.API_URL
@@ -75,7 +75,6 @@ export const providerServiceStats={
                 },
             )
              const body:OrderStatsApiResponse = await response.json()
-             console.log(body,'body data')
             if (!response.ok) {
                     throw new Error(`Error fetching provider meals: ${response.statusText}`);
                 }
