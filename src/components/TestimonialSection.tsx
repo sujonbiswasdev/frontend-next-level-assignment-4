@@ -1,22 +1,32 @@
-"use client"
-
-import { providerRating } from "@/types/meals/mealstype"
-import { ProviderProfile } from "@/types/user/user"
+"use client";
+import { IProviderInfo } from "@/types/provider.type";
 import { Star, StarHalf } from "lucide-react";
-import Image from "next/image"
-import InfoRow from "./infoRow";
+import Image from "next/image";
 import Link from "next/link";
-export default function TestimonialSection({ testomonialdata, providerRating }: { testomonialdata: ProviderProfile[], providerRating: providerRating }) {
-
-  const fullStars = Math.floor(Number(providerRating.averageRating));
-  const hasHalfStar = Number(providerRating.averageRating) % 1 >= 0.5;
+export default function TestimonialSection({
+  testomonialdata,
+}: {
+  testomonialdata: IProviderInfo[];
+}) {
+  const providerdata=testomonialdata.map((item)=>item)
+  const mealdata=providerdata.find((item)=>item.meals)
+  console.log(mealdata,'d')
+  // const mainReviews = mealdata.filter((r) => r.parentId == null);
+  // console.log(mainReviews,'dd')
+  // const totalReviews = mainReviews.length;
+  // const avg =
+  //   totalReviews > 0
+  //     ? mainReviews.reduce((sum: any, r: any) => sum + r.rating, 0) /
+  //       totalReviews
+  //     : 0;
+  // const fullStars = Math.floor(Number(avg));
+  // const hasHalfStar = Number(avg) % 1 >= 0.5;
   return (
     <section className="w-full py-16 px-4 bg-white shadow-sm space-y-1">
       <div className="max-w-[1440px] mx-auto">
-
         {/* Cards */}
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {testomonialdata.map((item: ProviderProfile) => (
+          {providerdata.map((item: any) => (
             <div
               key={item.id}
               className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
@@ -35,7 +45,6 @@ export default function TestimonialSection({ testomonialdata, providerRating }: 
                   <p className="">restaurantName : {item.restaurantName} </p>
                   <p>role : {item.user.role}</p>
                 </div>
-
               </div>
               <div>
                 <p>{item.description}</p>
@@ -43,8 +52,8 @@ export default function TestimonialSection({ testomonialdata, providerRating }: 
               {/* Rating */}
               <div className="flex justify-between items-center gap-0.5">
                 <div className="flex">
-                  {Array.from({ length: 5 }).map((_, i) => {
-                    if (i < fullStars) {
+                  {/* {Array.from({ length: 5 }).map((_, i) => {
+                    if (i<fullStars) {
                       return (
                         <Star
                           key={i}
@@ -52,7 +61,6 @@ export default function TestimonialSection({ testomonialdata, providerRating }: 
                         />
                       );
                     }
-
                     if (i === fullStars && hasHalfStar) {
                       return (
                         <StarHalf
@@ -62,27 +70,27 @@ export default function TestimonialSection({ testomonialdata, providerRating }: 
                       );
                     }
 
-                    return (
-                      <Star
-                        key={i}
-                        className="w-[14px] text-gray-300"
-                      />
-                    );
-                  })}
+                    return <Star key={i} className="w-[14px] text-gray-300" />;
+                  })} */}
 
                   <div>
                     <span className="text-xs text-gray-600 ml-1">
-                      ({Number(providerRating.averageRating).toFixed(1)})
+                      ({Number(item?.averageRating).toFixed(1)})
                     </span>
-                    <span>({providerRating.totalReview}reviews)</span>
+                    {/* <span>({findReview?.totalReview}reviews)</span> */}
                   </div>
                 </div>
-                <Link className="text-blue-700 hover:underline font-semibold" href={`/providers/${item.id}`}>Click</Link>
+                <Link
+                  className="text-blue-700 hover:underline font-semibold"
+                  href={`/providers/${item.id}`}
+                >
+                  Click
+                </Link>
               </div>
             </div>
           ))}
         </div>
       </div>
     </section>
-  )
+  );
 }

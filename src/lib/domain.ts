@@ -1,0 +1,1 @@
+export const allowedDomains = ["res.cloudinary.com", "images.pexels.com"];

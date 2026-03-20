@@ -1,13 +1,11 @@
 'use client'
-import { User } from "@/types/user/user";
+import { TUser } from "@/types/user/user";
 import Image from "next/image";
-import { Label } from "radix-ui";
-import { FieldLabel } from "./ui/field";
 import InfoRow from "./infoRow";
 import { Status, StatusIndicator, StatusLabel } from "./ui/status";
 import ShareProfileButton from "./profileshare";
-function SingleProfile(user: any) {
-  const singleuser = user.user.data.result.result as User
+function SingleProfile({user}:{user:TUser}) {
+  const singleuser =user as TUser
   const defaultProfile = 'https://images.pexels.com/photos/952670/pexels-photo-952670.jpeg';
 
   if (!user) return <p className="text-center p-4">User not found</p>;

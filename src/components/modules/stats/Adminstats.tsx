@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { ArrowTrendingUpIcon, ArrowTrendingDownIcon } from "@heroicons/react/24/solid"
-import { CategoryStats, MealStats, OrderStats, RevenueDashboardResponse, UserStats } from "@/types/user/adminstats"
-
+import { TCategoryStats, TMealStats, TOrderStats, TRevenueDashboardResponse, TReviewStats, TUserStats } from "@/types/user/adminstats"
 
 type StatCardProps = {
   title: string
@@ -31,7 +30,7 @@ function StatCard({ title, value, percentage, positive = true }: StatCardProps) 
   )
 }
 
-export default function AdminStats({ usersStats ,mealsStats,ordersStats,revenuestats,categoriesStats}: { usersStats: UserStats,mealsStats:MealStats,ordersStats:OrderStats,revenuestats:RevenueDashboardResponse ,categoriesStats:CategoryStats}) {
+export default function AdminStats({ usersStats ,mealsStats,ordersStats,revenuestats,categoriesStats,reviewStats}: { usersStats: TUserStats,mealsStats:TMealStats,ordersStats:TOrderStats,revenuestats:TRevenueDashboardResponse ,categoriesStats:TCategoryStats,reviewStats:TReviewStats}) {
   return (
     <section className="w-full py-10 px-4 sm:px-6 lg:px-10 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto space-y-10">
@@ -107,15 +106,15 @@ export default function AdminStats({ usersStats ,mealsStats,ordersStats,revenues
         )}
 
         {/* Review Stats */}
-        {/* {reviewStats && (
+        {reviewStats && (
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-gray-700">Reviews Overview</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-              <StatCard title="Total Reviews" value={formatValue(reviewStats.totalreviews)} />
-              <StatCard title="Today Reviews" value={formatValue(reviewStats.todayreviews)} />
+              <StatCard title="Total Reviews" value={reviewStats.totalreviews || 0} />
+              <StatCard title="Today Reviews" value={reviewStats.todayreviews || 0} />
             </div>
           </div>
-        )} */}
+        )}
 
         {/* Category Stats */}
         {categoriesStats && (
@@ -129,6 +128,12 @@ export default function AdminStats({ usersStats ,mealsStats,ordersStats,revenues
                   <StatCard title={`meals per category by ${item.category_name}`} value={item._count._all} />
                   </div>
                  })}
+
+                 {categoriesStats.totalcategory_name.map((item,index)=>{
+                return <div key={index}>
+                   <StatCard title="Category_name" value={item.name || 0} />
+                </div>
+              })}
             </div>
           </div>
         )}

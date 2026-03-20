@@ -1,6 +1,7 @@
 'use server'
+import { IOrderUpdateStatus } from "@/components/modules/orders/customerordertable";
 import { OrderService } from "@/services/order/order";
-import { ICreateOrderPayload } from "@/types/order/order";
+import { ICreateorderData } from "@/types/order/order.type";
 import { revalidateTag } from "next/cache";
 
 export const getownorder = async () => {
@@ -8,15 +9,15 @@ export const getownorder = async () => {
   return res;
 };
 
-export const updateorderstatus = async (id:string,data:any) => {
+export const updateorderstatus = async (id:string,data:IOrderUpdateStatus) => {
   const res = await OrderService.updateOrderStatus(id,data);
-  revalidateTag("orderupdate",'page');
+  revalidateTag("orderupdate",'max');
   return res;
 };
 
-export const CreateOrder = async (payload:ICreateOrderPayload) => {
+export const CreateOrder = async (payload:ICreateorderData) => {
   const res = await OrderService.createorder(payload);
-  revalidateTag("orderupdate",'page');
+  revalidateTag("orderupdate",'max');
   return res;
 };
 

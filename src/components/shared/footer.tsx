@@ -6,17 +6,19 @@ export default function Footer() {
   return (
     <footer className="bg-[#f8fafc] border-t mt-24">
       <div className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-20 py-16">
-        
         {/* Top Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-12">
-          
           {/* Brand Section */}
           <div className="space-y-4">
             <div className="flex items-center">
-                <img src="https://res.cloudinary.com/drmeagmkl/image/upload/v1772007286/logo_rcsr8h.png" className="w-[70px] h-[70px] rounded-full" alt="" />
-                <h2 className="text-2xl font-bold text-primary tracking-tight">
-              FoodHub 
-            </h2>
+              <img
+                src="https://res.cloudinary.com/drmeagmkl/image/upload/v1772007286/logo_rcsr8h.png"
+                className="w-[70px] h-[70px] rounded-full"
+                alt=""
+              />
+              <h2 className="text-2xl font-bold text-primary tracking-tight">
+                FoodHub
+              </h2>
             </div>
             <p className="text-gray-600 text-sm leading-relaxed max-w-xs">
               Discover & order delicious meals from trusted providers near you.
@@ -30,10 +32,32 @@ export default function Footer() {
               Products
             </h3>
             <ul className="space-y-3 text-sm text-gray-600">
-              <li><Link href="/meals" className="hover:text-primary transition">Browse Meals</Link></li>
-              <li><Link href="/providers" className="hover:text-primary transition">Providers</Link></li>
-              <li><Link href="/login" className="hover:text-primary transition">Login</Link></li>
-              <li><Link href="/register" className="hover:text-primary transition">Register</Link></li>
+              <li>
+                <Link href="/meals" className="hover:text-primary transition">
+                  Browse Meals
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/providers"
+                  className="hover:text-primary transition"
+                >
+                  Providers
+                </Link>
+              </li>
+              <li>
+                <Link href="/login" className="hover:text-primary transition">
+                  Login
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/register"
+                  className="hover:text-primary transition"
+                >
+                  Register
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -43,10 +67,29 @@ export default function Footer() {
               For Customers
             </h3>
             <ul className="space-y-3 text-sm text-gray-600">
-              <li><Link href="/cart" className="hover:text-primary transition">Cart</Link></li>
-              <li><Link href="/orders" className="hover:text-primary transition">My Orders</Link></li>
-              <li><Link href="/profile" className="hover:text-primary transition">Profile</Link></li>
-              <li><Link href="/checkout" className="hover:text-primary transition">Checkout</Link></li>
+              <li>
+                <Link href="/cart" className="hover:text-primary transition">
+                  Cart
+                </Link>
+              </li>
+              <li>
+                <Link href="/orders" className="hover:text-primary transition">
+                  My Orders
+                </Link>
+              </li>
+              <li>
+                <Link href="/profile" className="hover:text-primary transition">
+                  Profile
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/checkout"
+                  className="hover:text-primary transition"
+                >
+                  Checkout
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -56,9 +99,30 @@ export default function Footer() {
               For Providers
             </h3>
             <ul className="space-y-3 text-sm text-gray-600">
-              <li><Link href="/provider/dashboard" className="hover:text-primary transition">Dashboard</Link></li>
-              <li><Link href="/provider/menu" className="hover:text-primary transition">Manage Menu</Link></li>
-              <li><Link href="/provider/orders" className="hover:text-primary transition">Orders</Link></li>
+              <li>
+                <Link
+                  href="/provider/dashboard"
+                  className="hover:text-primary transition"
+                >
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/provider/menu"
+                  className="hover:text-primary transition"
+                >
+                  Manage Menu
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/provider/orders"
+                  className="hover:text-primary transition"
+                >
+                  Orders
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -69,25 +133,37 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3 text-sm text-gray-600">
               <li className="hover:text-primary transition cursor-pointer">
-                support@foodhub.com
+                dev.sujonbiswas@gmail.com
               </li>
               <li className="hover:text-primary transition cursor-pointer">
                 +880 1788477912
               </li>
-              <li className="text-gray-500">
-                Sylhet, Bangladesh
-              </li>
+              <li className="text-gray-500">Sylhet, Bangladesh</li>
             </ul>
 
             {/* Social Icons */}
             <div className="flex items-center gap-4 mt-6">
-              <Facebook className="w-5 h-5 text-gray-500 hover:text-primary transition cursor-pointer" />
-              <Instagram className="w-5 h-5 text-gray-500 hover:text-primary transition cursor-pointer" />
-              <Linkedin className="w-5 h-5 text-gray-500 hover:text-primary transition cursor-pointer" />
-              <Twitter className="w-5 h-5 text-gray-500 hover:text-primary transition cursor-pointer" />
+              <Link href={"https://facebook.com/sujonbiswasdev"}>
+                <Facebook className="w-5 h-5 text-gray-500 hover:text-primary transition cursor-pointer" />
+              </Link>
+              <Link href={"https://instagram.com/sujonbiswasdev"}>
+                {" "}
+                <Instagram className="w-5 h-5 text-gray-500 hover:text-primary transition cursor-pointer" />
+              </Link>
+              <Link href={"https://linkedin.com/in/sujonbiswasdev"}>
+                <Linkedin className="w-5 h-5 text-gray-500 hover:text-primary transition cursor-pointer" />
+              </Link>
+              <Link href={"https://twitter.com/sujonbiswasdev"}>
+                <Twitter className="w-5 h-5 text-gray-500 hover:text-primary transition cursor-pointer" />
+              </Link>
+              <Link
+                href={`https://wa.me/01804935939`}
+                target="_blank"
+              >
+                <img src="/whatsapp.png" className="w-8 h-8 text-gray-500 hover:text-primary transition cursor-pointer" alt="" />
+              </Link>
             </div>
           </div>
-
         </div>
 
         {/* Bottom Bar */}
@@ -95,7 +171,10 @@ export default function Footer() {
           <p>© {new Date().getFullYear()} FoodHub. All rights reserved.</p>
 
           <div className="flex gap-6">
-            <Link href="/privacy-policy" className="hover:text-primary transition">
+            <Link
+              href="/privacy-policy"
+              className="hover:text-primary transition"
+            >
               Privacy Policy
             </Link>
             <Link href="/terms" className="hover:text-primary transition">
@@ -103,7 +182,6 @@ export default function Footer() {
             </Link>
           </div>
         </div>
-
       </div>
     </footer>
   );

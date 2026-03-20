@@ -1,8 +1,6 @@
 'use client'
 import { useState } from "react"
 import { Menu, Bell, Edit2, Pencil, Save } from "lucide-react"
-import Image from "next/image"
-import { ProviderProfile, UpdateUserInput, updateUserSchema, User } from "@/types/user/user"
 import { Status, StatusIndicator, StatusLabel } from "../ui/status"
 import { useRouter } from "next/navigation"
 import { toast } from "react-toastify"
@@ -10,21 +8,25 @@ import { Input } from "../ui/input"
 import { Label } from "../ui/label"
 import InfoRow from "../infoRow"
 import Resturantinfo from "../resturant"
+import { TUpdateUserInput, TUser } from "@/types/user/user"
+import { updateUserSchema } from "@/validations/auth.validation"
+import { IProviderInfo } from "@/types/provider.type"
+import { updateUser } from "@/actions/user/user"
 
-export default function ProviderProfilePage({ userdata }: { userdata: User }) {
-    const [userinfo, setuserinfo] = useState<User>({ ...userdata })
+export default function ProviderProfilePage({ userdata }: { userdata: TUser }) {
+    const [userinfo, setuserinfo] = useState<TUser>({ ...userdata })
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const router = useRouter()
     const [access, setaccess] = useState<string>("profile")
-    const [inputvalue, setinputvalue] = useState<Partial<UpdateUserInput>>({})
+    const [inputvalue, setinputvalue] = useState<Partial<TUpdateUserInput>>({})
     const [editfield, seteditfield] = useState<string | boolean | 'bgimage' | 'name' | 'phone' | 'isActive'>('')
-    const getDate = new Date(userdata.updatedAt)
+    const getDate = new Date(userinfo.updatedAt)
     const year = getDate.getFullYear()
     const month = getDate.getMonth()
     const day = getDate.getDay()
 
 
-    const handleUpdateUser = async <k extends keyof User>(field: k, value: User[k]) => {
+    const handleUpdateUser = async <k extends keyof TUser>(field: k, value: TUser[k]) => {
         if (value == null) {
             toast.error("please provide a value", { theme: "colored", position: "bottom-right", autoClose: 2000 })
             return
@@ -45,22 +47,14 @@ export default function ProviderProfilePage({ userdata }: { userdata: User }) {
         }
         try {
             const toastid = toast.loading(`"user ${field} updating...."`, { theme: "dark", position: "bottom-right", autoClose: 2000 })
-            const res = await fetch(`${api_url}/api/users/profile/update`, {
-                method: "PUT",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                    Cookie: cookieStore.toString(),
-                },
-                body: JSON.stringify({ [field]: value }),
-            });
-            if (!res.ok) {
+            const res =await updateUser({[field]:value})
+            if (!res.success || res.error || !res.result?.data) {
                 toast.dismiss(toastid)
                 toast.error(`"user ${field} update failed"`, { theme: "dark", position: "bottom-right", autoClose: 2000 })
                 return
             }
             toast.dismiss(toastid)
-            toast.success(`"user ${field} update successfully"`, { theme: "dark", position: "bottom-right", autoClose: 2000 })
+            toast.success(res.result.message||`"user ${field} update successfully"`, { theme: "dark", position: "bottom-right", autoClose: 2000 })
             setuserinfo((prev:any) => ({ ...prev, [field]: value }))
         } catch (error: any) {
             toast.error(`someting went wrong please try again`)
@@ -117,7 +111,7 @@ export default function ProviderProfilePage({ userdata }: { userdata: User }) {
                         {editfield !== 'image' ? (<div className="flex items-center justify-between px-6 py-4">
                             <div className="flex gap-1 pr-1">
                                 <img
-                                    src={userinfo.image}
+                                    src={userinfo.image || ''}
                                     alt="profile"
                                     className="w-[100px] h-[100px] object-cover rounded-full shadow-sm border-2"
                                 />
@@ -300,15 +294,12 @@ export default function ProviderProfilePage({ userdata }: { userdata: User }) {
                                                     ><Save className="text-blue-800 text-[5px]" /></button>
                                                 </div>)}
                                             </div>
-                                            <InfoRow label="createdAt" value={userinfo.createdAt.toLocaleString().slice(0, 10)} />
-
-
-
+                                            <InfoRow  label="createdAt" value={userinfo.createdAt.toLocaleString().slice(0, 10)} />
                                         </div>
                                     </div>) :
                                     (
                                         <div className="mt-10 ">
-                                            <Resturantinfo userinfo={userinfo.provider} />
+                                            <Resturantinfo userinfo={userinfo.provider as IProviderInfo} />
 
                                         </div>
                                     )}
@@ -326,7 +317,7 @@ export default function ProviderProfilePage({ userdata }: { userdata: User }) {
                                             {userinfo.email}
                                         </p>
                                         <span className="text-xs text-gray-500">
-                                            {year}-{month}-{day}
+                                            {/* {year}-{month}-{day} */}
                                         </span>
                                     </div>
                                 </div>

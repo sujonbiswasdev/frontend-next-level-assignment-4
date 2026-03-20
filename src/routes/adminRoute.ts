@@ -46,8 +46,8 @@ export const adminRoutes: Route[] = [
         isActive: true,
         items: [
             {
-                title: "revies",
-                url: "/admin/review",
+                title: "reviews",
+                url: "/admin/reviews",
             },
         ],
     },

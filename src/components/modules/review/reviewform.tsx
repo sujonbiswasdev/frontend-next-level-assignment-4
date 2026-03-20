@@ -38,7 +38,7 @@ export default function ReviewForm({
        toast.error( res.message||"Failed to add review");
        return
     } 
-    toast.success("Review added successfully");
+    toast.success(res.message || "Review added successfully");
     router.refresh()
     setComment("")
     setRating(0)

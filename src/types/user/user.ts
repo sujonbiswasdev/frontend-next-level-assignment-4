@@ -1,7 +1,12 @@
-import { updateUserSchema, UpdateuserschemabyAdmin } from "@/validations/auth.validation"
+import { UpdateUserCommonData, updateUserSchema, UpdateuserschemabyAdmin } from "@/validations/auth.validation"
 import z from "zod"
+import { Ipagination } from "../meals/pagination"
+import { IProviderInfo } from "../provider.type"
 // update user by admin
 export type TUpdateuserbyAdmin = z.infer<typeof UpdateuserschemabyAdmin>
+
+// update user common data
+export type TUpdateUserCommonData=z.infer<typeof UpdateUserCommonData>
 
 
 export type TUserRoleType = "Provider" | "Admin" | "Customer"
@@ -21,10 +26,16 @@ export type TUser = {
   image: string | null;
   createdAt: string;
   updatedAt: string;
-  role: TUserRoleType
-  status:TUserStatusType
+  role: string
+  status:string
   phone: string | null;
   isActive: boolean;
   bgimage: string | null;
+  provider?:IProviderInfo
 };
 
+
+export interface IGetAllUserdata{
+     data:TUser[],
+     pagination: Ipagination
+}

@@ -1,12 +1,33 @@
+import { allowedDomains } from "@/lib/domain";
 import z from "zod";
 
-  export const createcategoryData = z.object({
-    name: z.string(),
-    image:z.string()
-  }).strict()
-
-
-export const UpdatecategoryData = z.object({
-    name: z.string().optional(),
-    image:z.string().optional()
-  }).strict()
+export const CreateCategory = z.object({
+  name: z.string().min(1, "Name is required"),
+  image: z
+    .string()
+    .min(1, "Image URL is required")
+    .url("Invalid URL format")
+    .refine((url) => {
+      try {
+        const parsed = new URL(url);
+        return allowedDomains.includes(parsed.hostname);
+      } catch {
+        return false;
+      }
+    }, {
+      message: "Only Cloudinary and Pexels images are allowed",
+    }),
+});
+export const UpdateCategory = z.object({
+  name: z.string().optional(),
+  image: z.string().url("Invalid image URL").refine((url) => {
+    try {
+      const parsed = new URL(url as any);
+      return allowedDomains.includes(parsed.hostname);
+    } catch {
+      return false;
+    }
+  }, {
+    message: "Only Cloudinary and Pexels images allowed",
+  }).optional(),
+})

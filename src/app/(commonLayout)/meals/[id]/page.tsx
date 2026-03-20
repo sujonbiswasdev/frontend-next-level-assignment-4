@@ -1,7 +1,8 @@
 import SignleMealByid from "@/components/meals/singleMeal";
 import { mealsService } from "@/services/meals";
-import { getSession } from "@/services/service";
-import { MealData } from "@/types/meals/mealstype";
+import { getSession } from "@/services/users/auth.service";
+import { IGetMealData } from "@/types/meals/mealstype";
+import { TUser } from "@/types/user/user";
 
 export default async function SingleMealPage({
   params,
@@ -9,9 +10,9 @@ export default async function SingleMealPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-
   const res = await mealsService.getmealsbyid(id);
-  if (!res.data) {
+  const userinfo=await getSession()
+  if (!res.success || res.error || !res.result?.data) {
     return (
       <div className="p-4 text-red-500">
         Failed to load meal
@@ -21,7 +22,7 @@ export default async function SingleMealPage({
   return (
     <>
       <div className="p-4">
-        <SignleMealByid meal={res.data as MealData}/>
+        <SignleMealByid meal={res.result.data as IGetMealData} userinfo ={userinfo?.data as TUser}/>
       </div>
     </>
   );

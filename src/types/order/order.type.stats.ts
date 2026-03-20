@@ -20,18 +20,3 @@ export interface OrderStatsResult {
   }>
   todayorders: number
 }
-
-export interface OrderStatsData {
-  success: boolean
-  message: string
-  result: OrderStatsResult
-}
-export type OrderStatsApiResponse =
-  | {
-      data: OrderStatsData
-      error: null
-    }
-  | {
-      data: null
-      error: string
-    }

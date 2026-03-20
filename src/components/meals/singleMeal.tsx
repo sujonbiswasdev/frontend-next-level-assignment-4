@@ -5,14 +5,15 @@ import { manageCartStore } from '@/store/CartStore'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Status, StatusIndicator, StatusLabel } from '../ui/status'
-import { MealData, MealReview } from '@/types/meals/mealstype'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { Star, StarHalf } from 'lucide-react'
 import { MealsForm } from './create-meals'
 import ReviewForm from '../modules/review/reviewform'
 import { ReviewItem } from '../modules/review/reviewitem'
-import { User } from '@/types/user/user'
-const SignleMealByid = ({ meal }: { meal: MealData }) => {
+import { IGetMealData } from '@/types/meals/mealstype'
+import { TUser } from '@/types/user/user'
+
+const SignleMealByid = ({ meal,userinfo }: { meal: IGetMealData,userinfo:TUser}) => {
   const addToCart = manageCartStore((state) => state.addToCart)
   const router = useRouter()
   const defaultIamge = 'https://res.cloudinary.com/drmeagmkl/image/upload/v1771962102/default_meal_kgc6mv.png'
@@ -33,24 +34,23 @@ const SignleMealByid = ({ meal }: { meal: MealData }) => {
     star,
     count: mainReviews.filter(r => Math.floor(r.rating) === star).length
   }));
-
-
-   const fullStars = Math.floor(Number(meal.providerRating.averageRating));
-  const hasHalfStar = Number(meal.providerRating.averageRating) % 1 >= 0.5;
+   const fullStars = Math.floor(Number(meal.providerRating?.averageRating));
+  const hasHalfStar = Number(meal.providerRating?.averageRating) % 1 >= 0.5;
   return (
     <div>
-
       <div className="bg-[#f8fafc] min-h-screen py-10 px-4">
         <div className="max-w-[1440px] mx-auto space-y-12">
 
           {/* HERO SECTION */}
           <div className="relative w-full h-[300px] sm:h-[450px] lg:h-[550px] rounded-3xl overflow-hidden shadow-xl">
 
-            <img
+        <Suspense fallback={<p>image loading..........</p>}>
+              <img
               src={meal.image || defaultIamge}
               alt={meal.meals_name}
               className="w-full h-full object-cover rounded-2xl"
             />
+        </Suspense>
 
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
@@ -204,10 +204,11 @@ const SignleMealByid = ({ meal }: { meal: MealData }) => {
                     <p className="text-gray-500">No reviews yet.</p>
                   )}
 
-                  {mainReviews.map((review: MealReview, index: number) => (
+                  {mainReviews.map((review:any, index: number) => (
                     <div key={review.id} className="border-t pt-6 flex gap-4">
 
                       <ReviewItem
+                      user={userinfo}
                         review={review}
                         meal={meal}
                         activeReplyId={activeReplyId}
@@ -304,7 +305,7 @@ const SignleMealByid = ({ meal }: { meal: MealData }) => {
                               />
                             );
                           })}
-                          <span className='text-sm text-gray-500 gap-2'>({meal.providerRating.totalReview}reviews)</span>
+                          <span className='text-sm text-gray-500 gap-2'>({meal.providerRating?.totalReview}reviews)</span>
 
                         </div>
 
@@ -328,7 +329,7 @@ const SignleMealByid = ({ meal }: { meal: MealData }) => {
                     <div className='flex items-center flex-wrap gap-1.5'>
                       <p className='text-gray-800'>Name :</p>
                       <p className="text-sm text-gray-600 shadow-sm rounded-sm p-1">
-                        {meal.meals_name}
+                        {meal.provider.user.name}
                       </p>
                     </div>
 

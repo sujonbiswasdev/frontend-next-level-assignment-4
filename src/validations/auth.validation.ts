@@ -57,3 +57,12 @@ export const updateUserSchema = z.object({
   phone: z.string().min(10).max(15).optional(),
   isActive: z.boolean().optional(),
 });
+
+// updateusr commont data
+export const UpdateUserCommonData = z
+    .object({
+      role: z.string().optional(),
+      status: z.string().optional(),
+      email: z.string().optional(),
+    })
+    .strict();

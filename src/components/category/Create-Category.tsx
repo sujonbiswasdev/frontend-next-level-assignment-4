@@ -20,26 +20,8 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { toast } from "react-toastify";
-
-const allowedDomains = ["res.cloudinary.com", "images.pexels.com"];
-
-export const formSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  image: z
-    .string()
-    .min(1, "Image URL is required")
-    .url("Invalid URL format")
-    .refine((url) => {
-      try {
-        const parsed = new URL(url);
-        return allowedDomains.includes(parsed.hostname);
-      } catch {
-        return false;
-      }
-    }, {
-      message: "Only Cloudinary and Pexels images are allowed",
-    }),
-});
+import { CreateCategory } from "@/validations/category.schema";
+import { categoryCreate } from "@/actions/categories/category";
 
 export function CreateCategoryForm() {
   const form = useForm({
@@ -48,7 +30,7 @@ export function CreateCategoryForm() {
       image: "",
     },
     validators: {
-      onSubmit: formSchema,
+      onSubmit: CreateCategory,
     },
     onSubmit: async ({ value }) => {
       const toastId = toast.loading("Creating category...", {
@@ -58,28 +40,19 @@ export function CreateCategoryForm() {
 
       try {
         // Using native fetch
-        const response = await fetch(`${api_url}/api/admin/category`, {
-          method: "POST",
-          credentials:"include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(value),
-        });
-
-        const data = await response.json();
+        const res= await categoryCreate(value)
 
         toast.dismiss(toastId);
 
-        if (!data?.success) {
-          toast.error(data?.error.CustomeMessage || "Category creation failed", {
+        if (!res?.success) {
+          toast.error(res?.message || "Category creation failed", {
             theme: "colored",
             position: "bottom-right",
           });
           return;
         }
 
-        toast.success(data?.message || "Category created successfully!", {
+        toast.success(res.result?.message || "Category created successfully!", {
           theme: "colored",
           position: "bottom-right",
         });

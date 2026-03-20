@@ -5,10 +5,10 @@ import React from 'react'
 const OrderHistory = async() => {
 
     const res = await getownorder();
-      if (!res.data || res.error) {
+      if (!res.data || !res.success) {
     return (
       <div className="p-4 text-red-500">
-        Failed to load users
+        Failed to load orders history
       </div>
     );
   }

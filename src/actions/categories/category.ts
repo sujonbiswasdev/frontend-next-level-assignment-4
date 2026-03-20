@@ -1,7 +1,8 @@
 'use server'
 import { CategoriesService, Icategory } from "@/services/categories/category";
+import { ICreateCategory } from "@/types/category";
 
-export const categoryCreate = async (data: any) => {
+export const categoryCreate = async (data:ICreateCategory) => {
   try {
     const res = await CategoriesService.createCategory(data);
     return res;
@@ -24,7 +25,6 @@ export const getCategory = async () => {
 export const updatecategory = async (id:string,data:Icategory) => {
     const res = await CategoriesService.updateCategory(id,data);
     return res;
- 
 }
 
 export const deleteCategory = async (id:string) => {

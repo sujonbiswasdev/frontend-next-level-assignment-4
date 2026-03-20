@@ -1,19 +1,18 @@
 import ProviderProfilePage from '@/components/provider/profileCard'
-import { getSession, getuserProvider } from '@/services/service'
-import React from 'react'
-
+import { getSession } from '@/services/users/auth.service';
+import { TUser } from '@/types/user/user';
 const ProviderProfile = async () => {
     const user=await getSession()
-      if (!user || user.error) {
+      if (!user || user.error || !user.success) {
     return (
       <div className="p-4 text-red-500">
-        Failed to load users
+        Failed to load provider profile
       </div>
     );
   }    
   return (
     <div>
-        <ProviderProfilePage userdata={user.data.result}/>
+        <ProviderProfilePage userdata={user.data as TUser}/>
     </div>
   )
 }

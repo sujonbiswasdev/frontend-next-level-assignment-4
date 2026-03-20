@@ -1,15 +1,15 @@
 'use client'
 import { Status, StatusIndicator, StatusLabel } from "@/components/ui/status";
 import { manageCartStore } from "@/store/CartStore";
-import { OrderItemMeal, SingleOrderResponse } from "@/types/order/order";
+import { IGetOrderData } from "@/types/order/order.type";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export default function OrderDetails({ orderdetails }: { orderdetails: SingleOrderResponse }) {
+export default function OrderDetails({ orderdetails }: { orderdetails: IGetOrderData }) {
     const { getSubtotal, getTotal, removeFromCart, increase, decrease, addToCart } = manageCartStore()
     const order = orderdetails;
     const defaultProfile = 'https://res.cloudinary.com/drmeagmkl/image/upload/v1766941482/chatgpt_m8tmep.png'
-    const orderdata = order.result.result
+    const orderdata = orderdetails
     if (!order) return notFound();
     return (
         <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-xl border border-gray-200">

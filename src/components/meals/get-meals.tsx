@@ -3,19 +3,14 @@ import { Suspense, useState, useTransition } from "react"
 import { useRouter, useSearchParams, usePathname } from "next/navigation"
 import PaginationPage from "./Pagination"
 import { manageCartStore } from "@/store/CartStore"
-
 import { toast } from "sonner"
-import { MealData } from "@/types/meals/mealstype"
-import { Category } from "@/types/category"
-import { pagination } from "@/types/meals/pagination"
 import MealCard from "./MealCard"
-
-const dietaryOptions = [
-  "HALAL",
-];
+import { Ipagination } from "@/types/meals/pagination"
+import { TGetCategory } from "@/types/category"
+import { cuisines, dietaryPreferences, IGetMealData } from "@/types/meals/mealstype"
 const MIN_PRICE_LIMIT = 0;
 const MAX_PRICE_LIMIT = 1000;
-export default function MealsCard({ initialMeals, initialcategory, pagination }: { initialMeals: MealData[], initialcategory: Category[], pagination: pagination }) {
+export default function MealsCard({ initialMeals, initialcategory, pagination }: { initialMeals: IGetMealData[], initialcategory: TGetCategory[], pagination: Ipagination }) {
   const addToCart = manageCartStore((state) => state.addToCart)
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -94,7 +89,7 @@ export default function MealsCard({ initialMeals, initialcategory, pagination }:
           {/* is available check */}
           <div className="flex meals-center gap-3 p-4 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all border">
             <span className="font-semibold text-gray-700 whitespace-nowrap">
-              {/* {urlAvailable=='true'?"available":urlAvailable=='false'?'not available':"All"} */}
+              {urlAvailable=='true'?"available":urlAvailable=='false'?'not available':"All"}
             </span>
             <label className="relative inline-flex meals-center cursor-pointer">
               <input
@@ -120,7 +115,7 @@ export default function MealsCard({ initialMeals, initialcategory, pagination }:
 
         <div className="flex justify-between meals-center flex-wrap gap-4 mt-4">
           {/* Dietary Preference */}
-          <div className="flex-1">
+          <div className="sm:flex-1">
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Dietary Preference
             </label>
@@ -128,7 +123,26 @@ export default function MealsCard({ initialMeals, initialcategory, pagination }:
               onChange={(e) => updateFilter("dietaryPreference", e.target.value)}
               className="w-full rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 px-4 py-2 outline-none transition"
             >
-              {dietaryOptions.map((option, index: number) => (
+              <option value="">All dietary</option>
+              {dietaryPreferences.map((option, index: number) => (
+                <option key={index} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* cuisine */}
+          <div className="sm:flex-1">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              cuisine
+            </label>
+            <select
+              onChange={(e) => updateFilter("cuisine", e.target.value)}
+              className="w-full rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 px-4 py-2 outline-none transition"
+            >
+              <option value="">All cuisine</option>
+              {cuisines.map((option, index: number) => (
                 <option key={index} value={option}>
                   {option}
                 </option>
@@ -137,7 +151,7 @@ export default function MealsCard({ initialMeals, initialcategory, pagination }:
           </div>
 
           {/*  Price */}
-          <div className="flex-1">
+          <div className="sm:flex-1">
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Price ($)
             </label>
@@ -153,7 +167,7 @@ export default function MealsCard({ initialMeals, initialcategory, pagination }:
 
 
         {/* Results show  */}
-        <div className="flex justify-between meals-center mt-4 pt-4 border-t border-emerald-200">
+        <div className="flex flex-wrap md:justify-between meals-center mt-4 pt-4 border-t border-emerald-200">
           <p className="text-lg font-semibold text-gray-800">
             Showing {filterData.length} meals
             {urlCategory && ` • ${urlCategory}`}

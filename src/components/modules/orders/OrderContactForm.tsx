@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { manageCartStore } from "@/store/CartStore"
-import { ICreateOrderPayload } from "@/types/order/order"
+import { ICreateorderData, IOrderItem } from "@/types/order/order.type"
 import { FormEvent, useState } from "react"
 import { toast } from "react-toastify"
 
@@ -17,10 +17,10 @@ export function OrderForm({
 }: {
     setactiveButton: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-    const [orderdata, setorderdata] = useState<ICreateOrderPayload | {}>({})
+    const [orderdata, setorderdata] = useState<ICreateorderData | {}>({})
     const { removeFromCart, cart, clearCart, getSubtotal, getTotal, increase, decrease } = manageCartStore()
 
-    const items = cart.map(item => ({
+    const items:IOrderItem[] = cart.map(item => ({
         mealId: item.mealid,
         price: item.price,
         quantity: item.quantity
@@ -33,14 +33,14 @@ export function OrderForm({
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault()
         const toastid = toast.loading("order creating.....")
-        const response = await CreateOrder(formData as ICreateOrderPayload)
-        if (response.error) {
+        const response = await CreateOrder(formData as ICreateorderData)
+        if (response.error || !response.success) {
             toast.dismiss(toastid)
-           toast.error(`order creation failed ${response.error}`)
+            toast.error(response.message)
            return
         }
         toast.dismiss(toastid)
-        toast.success(response.data.result.message || 'order created successfully')
+        toast.success(response.data?.message || 'order created successfully')
         setactiveButton(true)
     }
     return (

@@ -1,25 +1,27 @@
 'use client'
 import { MealStatusUpdate } from '@/actions/blog.meals';
-import { UpdateMealsData } from '@/types/meals/mealstype';
+import { IMealStatus } from '@/services/meals';
 import React from 'react'
 import { toast } from 'react-toastify';
 
 const MealStatus = ({mealid}:{mealid:string}) => {
-     const [mealData, setMealData] = React.useState<{status:string}>({status:""});
+     const [mealData, setMealData] = React.useState<IMealStatus>({status:""});
       const handleSubmit = async (e: React.FormEvent) => {
+        console.log(mealData,'mealdaa')
         if(mealData===null || mealData.status==''){
             toast.error("plase enter a valid status")
            return
         }
+        console.log(mealid,'meailid')
         const toastid=toast.loading("updating status........")
         e.preventDefault();
-        const data = await MealStatusUpdate(mealid, mealData.status)
-        if (!data) {
+        const res = await MealStatusUpdate(mealid, mealData)
+        if (!res.data || !res.success){
             toast.dismiss(toastid)
-          return toast.error("Failed to update status meal");
+          return toast.error(res.message||"Failed to update status meal");
         } else {
             toast.dismiss(toastid)
-          toast.success("Meal status updated successfully");
+          toast.success(res.message||"Meal status updated successfully");
           setMealData({'status':""})
         }
       };

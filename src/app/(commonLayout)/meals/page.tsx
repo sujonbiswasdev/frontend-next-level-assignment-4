@@ -1,9 +1,9 @@
-
 import { getMeals } from '@/actions/blog.meals'
 import { getCategory } from '@/actions/categories/category'
 import MealsCard from '@/components/meals/get-meals'
-import { Category } from '@/types/category'
-import { pagination } from '@/types/meals/pagination'
+import { TGetCategory } from '@/types/category'
+import { IGetMealData } from '@/types/meals/mealstype'
+import { Ipagination } from '@/types/meals/pagination'
 interface PageProps {
   searchParams: {
     category_name?: string
@@ -12,9 +12,10 @@ interface PageProps {
 }
 
 const GetMeals = async ({ searchParams }: PageProps) => {
-  const serch = await searchParams
-  const response = await getMeals(serch);
-  if (!response) {
+  const search =await searchParams
+  const response = await getMeals(search);
+
+  if (!response || !response.success) {
   return (
     <div className="p-4 text-red-500">
       No data found
@@ -22,7 +23,6 @@ const GetMeals = async ({ searchParams }: PageProps) => {
   );
 }
 
-const { data, pagination } = response;
   const categorydata = await getCategory()
     if (!categorydata) {
     return (
@@ -31,12 +31,10 @@ const { data, pagination } = response;
       </div>
     );
   }
-  
-
   return (
     <div className="">
       
-      <MealsCard initialMeals={data} initialcategory={categorydata.data as Category[]} pagination={pagination as pagination} />
+      <MealsCard initialMeals={response.data?.data as IGetMealData[]} initialcategory={categorydata.data?.data as TGetCategory[]} pagination={response.data?.pagination as Ipagination} />
     </div>
   )
 }

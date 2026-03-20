@@ -1,92 +1,87 @@
-import { deleteReviewAction, moderateReviewAction, reviewUpdate } from "@/actions/reviews"
-import ReviewForm from "@/components/modules/review/reviewform"
-import { ModerateData } from "@/services/review"
-import { MealData, MealReview } from "@/types/meals/mealstype"
-import { User } from "@/types/user/user"
-import Image from "next/image"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
-
+import {
+  deleteReviewAction,
+  reviewUpdate,
+} from "@/actions/reviews";
+import ReviewForm from "@/components/modules/review/reviewform";
+import { IGetMealData, MealReview } from "@/types/meals/mealstype";
+import { IUpdatereviewData } from "@/types/reviews.type";
+import { TUser } from "@/types/user/user";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { use, useState } from "react";
+import { toast } from "react-toastify";
 
 export const ReviewItem = ({
+  user,
   review,
   meal,
   activeReplyId,
   setActiveReplyId,
-  totalLength
+  totalLength,
 }: {
-  review: MealReview,
-  meal: MealData,
-  activeReplyId: any,
-  setActiveReplyId: any,
-  totalLength: number
+  user: TUser;
+  review: MealReview;
+  meal: IGetMealData;
+  activeReplyId: any;
+  setActiveReplyId: any;
+  totalLength: number;
 }) => {
-  const router = useRouter()
-  const [comment,setcomment]=useState<{comment:string}>({comment:""})
+  const router = useRouter();
+  const [isEditing, setisEditing] = useState(false);
+  const [updateReview, setupdateReview] = useState<IUpdatereviewData>();
   if (meal == null || meal == undefined) {
-    return (
-      <div className="p-4 text-red-500">
-        Failed to load meal
-      </div>
-    );
+    return <div className="p-4 text-red-500">Failed to load review</div>;
   }
-
-  const defaultIamge = 'https://res.cloudinary.com/drmeagmkl/image/upload/v1771962102/default_meal_kgc6mv.png'
-
+  const reply=review.replies.filter((item,index)=>item.customer?.name)
+  const reviewinfo=reply.find((item,index)=>item.customer?.id)
+  const defaultIamge =
+    "https://res.cloudinary.com/drmeagmkl/image/upload/v1771962102/default_meal_kgc6mv.png";
 
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this review?")) return;
-
+    const toastId=toast.loading("review deleting.......")
     const res = await deleteReviewAction(review.id);
     if (res.success) {
-      alert("Review deleted!");
-      router.refresh()
-
+      router.refresh();
+      toast.dismiss(toastId)
+      toast.success(res.message || "review deleted successfully")
     } else {
-      alert(res.message);
+      toast.dismiss(toastId)
+      toast.error(res.message || "review deleted failed");
     }
   };
-
-
-  const handleModerate = async (status: "APPROVED" | "REJECTED") => {
-
-    const res = await moderateReviewAction(review.id, { status } as ModerateData);
+  const handleupdate = async () => {
+    const res = await reviewUpdate(
+      review.id,
+      updateReview as IUpdatereviewData,
+    );
 
     if (res.success) {
       alert("Review updated!");
-      router.refresh()
+      router.refresh();
     } else {
-      alert(res.message);
+      alert(res.message || "update failed");
     }
   };
 
-    const handleupdate = async () => {
-
-    const res = await reviewUpdate(review.id, comment.comment);
-  
-    if (res.success) {
-      alert("Review updated!");
-      router.refresh()
-    } else {
-      alert(res.message);
-    }
-  };
-
-  const reviewlength = review?.replies?.map((_, i) => i)
+  const reviewlength = review?.replies?.map((_, i) => i);
   return (
     <div className="border-t pt-6 mt-4 flex gap-4">
       <div className="flex-1">
         <div className="flex items-center gap-2">
-          <div className="w-12 h-12 rounded-full bg-gray-200  overflow-hidden relative" style={{
-            backgroundImage: meal.provider.image
-              ? `url(${meal.provider.user.image})`
-              : `url(${defaultIamge})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}>
+          <div
+            className="w-12 h-12 rounded-full bg-gray-200  overflow-hidden relative"
+            style={{
+              backgroundImage: review.customer?.image
+                ? `url(${review.customer?.image})`
+                : `url(${reviewinfo?.customer?.image})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
             {review.customer?.image && (
               <Image
-                src={review.customer.image}
+                src={review.customer.image || reviewinfo?.customer?.image ||defaultIamge}
                 alt="user"
                 fill
                 className="object-cover"
@@ -95,27 +90,38 @@ export const ReviewItem = ({
           </div>
           <div className="flex items-center gap-2">
             <h4 className="font-semibold">
-              {review.customer?.name || (meal.provider.user.name)}
+              {review.customer?.name || reviewinfo?.customer?.name}
             </h4>
-            <button onClick={() => handleDelete()}>
-              delete
-            </button>
-            <button
-              className="bg-green-500 text-white px-3 py-1 rounded"
-              onClick={() => handleModerate("APPROVED")}
-            >
-              Approve
-            </button>
-            <input value={comment.comment} type="text" onChange={(e)=>setcomment({comment:e.target.value})} />
-            <button onClick={()=>handleupdate()}>update</button>
+            <button onClick={() => handleDelete()} className="bg-red-500 rounded-sm shadow-sm px-2 py-0.5 cursor-pointer text-white">delete</button>
 
-            <button
-              className="bg-gray-500 text-white px-3 py-1 rounded"
-              onClick={() => handleModerate("REJECTED")}
-            >
-              Reject
-            </button>
+            {isEditing ? (
+              <div>
+                <div className="space-y-2 space-x-2">
+                  <input
+                    className="text-black border-2 px-2 focus:bg-blue-100 border-green-700 rounded-md"
+                    value={updateReview?.comment}
+                    type="text"
+                    onChange={(e) =>
+                      setupdateReview({ comment: e.target.value })
+                    }
+                  />
+                  <button
 
+                    onClick={() => {
+                      setisEditing(false)
+                      handleupdate()
+                    }}
+                    className="px-2 py-1 bg-blue-800 text-white rounded-sm"
+                  >
+                    update
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button onClick={()=>setisEditing(true)}>
+                edit
+              </button>
+            )}
           </div>
           {review.rating && (
             <span className="text-orange-500 text-sm">
@@ -124,16 +130,12 @@ export const ReviewItem = ({
           )}
         </div>
 
-        <p className="text-gray-600 mt-1">
-          {review.comment}
-        </p>
+        <p className="text-gray-600 mt-1">{review.comment}</p>
 
         <button
           disabled={totalLength !== reviewlength?.length}
           onClick={() =>
-            setActiveReplyId(
-              activeReplyId === review.id ? null : review.id
-            )
+            setActiveReplyId(activeReplyId === review.id ? null : review.id)
           }
           className="text-sm text-blue-500 mt-2"
         >
@@ -144,12 +146,12 @@ export const ReviewItem = ({
           <ReviewForm parentId={review.id} mealId={meal.id} />
         )}
 
-
         {review.replies?.length > 0 && (
           <div className="ml-8 border-l pl-4">
             {review.replies.map((reply: any) => (
               <ReviewItem
                 key={reply.id}
+                user={user}
                 review={reply}
                 meal={meal}
                 activeReplyId={activeReplyId}
@@ -161,5 +163,5 @@ export const ReviewItem = ({
         )}
       </div>
     </div>
-  )
-}
+  );
+};

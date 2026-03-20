@@ -5,7 +5,7 @@ const UpdateUser = async ({ params }: { params: Promise<{ id: string }> }) => {
   if (!id) {
     return (
       <div className="p-4 text-red-500">
-        Failed to load users
+        Failed to load by id
       </div>
     );
   }

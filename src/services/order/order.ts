@@ -1,5 +1,7 @@
+import { IOrderUpdateStatus } from "@/components/modules/orders/customerordertable"
 import { env } from "@/env"
-import { ICreateOrderPayload } from "@/types/order/order"
+import { ICreateorderData, IGetOrderData } from "@/types/order/order.type"
+import { ApiErrorResponse, ApiResponse } from "@/types/response.type"
 import { cookies } from "next/headers"
 
 const api_url = env.API_URL
@@ -17,13 +19,12 @@ export const OrderService = {
                 },
             )
             const body = await response.json()
+            const result = body as ApiResponse<IGetOrderData[]>
             if (!response.ok) {
-                throw new Error(`Error fetching provider meals: ${response.statusText}`);
+                const error = body as ApiErrorResponse
+                return {success:error.success,message:error.message || "retrieve own orders data failed"};
             }
-            return {
-                data: body,
-                error: null
-            }
+            return result
 
         } catch (error) {
             return {
@@ -33,7 +34,7 @@ export const OrderService = {
         }
     },
 
-    updateOrderStatus: async (id: string, orderdata: any) => {
+    updateOrderStatus: async (id: string, orderdata: IOrderUpdateStatus) => {
         try {
             const cookieStore = await cookies()
             const res = await fetch(`${api_url}/api/provider/orders/${id}`, {
@@ -47,16 +48,18 @@ export const OrderService = {
 
             });
             const data = await res.json();
+            const result = data as ApiResponse<IGetOrderData>
             if (!res.ok) {
-                return { success: false, error: data.error.customMessage || "An error occurred while updating the meal" }
+                const error =data as ApiErrorResponse
+                return { success: false, message: error.message|| "order status update failed" }
             }
-            return { success: true, message: "order updated successfully", data };
+            return { success: result.success, message:result.message|| "order updated successfully", data:result };
         } catch (error: any) {
             console.error(error);
             return { success: false, error: error.message || "An error occurred while updating the meal" };
         }
     },
-    createorder: async (orderData: ICreateOrderPayload) => {
+    createorder: async (orderData: ICreateorderData) => {
         const cookieStore = await cookies()
         try {
             const res = await fetch(`${api_url}/api/orders`, {
@@ -70,11 +73,12 @@ export const OrderService = {
             });
 
             const data = await res.json();
-
+            const result = data as ApiResponse<IGetOrderData>
             if (!res.ok) {
-                return { data: null, error: data.result.data[0].message || "meals create failed" }
+                const error=data as ApiErrorResponse
+                return { success:error.success, message:error.message || "meals create failed" }
             }
-            return { data: data, error: null }
+            return { success:result.success,message:result.message,data:result }
         } catch (error) {
             return { data: null, error: { message: `${error} Something Went Wrong` } };
         }
@@ -90,10 +94,12 @@ export const OrderService = {
                 next: { tags: ['orderupdate'] }
             })
             const body = await res.json()
-            return {
-                data: body,
-                error: null
+            const result = body as ApiResponse<IGetOrderData>
+            if(!res.ok){
+                const error =body as ApiErrorResponse
+                return {success:error.success,message:error.message || "retrieve order by order failed"}
             }
+            return result
         } catch (error: any) {
             return {
                 data: null,

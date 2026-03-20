@@ -22,40 +22,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { createmeals } from "@/actions/blog.meals";
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
-import { Category } from "@/types/category"
+import { TGetCategory } from "@/types/category"
 import { getCategory } from "@/actions/categories/category"
-import { cuisines, dietaryPreferences } from "@/types/meals/mealstype"
-const allowedDomains = [
-  "res.cloudinary.com",
-  "images.pexels.com",
-];
-export const formSchema = z.object({
-  meals_name: z.string().min(1, "meals name is required"),
-  description: z.string().min(5, 'description atleast 5 character'),
-  image: z
-    .string()
-    .min(1, "Image is required")
-    .url("Invalid image URL")
-    .refine((url) => {
-      try {
-        const parsed = new URL(url);
-        return allowedDomains.includes(parsed.hostname);
-      } catch {
-        return false;
-      }
-    }, {
-      message: "Only Cloudinary and Pexels images allowed",
-    }),
-  price: z.int().min(1, "price is required").max(1000, 'max price only 1000'),
-  isAvailable: z.boolean(),
-  dietaryPreference: z.enum(dietaryPreferences),
-  providerId: z.string(),
-  category_name: z.string().min(1, 'category name is required'),
-  cuisine: z.enum(cuisines)
-})
-
+import { cuisines, dietaryPreferences, ICreateMealsData } from "@/types/meals/mealstype"
+import { CreateMealData } from "@/validations/meal.validations"
 export function MealsForm() {
-  const [category, setcategory] = useState<Category[] | undefined>()
+  const [category, setcategory] = useState<TGetCategory[] | undefined>()
   const router = useRouter()
   const form = useForm({
     defaultValues: {
@@ -64,31 +36,20 @@ export function MealsForm() {
       image: "",
       price: 0,
       isAvailable: true,
-      dietaryPreference: "HALAL",
-      providerId: "",
+      dietaryPreference: 'ANY',
       category_name: "",
-      cuisine: "BANGLEDESHI",
+      cuisine: 'BANGLEDESHI',
     },
     validators: {
-      onSubmit: formSchema,
+      onSubmit: CreateMealData,
     },
-    onSubmit: async ({ value }) => {
+    onSubmit: async ({ value }:{value:ICreateMealsData}) => {
       const toastid = toast.loading("meals creating.........")
-      const mealsdData = {
-        meals_name: value.meals_name,
-        description: value.description,
-        image: value.image,
-        price: value.price,
-        isAvailable: value.isAvailable,
-        dietaryPreference: value.dietaryPreference,
-        category_name: value.category_name,
-        cuisine: value.cuisine
-      }
       try {
-        const res = await createmeals(mealsdData as any)
-        if (res.error) {
+        const res = await createmeals(value)
+        if (res.error || !res.data || !res.success) {
           toast.dismiss(toastid)
-          toast.error(res.error)
+          toast.error(res.message)
           return;
         }
         toast.dismiss(toastid)
@@ -105,7 +66,7 @@ export function MealsForm() {
   useEffect(() => {
     const fetchCategory = async () => {
       const categorydata = await getCategory()
-      setcategory(categorydata)
+      setcategory(categorydata?.data.data)
     }
     fetchCategory()
   }, [])
@@ -127,6 +88,7 @@ export function MealsForm() {
           <FieldGroup>
             <form.Field
               name="meals_name"
+                 validators={{ onChange: CreateMealData.shape.meals_name }}
               children={(field) => {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid
@@ -152,6 +114,7 @@ export function MealsForm() {
 
             <form.Field
               name="image"
+                  validators={{ onChange: CreateMealData.shape.image }}
               children={(field) => {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid
@@ -179,6 +142,7 @@ export function MealsForm() {
 
             <form.Field
               name="price"
+                  validators={{ onChange: CreateMealData.shape.price }}
               children={(field) => {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid
@@ -205,6 +169,7 @@ export function MealsForm() {
 
             <form.Field
               name="cuisine"
+                  validators={{ onChange: CreateMealData.shape.cuisine}}
               children={(field) => {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid
@@ -217,7 +182,7 @@ export function MealsForm() {
                       name={field.name}
                       value={field.state.value}
                       onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
+                      onChange={(e:any) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
                     >
                       <option value="">Select a cuisines</option>
@@ -234,6 +199,7 @@ export function MealsForm() {
 
             <form.Field
               name="category_name"
+                  validators={{ onChange: CreateMealData.shape.category_name }}
               children={(field) => {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid
@@ -264,6 +230,7 @@ export function MealsForm() {
 
             <form.Field
               name="dietaryPreference"
+                  validators={{ onChange: CreateMealData.shape.dietaryPreference }}
               children={(field) => {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid
@@ -276,7 +243,7 @@ export function MealsForm() {
                       name={field.name}
                       value={field.state.value}
                       onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
+                      onChange={(e:any) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
                     >
                       <option value="">Select a dietaryPreference</option>
@@ -293,6 +260,7 @@ export function MealsForm() {
 
             <form.Field
               name="description"
+                  validators={{ onChange: CreateMealData.shape.description }}
               children={(field) => {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid
@@ -318,6 +286,7 @@ export function MealsForm() {
             />
             <form.Field
               name="isAvailable"
+                  validators={{ onChange: CreateMealData.shape.isAvailable }}
               children={(field) => {
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                 return (

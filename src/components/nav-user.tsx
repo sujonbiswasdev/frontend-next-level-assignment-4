@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   BadgeCheck,
@@ -7,13 +7,9 @@ import {
   CreditCard,
   LogOut,
   Sparkles,
-} from "lucide-react"
+} from "lucide-react";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,38 +18,34 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar"
-import { authClient } from "@/lib/authClient"
-import { useRouter } from "next/navigation"
+} from "@/components/ui/sidebar";
+import { authClient } from "@/lib/authClient";
+import { useRouter } from "next/navigation";
+import { TUser } from "@/types/user/user";
+import { toast } from "react-toastify";
+import { userLogout } from "@/actions/user/auth.actions";
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string
-    email: string
-    avatar: string,
-    image:string
-  }
-}) {
-  const { isMobile } = useSidebar()
-  const router=useRouter()
-
-   const handleLogout = async () => {
-      await authClient.signOut({
-        fetchOptions: {
-          onSuccess: () => {
-            router.push("/login");
-          },
-        }
-      })
+export function NavUser({ user }: { user: TUser }) {
+  const { isMobile } = useSidebar();
+  const router = useRouter();
+  const handleLogout = async () => {
+    const toastId = toast.loading("user logouting........");
+    const res = await userLogout();
+    if (res.error) {
+      toast.dismiss(toastId);
+      toast.error("user logout failed");
+      return;
     }
+    toast.dismiss(toastId);
+    toast.success(res.data?.message || "user logout successfully");
+    router.refresh();
+  };
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -64,7 +56,7 @@ export function NavUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.image} alt={user.name} />
+                <AvatarImage src={user.image as string} alt={user.name} />
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -83,8 +75,10 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.image} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">Foodhub</AvatarFallback>
+                  <AvatarImage src={user.image as string} alt={user.name} />
+                  <AvatarFallback className="rounded-lg">
+                    Foodhub
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.name}</span>
@@ -93,7 +87,11 @@ export function NavUser({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={()=>{router.push("/provider-dashboard/profile")}}>
+              <DropdownMenuItem
+                onClick={() => {
+                  router.push("/provider-dashboard/profile");
+                }}
+              >
                 <BadgeCheck />
                 Account
               </DropdownMenuItem>
@@ -115,5 +113,5 @@ export function NavUser({
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }

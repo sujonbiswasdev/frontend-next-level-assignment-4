@@ -26,12 +26,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { authClient } from "@/lib/authClient";
 import ProfileCard from "./ProfileCard";
 import { CartModal } from "../Cardmodel";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User } from "@/types/user/user";
+import { TUser } from "@/types/user/user";
 
 interface MenuItem {
   title: string;
@@ -61,7 +60,12 @@ interface Navbar1Props {
       url: string;
     };
   };
-  user:User | null
+  user:TUser | null
+}
+export interface User<T>{
+  user:{
+    data:T
+  }
 }
 
 const Navbar = ({
@@ -75,7 +79,7 @@ const Navbar = ({
   menu = [
     { title: "Home", url: "/" },
     { title: "meals", url: "/meals" },
-    { title: "provider", url: "/provider" },
+    { title: "providers", url: "/providers" },
   ],
   auth = {
     login: { title: "Login", url: "/login" },
@@ -83,7 +87,7 @@ const Navbar = ({
   },
   className,user
 }: Navbar1Props) => {
-  const { data: session } = authClient.useSession()
+  const userinfo=user as TUser
   return (
     <section className={cn("py-4", className)} >
       <div className="container">
@@ -101,7 +105,6 @@ const Navbar = ({
                 {logo.title}
               </span>
             </a>
-
           </div>
           <div className="hidden lg:flex items-center">
             <NavigationMenu>
@@ -113,9 +116,8 @@ const Navbar = ({
 
           <div className="flex items-center gap-4">
             <CartModal />
-            {session?.user ? (<>
-
-              <ProfileCard profile={user as User} />
+            {userinfo? (<>
+              <ProfileCard profile={user as TUser} />
             </>) :
 
               (<div className="flex gap-2">
@@ -168,7 +170,7 @@ const Navbar = ({
                     {menu.map((item) => renderMobileMenuItem(item))}
                   </Accordion>
 
-                  {session?.user ? "profile" : (<div className="flex flex-col gap-3">
+                  {userinfo ? "profile" : (<div className="flex flex-col gap-3">
                     <Button asChild variant="outline">
                       <a href={auth.login.url}>{"Login"}</a>
                     </Button>

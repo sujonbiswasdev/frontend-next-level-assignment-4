@@ -18,12 +18,11 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import Link from "next/link"
-import { useEffect, useState } from "react"
-import { getSession } from "@/services/service"
 import { Roles } from "@/constants/Roles"
-
+import { TUser } from "@/types/user/user"
 export function NavMain({
   items,
+  user
 }: {
   items: {
     title: string
@@ -34,20 +33,12 @@ export function NavMain({
       title: string
       url: string
     }[]
-  }[]
+  }[],user:TUser
 }) {
-  const [role,setrole]=useState()
-  useEffect(()=>{
-    const fetchData=async()=>{
-      const {data}=await getSession()
-      setrole(data.result.role)
-    }
-    fetchData()
-  },[])
   return (
     <SidebarGroup>
       <SidebarGroupLabel>
-        <Link className="text-[18px] text-black/95 font-semibold" href={role===Roles.Admin?"/admin-dashboard":"/provider-dashboard"}>Dashboard</Link>
+        <Link className="text-[18px] text-black/95 font-semibold" href={user.role===Roles.Admin?"/admin-dashboard":"/provider-dashboard"}>Dashboard</Link>
       </SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (

@@ -8,6 +8,45 @@ import { TUser } from "@/types/user/user";
 import { cookies } from "next/headers";
 const api_url = env.API_URL;
 
+
+
+export async function getNewTokensWithRefreshToken(refreshToken  : string) : Promise<boolean> {
+    try {
+        const res = await fetch(`${api_url}/api/auth/refresh-token`, {
+            method: "POST",
+            headers:{
+                "Content-Type": "application/json",
+                Cookie : `refreshToken=${refreshToken}`
+            }
+        });
+
+        if(!res.ok){
+            return false;
+        }
+
+        const {data} = await res.json();
+
+        const { accessToken, refreshToken: newRefreshToken, token } = data;
+
+        if(accessToken){
+            await setTokenInCookies("accessToken", accessToken);
+        }
+
+        if(newRefreshToken){
+            await setTokenInCookies("refreshToken", newRefreshToken);
+        }
+
+        if(token){
+            await setTokenInCookies("better-auth.session_token", token, 24 * 60 * 60); 
+        }
+
+        return true;
+    } catch (error) {
+        console.error("Error refreshing token:", error);
+        return false;
+    }
+}
+
 export async function getSession() {
   try {
     const cookieStore = await cookies();
@@ -20,18 +59,18 @@ export async function getSession() {
     }
     const res = await fetch(`${api_url}/api/auth/me`, {
       method: "GET",
-      credentials:"include",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Cookie: cookieHeader,
       },
       cache: "no-store",
     });
-    const session:ApiResponse<TUser> = await res.json();
+    const session: ApiResponse<TUser> = await res.json();
     if (!session) {
       return { data: null, error: "No session" };
     }
-    return { data: session, error: null };
+    return { success:session.success,message:session.message,data:session.data};
   } catch (e: any) {
     return { data: null, error: "server error" };
   }
@@ -75,4 +114,27 @@ export async function loginUser(logindata: Ilogin) {
   } catch (error) {
     return { data: null, error: "server error" };
   }
+}
+
+export async function Logout() {
+  const storeCookies = await cookies();
+  const response = await fetch(`${api_url}/api/auth/logout`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: storeCookies.toString(),
+    },
+    cache: "no-store",
+  });
+  const body: ApiResponse<TAuthData> = await response.json();
+  if (!response.ok || !body.success) {
+    const data = body as ApiErrorResponse;
+    return {
+      data: null,
+      error: data.message || "Logout failed",
+    };
+  }
+   return { data: body, error: null };
+
 }

@@ -1,9 +1,9 @@
 'use client'
-import { Category } from "@/types/category";
+import { TGetCategory } from "@/types/category";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-export default function FoodCategories({categories}:{categories:Category[]}) {
+export default function FoodCategories({categories}:{categories:TGetCategory[]}) {
     const router=useRouter()
   return (
     <section className="w-full bg-gray-50 py-16">

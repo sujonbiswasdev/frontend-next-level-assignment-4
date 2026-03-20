@@ -1,6 +1,6 @@
 import { env } from "@/env";
-import { safeData } from "@/lib/safeResponsive";
-import { Category } from "@/types/category";
+import {ICreateCategory, IUpdateCategory, TGetCategory } from "@/types/category";
+import { ApiErrorResponse, ApiResponse } from "@/types/response.type";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 const api_url = env.API_URL
@@ -23,8 +23,14 @@ export const CategoriesService = {
         }
       })
       const data = await res.json()
-      return data
+      const result =data as ApiResponse<TGetCategory>
+      if(!result.data){
+        const error=data as ApiErrorResponse
+        return {message:error.message || "categories retrive failed"}
+      }
+      return {message:result.message,data}
     } catch (error) {
+      return {message:"something went wrong,please try again"}
     }
   },
   createCategory: async (value: any) => {
@@ -42,17 +48,13 @@ export const CategoriesService = {
         body: JSON.stringify(value)
       })
       revalidateTag('categorydata', 'max')
-      const body = await response.json()
-      if (!body) {
-        return {
-          success: false,
-          message: "category create failed"
-        }
-      }
-      return {
-        success: true,
-        message: "category created successfully"
-      }
+      const data = await response.json()
+        const result =data as ApiResponse<ICreateCategory> 
+          if (!result.data) {
+            const error=data as ApiErrorResponse
+             return { message: error.message || "category create failed" }
+          }
+          return { success: true, message: "category created successfully", result };
 
     } catch (error) {
       return {
@@ -63,7 +65,7 @@ export const CategoriesService = {
     }
 
   },
-  updateCategory: async (id: string, updateUser: Icategory) => {
+  updateCategory: async (id: string, updateUser: IUpdateCategory) => {
     try {
       const cookieStore = await cookies()
       const res = await fetch(`${api_url}/api/admin/category/${id}`, {
@@ -77,10 +79,12 @@ export const CategoriesService = {
       });
       revalidateTag('categorydata', 'max')
       const data = await res.json();
+      const result = data as ApiResponse<TGetCategory>
       if (!res.ok) {
-        return { success: false, error: data.result?.message || "category data update fail" }
+        const error = data as ApiErrorResponse
+        return {success:error.success ,message:error.message || "category data update fail" }
       }
-      return { success: true, message: "category data update successfully", data };
+      return { success: result.success, message:result.message ||  "category data update successfully", data };
     } catch (error: any) {
       console.error(error);
       return { success: false, error: error.message || "something went wrong please try again" };
@@ -99,10 +103,12 @@ export const CategoriesService = {
       });
       revalidateTag("categorydata", 'max')
       const data = await res.json();
+      const result = data as ApiResponse<TGetCategory>
       if (!res.ok) {
-        return { success: false, error: data.result?.message || "category data delete fail" }
+        const error =data as ApiErrorResponse
+        return { success: error.success, message:error.message || "category data delete fail" }
       }
-      return { success: true, message: "category data delete successfully", data };
+      return {success:result.success,message:result.message || "category deleted sucessfully",data:result};
     } catch (error: any) {
       console.error(error);
       return { success: false, error: error.message || "something went wrong please try again" };
@@ -121,10 +127,12 @@ export const CategoriesService = {
         }
       })
       const data = await res.json();
+      const result = data as ApiResponse<TGetCategory>
       if (!res.ok) {
-        return { success: false, error: data.message || "category data retrieve fail" }
+        const error=data as ApiErrorResponse
+        return { success: false, message: error.message || "category data retrieve fail" }
       }
-      return safeData(data, {});
+      return {success:result.success,message:result.message,data:result};
     } catch (error: any) {
       console.error(error);
       return { success: false, error: error.message || "something went wrong please try again" };

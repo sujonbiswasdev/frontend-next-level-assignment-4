@@ -8,7 +8,6 @@ const api_url=env.API_URL
 
 export const userService={
     updateUser:async(updateUser:TUpdateUserInput)=>{  
-      console.log(updateUser,'userdatas')
   try {
     const cookieStore = await cookies()
     const res = await fetch(`${api_url}/api/user/profile/update`, {

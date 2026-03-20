@@ -1,59 +1,62 @@
-'use client'
+"use client";
 
-import Image from "next/image"
-import { useState } from "react"
-import { Eye, Pen, Pencil, Search, Trash, Trash2 } from "lucide-react"
-import { User } from "@/types/user/user"
-import Link from "next/link"
-import PaginationPage from "@/components/meals/Pagination"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import UserRoleChage from "./userprofilechange"
-import { AdminService } from "@/services/users/admin"
-import { toast } from "react-toastify"
-import { deleteUser } from "@/actions/user/admin"
-import { pagination } from "@/types/meals/pagination"
+import Image from "next/image";
+import { useState } from "react";
+import { Eye, Pen, Pencil, Search, Trash, Trash2 } from "lucide-react";
+import Link from "next/link";
+import PaginationPage from "@/components/meals/Pagination";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import UserRoleChage from "./userprofilechange";
+import { AdminService } from "@/services/users/admin";
+import { toast } from "react-toastify";
+import { deleteUser } from "@/actions/user/admin";
+import { Ipagination } from "@/types/meals/pagination";
+import { TUser } from "@/types/user/user";
 
 interface Props {
-  users: User[],
-  pagination: pagination
+  users: TUser[];
+  pagination: Ipagination;
 }
 
 export default function UsersTable({ users, pagination }: Props) {
-  const {page,total,totalpage,limit}=pagination
-  const [search, setSearch] = useState("")
-  const [isActive, setisActive] = useState<boolean>()
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const pathname = usePathname()
-  const filteredUsers = users.filter(user =>
-    user.name.toLowerCase().includes(search.toLowerCase()) ||
-    user.email.toLowerCase().includes(search.toLowerCase()) || user?.phone?.toLowerCase().includes(search.toLowerCase())
-  )
+  const { page, total, totalpage, limit } = pagination;
+  const [search, setSearch] = useState("");
+  const [isActive, setisActive] = useState<boolean>();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const defaultProfile =
+    "https://images.pexels.com/photos/952670/pexels-photo-952670.jpeg";
+  const filteredUsers = users.filter(
+    (user) =>
+      user.name.toLowerCase().includes(search.toLowerCase()) ||
+      user.email.toLowerCase().includes(search.toLowerCase()) ||
+      user?.phone?.toLowerCase().includes(search.toLowerCase()),
+  );
   const handleDelete = async (id: string) => {
-    const toastid=toast.loading("user deleting........")
-    const res=await deleteUser(id)
-    if(res.error){
-      toast.dismiss(toastid)
-      toast.error(res.error||"user delete failed")
-      return
+    const toastid = toast.loading("user deleting........");
+    const res = await deleteUser(id);
+    if (!res.data) {
+      toast.dismiss(toastid);
+      toast.error(res.message || "user delete failed");
+      return;
     }
-    toast.dismiss(toastid)
-    toast.success("user deleted successfully")
-  }
+    toast.dismiss(toastid);
+    toast.success(res.message || "user deleted successfully");
+  };
 
   const updateFilter = (key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString().toLowerCase());
 
-    if (value === null || value === '' || value === '0') {
+    if (value === null || value === "" || value === "0") {
       params.delete(key);
     } else {
       params.set(key, value);
     }
     router.push(`${pathname}?${params.toString()}`);
-
   };
-  const roles = ['Admin', 'Provider', "Customer"]
-  const status = ['activate', 'suspend']
+  const roles = ["Admin", "Provider", "Customer"];
+  const status = ["activate", "suspend"];
 
   return (
     <section className="px-1 sm:px-2 lg:px-3">
@@ -77,8 +80,8 @@ export default function UsersTable({ users, pagination }: Props) {
                 type="checkbox"
                 checked={isActive}
                 onChange={(e) => {
-                  setisActive(!isActive)
-                  updateFilter("isActive", e.target.checked ? "true" : "false")
+                  setisActive(!isActive);
+                  updateFilter("isActive", e.target.checked ? "true" : "false");
                 }}
                 className="peer sr-only"
               />
@@ -141,15 +144,22 @@ export default function UsersTable({ users, pagination }: Props) {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
           <div>
             <div className="flex gap-3">
-              <p className="text-gray-700 font-semibold">page:{page} of {totalpage},</p>
+              <p className="text-gray-700 font-semibold">
+                page:{page} of {totalpage},
+              </p>
               <p className="text-gray-700 font-semibold">limit:{limit},</p>
-              <p className="text-gray-700 font-semibold">totaluser:{totalpage}</p>
+              <p className="text-gray-700 font-semibold">
+                totaluser:{totalpage}
+              </p>
             </div>
           </div>
 
           {/* Search */}
           <div className="relative w-full md:w-80">
-            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Search
+              size={18}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            />
             <input
               type="text"
               placeholder="Search users with name and email phone..."
@@ -157,19 +167,14 @@ export default function UsersTable({ users, pagination }: Props) {
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm"
             />
-
           </div>
-
         </div>
 
         {/* Table Wrapper */}
         <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
-
           {/* Scroll wrapper for small devices */}
           <div className="overflow-x-auto">
-
             <table className="min-w-[1100px] w-full text-sm text-left">
-
               {/* Table Head */}
               <thead className="bg-gray-50 text-gray-600 uppercase text-xs tracking-wider">
                 <tr>
@@ -201,11 +206,10 @@ export default function UsersTable({ users, pagination }: Props) {
 
                     {/* user */}
                     <td className="px-6 py-4 text-gray-600">
-
                       <div className="flex items-center gap-2">
                         <div className="relative w-7 h-7">
                           <img
-                            src={user.image || ""}
+                            src={user.image || "/images/default-meal.jpg"}
                             alt={user.name}
                             className="rounded-full object-cover"
                           />
@@ -214,14 +218,10 @@ export default function UsersTable({ users, pagination }: Props) {
                           <p className="font-medium text-gray-900">
                             {user.name}
                           </p>
-                          <p className="text-xs text-gray-500">
-                            {user.email}
-                          </p>
+                          <p className="text-xs text-gray-500">{user.email}</p>
                         </div>
                       </div>
-
                     </td>
-
 
                     {/* Phone */}
                     <td className="px-6 py-4 text-gray-600">
@@ -272,26 +272,34 @@ export default function UsersTable({ users, pagination }: Props) {
 
                     <td className="px-6 py-4">
                       <div className="flex  items-center justify-end gap-1">
-
-                        <button onClick={()=>router.push(`/profile/${user.id}`)} className="p-2 rounded-lg hover:bg-blue-50 text-blue-600 transition">
+                        <button
+                          onClick={() => router.push(`/profile/${user.id}`)}
+                          className="p-2 rounded-lg hover:bg-blue-50 text-blue-600 transition"
+                        >
                           <Eye size={18} />
                         </button>
 
-                         <button onClick={()=>router.push(`/admin-dashboard/users/${user.id}`)} className="p-2 rounded-lg hover:bg-blue-50 text-blue-600 transition">
+                        <button
+                          onClick={() =>
+                            router.push(`/admin-dashboard/users/${user.id}`)
+                          }
+                          className="p-2 rounded-lg hover:bg-blue-50 text-blue-600 transition"
+                        >
                           <Pencil size={18} />
                         </button>
-                          
-                        <button onClick={()=>handleDelete(user.id)} className="p-2 rounded-lg hover:bg-red-50 text-red-600 transition">
+
+                        <button
+                          onClick={() => handleDelete(user.id)}
+                          className="p-2 rounded-lg hover:bg-red-50 text-red-600 transition"
+                        >
                           <Trash2 size={18} />
                         </button>
-
                       </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-
           </div>
         </div>
 
@@ -302,8 +310,7 @@ export default function UsersTable({ users, pagination }: Props) {
           </div>
         )}
         <PaginationPage pagination={pagination} />
-
       </div>
     </section>
-  )
+  );
 }

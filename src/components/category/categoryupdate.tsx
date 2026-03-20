@@ -1,38 +1,24 @@
 'use client'
 import { updatecategory } from "@/actions/categories/category";
-import { Icategory } from "@/services/categories/category";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import z from "zod";
 import { FieldError } from "../ui/field";
-const allowedDomains = [
-  "res.cloudinary.com",
-  "images.pexels.com",
-];
-
-const categoryschema = z.object({
-  name: z.string().optional(),
-  image: z.string().url("Invalid image URL").refine((url) => {
-    try {
-      const parsed = new URL(url as any);
-      return allowedDomains.includes(parsed.hostname);
-    } catch {
-      return false;
-    }
-  }, {
-    message: "Only Cloudinary and Pexels images allowed",
-  }).optional(),
-})
+import { UpdateCategory } from "@/validations/category.schema";
+import { IUpdateCategory } from "@/types/category";
 
 const Categoryupdate = ({ categoryid }: { categoryid: string }) => {
-  const [categorydata, setcategorydata] = useState<Icategory>({});
-  const parsedata = categoryschema.safeParse(categorydata);
+  const [categorydata, setcategorydata] = useState<IUpdateCategory>({});
+  const parsedata = UpdateCategory.safeParse(categorydata);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+   const toastId= toast.loading("category updateting......")
     const data = await updatecategory(categoryid, parsedata.data!)
-    if (!data || data === undefined || data.error || data === null) {
+    if (data.error || !data.success) {
+      toast.dismiss(toastId)
       toast.error(data?.message || "Failed to update category");
+      return
     } else {
+      toast.dismiss(toastId)
       toast.success("category updated successfully");
       setcategorydata({})
     }

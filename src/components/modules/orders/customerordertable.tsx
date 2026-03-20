@@ -6,26 +6,28 @@ import { Pen, X } from "lucide-react";
 import { toast } from "react-toastify";
 import { Status, StatusIndicator, StatusLabel } from "@/components/ui/status";
 import { updateorderstatus } from "@/actions/order.action";
-
-interface CustomerOrderTableProps {
-  initialorder: any[];
+import { IGetOrderData } from "@/types/order/order.type";
+export interface IOrderUpdateStatus {
+  status: string
 }
 
-const CustomerOrderTable = ({ initialorder }: CustomerOrderTableProps) => {
+const CustomerOrderTable = ({ initialorder }: {initialorder: IGetOrderData[]}) => {
+  const data=initialorder.map((item,index)=>item.orderitem.map((item,index)=>item.meal.category_name))
+  const category=data[0]
   const [editingId, setEditingId] = useState<string | null>(null);
   const [orders, setOrders] = useState(initialorder);
-  const [status, setStatus] = useState({ status: "" });
-
-  const handleUpdate = async (id: string, data: any) => {
+  const [status, setStatus] = useState<IOrderUpdateStatus>({ status: "" });
+  const handleUpdate = async (id: string, data:IOrderUpdateStatus) => {
     try {
+      const toastId=toast.loading("order updating.......")
       const res = await updateorderstatus(id, data);
-      if (res?.error) {
-        toast.error(res.error || "Order status update failed");
+      if (res.error || !res.success || !res.data) {
+        toast.dismiss(toastId)
+        toast.error(res.message || "Order status update failed");
         return;
       }
-
-      toast.success("Order status updated successfully");
-
+      toast.dismiss(toastId)
+      toast.success(res.message || "Order status updated successfully");
       setOrders((prev) =>
         prev.map((order) =>
           order.id === id ? { ...order, status: status.status } : order
@@ -35,7 +37,7 @@ const CustomerOrderTable = ({ initialorder }: CustomerOrderTableProps) => {
       setEditingId(null);
       setStatus({ status: "" });
     } catch (error) {
-      toast.error("Something went wrong.");
+      toast.error("Something went wrong.please try again");
     }
   };
 
@@ -126,7 +128,7 @@ const CustomerOrderTable = ({ initialorder }: CustomerOrderTableProps) => {
                   </td>
 
                   <td className="px-6 py-4 text-gray-600">
-                    {item.orderitem[0]?.meal?.category_name}
+                    {category.map((item)=>item)}
                   </td>
 
                   <td className="px-6 py-4 text-gray-500 max-w-[200px] truncate">

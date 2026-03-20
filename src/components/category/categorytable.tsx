@@ -1,21 +1,24 @@
 'use client'
 import { deleteCategory } from "@/actions/categories/category";
-import { Category } from "@/types/category";
+import { TGetCategory } from "@/types/category";
 import { Eye, Pencil, SquarePlus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-export default function CategoryTable({categorydata}:{categorydata:Category[]}) {
+export default function CategoryTable({categorydata}:{categorydata:TGetCategory[]}) {
     const router =useRouter()
     const handleDelete=async(id:string)=>{
+        const toastId=toast.loading("category deleting...........")
         const res=await deleteCategory(id)
-        if(res.error){
-            toast.error('category delete failed')
+        if(!res.success){
+            toast.dismiss(toastId)
+            toast.error( res.message||'category delete failed')
             return
         }
-        toast.success("category delete successfully")
+        toast.dismiss(toastId)
+        toast.success(res.data?.message || "category delete successfully")
         router.refresh()
     }
     return (
@@ -49,7 +52,7 @@ export default function CategoryTable({categorydata}:{categorydata:Category[]}) 
                     {/* Body */}
                     <tbody>
 
-                        {categorydata?.map((item:Category,index:number)=>{
+                        {categorydata?.map((item:TGetCategory,index:number)=>{
                             return   <tr key={index} className="border-b hover:bg-gray-50 transition duration-300">
 
                             

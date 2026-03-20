@@ -28,7 +28,7 @@ const allowedDomains = [
     "images.pexels.com",
 ];
 export const formSchema = z.object({
-    name: z.string().min(1, "Name is required"),
+    name: z.string().min(2, "Name is required"),
     email: z.string().email("Invalid email"),
     password: z.string().min(8, "Password must be 8+ chars"),
     bgimage: z.url().refine((url) => {
@@ -40,7 +40,7 @@ export const formSchema = z.object({
         }
     }, {
         message: "Only Cloudinary and Pexels images allowed",
-    }).optional(),
+    }),
     image: z.url().refine((url) => {
         try {
             const parsed = new URL(url as any);
@@ -50,8 +50,8 @@ export const formSchema = z.object({
         }
     }, {
         message: "Only Cloudinary and Pexels images allowed",
-    }).optional(),
-    phone: z.string(),
+    }),
+    phone: z.string().min(11,'minimum 11 chars').max(14,'max 14 chars'),
     role: z.enum(['Customer', "Provider"]),
     restaurantName: z.string(),
     address: z.string(),
@@ -105,7 +105,7 @@ export function SignupForm() {
             try {
                 const response = await fetch('http://localhost:5000/api/auth/register', {
                     method: "POST",
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json'},
                     body: JSON.stringify(value)
                 })
                 const body = await response.json()
@@ -116,23 +116,12 @@ export function SignupForm() {
                     return
                 }
                 toast.dismiss(toastId)
-                toast.success('user signup successfully',{});
+                toast.success('user signup successfully');
                  localStorage.removeItem("foodhub-cart")
-                  const signin=await authClient.signIn.email({
-                    email:value.email,
-                    password:value.password
-                })
-                 localStorage.removeItem("foodhub-cart")
-                if(signin.error){
-                    toast.dismiss(toastId)
-                    toast.error(body.error.body.message || 'user login failed')
-                    router.push("/")
-                    return
-                }
-                router.push('/profile')
-            } catch (error) {
+                router.push('/login')
+            } catch (error:any) {
                 toast.dismiss(toastId)
-                toast.error("Something went wrong, please try again.");
+                toast.error("Something went wrong . please try again ",error.message);
             }
         },
     })
@@ -152,6 +141,7 @@ export function SignupForm() {
                 >
                     <FieldGroup>
                         <form.Field
+                         validators={{ onChange: formSchema.shape.name }}
                             name="name"
                             children={(field) => {
                                 const isInvalid =
@@ -177,6 +167,7 @@ export function SignupForm() {
                         />
                         <form.Field
                             name="email"
+                               validators={{ onChange: formSchema.shape.email }}
                             children={(field) => {
                                 const isInvalid =
                                     field.state.meta.isTouched && !field.state.meta.isValid
@@ -203,6 +194,7 @@ export function SignupForm() {
 
                         <form.Field
                             name="password"
+                               validators={{ onChange: formSchema.shape.password }}
                             children={(field) => {
                                 const isInvalid =
                                     field.state.meta.isTouched && !field.state.meta.isValid
@@ -229,6 +221,7 @@ export function SignupForm() {
 
                         <form.Field
                             name="role"
+                               validators={{ onChange: formSchema.shape.role }}
                             children={(field) => {
                                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                                 return (
@@ -255,6 +248,7 @@ export function SignupForm() {
 
                         <form.Field
                             name="image"
+                               validators={{ onChange: formSchema.shape.image }}
                             children={(field) => {
                                 const isInvalid =
                                     field.state.meta.isTouched && !field.state.meta.isValid
@@ -281,6 +275,7 @@ export function SignupForm() {
 
    <form.Field
                             name="bgimage"
+                               validators={{ onChange: formSchema.shape.bgimage }}
                             children={(field) => {
                                 const isInvalid =
                                     field.state.meta.isTouched && !field.state.meta.isValid
@@ -308,6 +303,7 @@ export function SignupForm() {
 
                         <form.Field
                             name="phone"
+                               validators={{ onChange: formSchema.shape.phone }}
                             children={(field) => {
                                 const isInvalid =
                                     field.state.meta.isTouched && !field.state.meta.isValid
@@ -337,6 +333,7 @@ export function SignupForm() {
                             <>
                                 <form.Field
                                     name="restaurantName"
+                                       validators={{ onChange: formSchema.shape.restaurantName }}
                                     children={(field) => {
                                         const isInvalid =
                                             field.state.meta.isTouched && !field.state.meta.isValid
@@ -363,6 +360,7 @@ export function SignupForm() {
 
                                 <form.Field
                                     name="address"
+                                       validators={{ onChange: formSchema.shape.address }}
                                     children={(field) => {
                                         const isInvalid =
                                             field.state.meta.isTouched && !field.state.meta.isValid
@@ -389,6 +387,7 @@ export function SignupForm() {
 
                                 <form.Field
                                     name="description"
+                                       validators={{ onChange: formSchema.shape.description }}
                                     children={(field) => {
                                         const isInvalid =
                                             field.state.meta.isTouched && !field.state.meta.isValid

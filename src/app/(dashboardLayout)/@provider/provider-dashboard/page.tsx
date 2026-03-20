@@ -1,20 +1,35 @@
-import { getownorderstats, getprovidermealsStats, getrevenueStats } from "@/actions/provider/stats"
-import RevenueStats from "@/components/provider/stats"
-import { OrderStatsApiResponse, OrderStatsResult } from "@/types/order/order.type.stats"
+import {
+  getownorderstats,
+  getprovidermealsStats,
+  getrevenueStats,
+} from "@/actions/provider/stats";
+import RevenueStats from "@/components/provider/stats";
+import { OrderStatsResult } from "@/types/order/order.type.stats";
+import {
+  IProviderMealStats,
+  IProviderRevenueStats,
+} from "@/types/provider.type";
 
-const ProviderPage = async() => {
-  const revenuedata=await getrevenueStats()
-  const revenuestats=revenuedata.data.result
-   const mealsdata=await getprovidermealsStats()
-  const mealstats=mealsdata.data.result
-  
-     const ownorderdata=await getownorderstats()
-  const ownorderstats=ownorderdata as OrderStatsApiResponse
+const ProviderStats = async () => {
+  const revenuedata = await getrevenueStats();
+  const mealsdata = await getprovidermealsStats();
+  const ownorderdata = await getownorderstats();
+
+  if (!revenuedata.success || !mealsdata.success || !ownorderdata.success) {
+    return (
+      <div className="p-4 text-red-500">Failed to load provider stats</div>
+    );
+  }
   return (
     <div>
-     <RevenueStats stats={revenuestats} mealstats={mealstats} ownorderstats={ownorderstats as OrderStatsApiResponse} />
+      {/* ownorderstats={ownorderstats as OrderStatsApiResponse}  */}
+      <RevenueStats
+        stats={revenuedata.data as IProviderRevenueStats}
+        mealstats={mealsdata.data as IProviderMealStats}
+        ownorderstats={ownorderdata.data as OrderStatsResult}
+      />
     </div>
-  )
-}
+  );
+};
 
-export default ProviderPage
+export default ProviderStats;

@@ -1,19 +1,22 @@
-'use client'
+"use client";
 import {
-  MapPin, Clock, Truck,
+  MapPin,
+  Clock,
+  Truck,
   ShoppingCart,
   Star,
   StarHalf,
-} from 'lucide-react';
-import { manageCartStore } from '@/store/CartStore';
-import ShareProviderProfileButton from './providerprofileshare';
-import { ProviderProfile } from '@/types/user/user';
+} from "lucide-react";
+import { manageCartStore } from "@/store/CartStore";
+import ShareProviderProfileButton from "./providerprofileshare";
+import { TGetProviderProfileWithMeals } from "@/types/provider.type";
+import Link from "next/link";
+import { IGetMealData } from "@/types/meals/mealstype";
 
-const ProviderPage = ({ data }: { data: ProviderProfile }) => {
-  const { cart, addToCart } =
-    manageCartStore()
-  const fullStars = Math.floor(Number(data.averageRating));
-  const hasHalfStar = Number(data.averageRating) % 1 >= 0.5;
+const ProviderPage = ({ data }: { data: TGetProviderProfileWithMeals }) => {
+  const { cart, addToCart } = manageCartStore();
+  const fullStars = Math.floor(Number(data.result.averageRating));
+  const hasHalfStar = Number(data.result.averageRating) % 1 >= 0.5;
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header Bar */}
@@ -22,12 +25,16 @@ const ProviderPage = ({ data }: { data: ProviderProfile }) => {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex items-center gap-4 flex-1">
               <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center shadow-lg">
-                <img src={data.user.image} alt={data.user.name} className="w-12 h-12 rounded-full object-cover" />
+                <img
+                  src={data.result.user.image || ""}
+                  alt={data.result.user.name}
+                  className="w-12 h-12 rounded-full object-cover"
+                />
               </div>
               <div>
                 <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">
-                  {data.restaurantName}
-                  <div className='flex items-center gap-2.5'>
+                  {data.result.restaurantName}
+                  <div className="flex items-center gap-2.5">
                     {Array.from({ length: 5 }).map((_, i) => {
                       if (i < fullStars) {
                         return (
@@ -48,28 +55,24 @@ const ProviderPage = ({ data }: { data: ProviderProfile }) => {
                       }
 
                       return (
-                        <Star
-                          key={i}
-                          className="w-[14px] text-gray-300"
-                        />
+                        <Star key={i} className="w-[14px] text-gray-300" />
                       );
                     })}
-                     <span className='text-sm text-gray-500 gap-2'>({data.totalReview}reviews)</span>
-
+                    <span className="text-sm text-gray-500 gap-2">
+                      ({data.result.totalReview}reviews)
+                    </span>
                   </div>
                 </h1>
                 <p className="text-sm text-gray-600 flex items-center gap-1">
                   <MapPin className="w-4 h-4" />
-                  {data.address}
+                  {data.result.address}
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="text-sm text-gray-600 hidden sm:block">25-35 mins • Free delivery</div>
-              <a href="https://wa.me/01804935939" target="_blank">
-                <img src="/whatsapp.png" className='w-[40px]' alt="" />
-              </a>
-
+              <div className="text-sm text-gray-600 hidden sm:block">
+                25-35 mins • Free delivery
+              </div>
             </div>
           </div>
         </div>
@@ -82,7 +85,7 @@ const ProviderPage = ({ data }: { data: ProviderProfile }) => {
           <div className="lg:col-span-1">
             <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 lg:p-10 sticky lg:top-24">
               {/* Stats */}
-              <div className='flex flex-wrap px-2 md:px-6'>
+              <div className="flex flex-wrap px-2 md:px-6">
                 <div className="space-y-4 mb-2 ">
                   <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors">
                     <div className="flex items-center gap-3">
@@ -104,36 +107,58 @@ const ProviderPage = ({ data }: { data: ProviderProfile }) => {
                   </div>
                 </div>
 
-                <div className='space-y-4 '>
-                  <div className='flex flex-wrap items-center gap-2'>
-                    <h4 className="text-sm font-medium text-gray-700">Name :</h4>
-                    <p className="text-lg font-semibold text-gray-600">{data.user.name}</p>
+                <div className="space-y-4 ">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h4 className="text-sm font-medium text-gray-700">
+                      Name :
+                    </h4>
+                    <p className="text-lg font-semibold text-gray-600">
+                      {data.result.user.name}
+                    </p>
                   </div>
 
                   <div className="flex flex-wrap items-center gap-2">
-                    <h4 className="text-sm font-medium text-gray-700">email :</h4>
-                    <p className="text-sm text-gray-600">{data.user.email}</p>
+                    <h4 className="text-sm font-medium text-gray-700">
+                      email :
+                    </h4>
+                    <p className="text-sm text-gray-600">
+                      {data.result.user.email}
+                    </p>
                   </div>
-                  <div className='flex flex-wrap items-center gap-2'>
-                    <h4 className="text-sm font-medium text-gray-700">Phone :</h4>
-                    <p className="text-sm text-gray-600">{data.user.phone || "Not available"}</p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h4 className="text-sm font-medium text-gray-700">
+                      Phone :
+                    </h4>
+                    <p className="text-sm text-gray-600">
+                      {data.result.user.phone || "Not available"}
+                    </p>
                   </div>
 
-                  <div className='flex flex-wrap items-center gap-2'>
-                    <h4 className="text-sm font-medium text-gray-700">isActive :</h4>
-                    <p className="text-sm text-gray-600">{data.user.isActive ? "Yes" : "No"}</p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h4 className="text-sm font-medium text-gray-700">
+                      isActive :
+                    </h4>
+                    <p className="text-sm text-gray-600">
+                      {data.result.user.isActive ? "Yes" : "No"}
+                    </p>
                   </div>
-                  <div className='flex flex-wrap items-center gap-2'>
-                    <h4 className="text-sm font-medium text-gray-700">role :</h4>
-                    <p className="text-sm text-gray-600">{data.user.role}</p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h4 className="text-sm font-medium text-gray-700">
+                      role :
+                    </h4>
+                    <p className="text-sm text-gray-600">
+                      {data.result.user.role}
+                    </p>
                   </div>
                 </div>
               </div>
 
               {/* Action Buttons */}
               <div className="space-y-3 mt-2">
-                <ShareProviderProfileButton userId={data.id} userName={data.restaurantName} />
-
+                <ShareProviderProfileButton
+                  userId={data.result.id}
+                  userName={data.result.restaurantName}
+                />
               </div>
             </div>
           </div>
@@ -144,12 +169,19 @@ const ProviderPage = ({ data }: { data: ProviderProfile }) => {
             <div>
               <h3 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
                 Menu Items
-                <span className="bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-bold">Recommended</span>
+                <span className="bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-bold">
+                  Recommended
+                </span>
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {data.meals.map((meal: any) => (
-                  <MealCard key={meal.id} meal={meal} onAddToCart={addToCart} cartItems={cart} />
+                {data.result.meals.map((meal: IGetMealData) => (
+                  <MealCard
+                    key={meal.id}
+                    meal={meal}
+                    onAddToCart={addToCart}
+                    cartItems={cart}
+                  />
                 ))}
               </div>
             </div>
@@ -158,9 +190,11 @@ const ProviderPage = ({ data }: { data: ProviderProfile }) => {
 
         {/* About Section */}
         <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-10 lg:p-16 mt-12">
-          <h3 className="text-3xl font-bold text-gray-900 mb-6">About Restaurant</h3>
+          <h3 className="text-3xl font-bold text-gray-900 mb-6">
+            About Restaurant
+          </h3>
           <p className="text-xl text-gray-700 leading-relaxed">
-            {data.description}
+            {data.result.description}
           </p>
         </div>
       </div>
@@ -178,6 +212,16 @@ const ProviderPage = ({ data }: { data: ProviderProfile }) => {
 };
 
 const MealCard = ({ meal, onAddToCart, cartItems }: any) => {
+  const mainReviews = meal.reviews.filter((r: any) => r.parentId == null);
+  const totalReviews = mainReviews.length;
+  const avg =
+    totalReviews > 0
+      ? mainReviews.reduce((sum: any, r: any) => sum + r.rating, 0) /
+        totalReviews
+      : 0;
+  const fullStars = Math.floor(Number(avg));
+  const hasHalfStar = Number(avg) % 1 >= 0.5;
+
   return (
     <div className="group bg-white border border-gray-200 hover:border-orange-300 rounded-3xl p-6 hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-2">
       {/* Meal Image */}
@@ -189,10 +233,11 @@ const MealCard = ({ meal, onAddToCart, cartItems }: any) => {
           className="object-cover transition-transform duration-700 hover:scale-110"
         />
 
-        <div className={`absolute top-4 right-4  px-3 py-2 rounded-full text-xs font-bold shadow-lg ${!meal.isAvailable ? 'bg-red-500 text-white' : 'bg-green-500 text-white'}`}>
+        <div
+          className={`absolute top-4 right-4  px-3 py-2 rounded-full text-xs font-bold shadow-lg ${!meal.isAvailable ? "bg-red-500 text-white" : "bg-green-500 text-white"}`}
+        >
           {meal.isAvailable ? "Available" : "Unavailable"}
         </div>
-
       </div>
 
       {/* Content */}
@@ -206,8 +251,41 @@ const MealCard = ({ meal, onAddToCart, cartItems }: any) => {
           </span>
         </div>
 
-        <h4 className="text-xl font-bold text-gray-900 line-clamp-2 leading-tight">{meal.meals_name}</h4>
-        <p className="text-gray-600 text-base line-clamp-2 leading-relaxed">{meal.description}</p>
+        <Link href={`/meals/${meal.id}`}>
+          <h4 className="text-xl font-bold text-gray-900 hover:text-blue-700 hover:underline line-clamp-2 leading-tight">
+            {meal.meals_name.slice(0, 8)}...
+          </h4>
+        </Link>
+        <p className="text-gray-600 text-base line-clamp-2 leading-relaxed">
+          {meal.description.slice(0, 15)}...
+        </p>
+
+        <div className="flex items-center">
+          {Array.from({ length: 5 }).map((_, i) => {
+            if (i < fullStars) {
+              return (
+                <Star
+                  key={i}
+                  className="w-[14px] text-amber-400 fill-amber-400"
+                />
+              );
+            }
+
+            if (i === fullStars && hasHalfStar) {
+              return (
+                <StarHalf
+                  key={i}
+                  className="w-[14px] text-amber-400 fill-amber-400"
+                />
+              );
+            }
+
+            return <Star key={i} className="w-[14px] text-gray-300" />;
+          })}
+          <span className="text-sm text-gray-500 gap-2">
+            ({totalReviews}reviews)
+          </span>
+        </div>
 
         <div className="flex items-center justify-between pt-6 border-t border-gray-200">
           <div className="text-3xl font-black text-gray-900">${meal.price}</div>
@@ -222,7 +300,7 @@ const MealCard = ({ meal, onAddToCart, cartItems }: any) => {
                 quantity: 1,
               })
             }
-            className={`bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-2xl font-bold text-base shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 ml-auto ${!meal.isAvailable ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-2xl font-bold text-base shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 ml-auto ${!meal.isAvailable ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             <ShoppingCart className="w-5 h-5" />
             Add

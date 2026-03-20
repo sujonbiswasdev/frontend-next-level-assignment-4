@@ -1,21 +1,21 @@
+import { IUpdatereviewData } from "./../types/reviews.type";
 import { env } from "@/env";
-import { safeData } from "@/lib/safeResponsive";
+import { ApiErrorResponse, ApiResponse } from "@/types/response.type";
+import { ICreatereviewData, IgetReviewData } from "@/types/reviews.type";
 import { cookies } from "next/headers";
 
-export interface ModerateData {
-  status: "APPROVED" | "REJECTED" ;
-  [key: string]: any;
+export interface IModerateData {
+  status:string;
 }
-
 
 const api_url = env.API_URL;
 
 export const reviewService = {
-  createReview: async (mealid:string,data:any) => {
+  createReview: async (mealid: string, data: ICreatereviewData) => {
     try {
-      const cookieStore = await cookies()
+      const cookieStore = await cookies();
 
-      const res = await fetch(`${api_url}/api/meals/${mealid}/reviews`, {
+      const res = await fetch(`${api_url}/api/meal/${mealid}/review`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -25,18 +25,19 @@ export const reviewService = {
         body: JSON.stringify(data),
         cache: "no-store",
       });
-       const result = await res.json();
-      if(!res.ok){
-
+      const body = await res.json();
+      const result = body as ApiResponse<IgetReviewData>;
+      if (!res.ok) {
+        const error = body as ApiErrorResponse;
         return {
-          success:false,
-          message:result.message|| "review create failed"
-        }
+          success: error.success,
+          message: error.message || "review create failed",
+        };
       }
-  
-      return safeData(result,{});
-    } catch (e:any) {
-      return { success: false,message:e.message, error: "Server error" };
+
+      return result;
+    } catch (e: any) {
+      return { success: false, message: e.message, error: "Server error" };
     }
   },
 
@@ -51,15 +52,22 @@ export const reviewService = {
       });
 
       const result = await res.json();
-      if (!res.ok) return { success: false, message: result.message || "Delete failed" };
+      const data = result as ApiResponse<IgetReviewData>;
+      if (!res.ok) {
+        const error = result as ApiErrorResponse;
+        return {
+          success: error.success,
+          message: error.message || "Delete failed",
+        };
+      }
 
-      return safeData(result, {});
+      return { success: data.success, message: data.message, data: data.data };
     } catch (e: any) {
       return { success: false, message: e.message, error: "Server error" };
     }
   },
 
-  moderateReview: async (reviewId: string, data: ModerateData) => {
+  moderateReview: async (reviewId: string, data: IModerateData) => {
     try {
       const cookieStore = await cookies();
       const res = await fetch(`${api_url}/api/review/${reviewId}/moderate`, {
@@ -73,31 +81,39 @@ export const reviewService = {
         cache: "no-store",
       });
 
-      const result = await res.json();
-      if (!res.ok) return { success: false, message: result.message || "Moderation failed" };
+      const body = await res.json();
+        const result = body as ApiResponse<IgetReviewData>;
+      if (!res.ok) {
+        const error = result as ApiErrorResponse;
+        return {
+          success: error.success,
+          message: error.message || "Delete failed",
+        };
+      }
 
-      return result;
+      return { success: result.success, message: result.message, data: result.data };
     } catch (e: any) {
       return { success: false, message: e.message, error: "Server error" };
     }
   },
 
-   reviewUpdate: async (reviewId: string, comment:string) => {
+  reviewUpdate: async (reviewId: string, data: IUpdatereviewData) => {
     try {
       const cookieStore = await cookies();
-      const res = await fetch(`${api_url}/api/review/${reviewId}/moderate`, {
+      const res = await fetch(`${api_url}/api/review/${reviewId}`, {
         method: "PUT",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
           Cookie: cookieStore.toString(),
         },
-        body: JSON.stringify(comment),
+        body: JSON.stringify(data),
         cache: "no-store",
       });
 
       const result = await res.json();
-      if (!res.ok) return { success: false, message: result.message || "update failed" };
+      if (!res.ok)
+        return { success: false, message: result.message || "update failed" };
 
       return result;
     } catch (e: any) {
@@ -105,7 +121,7 @@ export const reviewService = {
     }
   },
 
-    getAllReviews: async () => {
+  getAllReviews: async () => {
     try {
       const res = await fetch(`${api_url}/api/reviews`, {
         method: "GET",
@@ -113,15 +129,17 @@ export const reviewService = {
       });
 
       const result = await res.json();
+      const data = result as ApiResponse<IgetReviewData[]>;
       if (!res.ok) {
-        return { success: false, message: result.message || "Failed to fetch reviews" };
+        const error = result as ApiErrorResponse;
+        return {
+          success: error.success,
+          message: error.message || "retrieve all reviews failed",
+        };
       }
-
-      return result;
+      return { success: data.success, message: data.message, data: data.data };
     } catch (e: any) {
       return { success: false, message: e.message, error: "Server error" };
     }
   },
-
-  
 };

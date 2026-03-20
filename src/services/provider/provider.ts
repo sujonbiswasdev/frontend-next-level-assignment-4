@@ -1,4 +1,6 @@
 import { env } from "@/env"
+import { IProviderInfo, TGetProviderProfileWithMeals } from "@/types/provider.type";
+import { ApiErrorResponse, ApiResponse } from "@/types/response.type";
 
 const api_url=env.API_URL
 
@@ -11,16 +13,13 @@ export const providerService = {
       );
 
       const body = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          `Error fetching provider meals: ${response.statusText}`
-        );
+      const result = body as ApiResponse<TGetProviderProfileWithMeals>
+      if(!response.ok){
+        const error=body as ApiErrorResponse
+        return {success:error.success,message:error.message || "retrieve provider profile with meal Failed"}
       }
-
-      return {
-        data: body.result,
-      };
+      return {success:result.success,message:result.message || "retrieve provider profile with meal successfully",data:result.data
+      }
     } catch (error) {
       return {
         data: null,
@@ -33,14 +32,14 @@ export const providerService = {
       const response = await fetch(`${api_url}/api/providers`);
 
       const data = await response.json();
+      const result = data as ApiResponse<IProviderInfo[]>
 
       if (!response.ok) {
-        throw new Error(
-          `Error fetching provider meals: ${response.statusText}`
-        );
+        const error=data as ApiErrorResponse
+        return {success:error.success,message:error.message || "retrieve all provider user failed"}
       }
 
-      return data
+      return result
     } catch (error) {
       return {
         data: null,

@@ -1,6 +1,10 @@
-import { Category } from "../category";
-import { User } from "../user/user";
-
+import z from "zod";
+import { TGetCategory } from "../category";
+import { TUser } from "../user/user";
+import { Ipagination } from "./pagination";
+import { CreateMealData, UpdatemealData } from "@/validations/meal.validations";
+import { IProviderInfo, TGetProviderProfileWithMeals } from "../provider.type";
+import { IgetReviewData } from "../reviews.type";
 export const cuisines = [
   "BANGLEDESHI",
   "ITALIAN",
@@ -28,6 +32,8 @@ export const dietaryPreferences = [
   "LOW_SUGAR"
 ] as const;
 
+// create meal
+export type ICreateMealsData=z.infer<typeof CreateMealData>
 
 export type Cuisine = typeof cuisines[number];
 export type DietaryPreference = typeof dietaryPreferences[number];
@@ -38,6 +44,13 @@ export interface ReviewCustomer {
   name: string | null;
   image: string | null;
   email: string;
+}
+// update meal
+export type IUpdateMealsData = z.infer<typeof UpdatemealData>;
+
+export interface IGetAllmeals{
+  data:IGetMealData[],
+  pagination:Ipagination
 }
 
 export interface MealReview {
@@ -50,22 +63,7 @@ export interface MealReview {
   replies: MealReview[] 
 }
 
-
-
-export interface MealProvider {
-  id: string;
-  userId: string;
-  restaurantName: string;
-  address: string;
-  description: string;
-  user:User;
-  image: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
-
-export interface MealData {
+export interface IGetMealData {
   id: string;
   meals_name: string;
   description: string | null;
@@ -79,13 +77,15 @@ export interface MealData {
   status: "PENDING" | "APPROVED" | "REJECTED";
   createdAt: string;
   updatedAt: string;
-  provider: MealProvider;
+  provider: IProviderInfo;
   reviews: MealReview[];
-  providerRating:{
+  providerRating?:{
     averageRating:number
     totalReview:number
   };
-  category:Category
+  averageRating?:number
+  totalReview?:number
+  category:TGetCategory
 }
 
  export interface providerRating{

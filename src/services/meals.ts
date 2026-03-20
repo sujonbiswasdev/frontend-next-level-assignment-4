@@ -1,8 +1,15 @@
-import { env } from "@/env"
-import { cookies } from "next/headers"
+import { env } from "@/env";
+import { cookies } from "next/headers";
 import { safeData } from "@/lib/safeResponsive";
-import { MealData, UpdateMealsData } from "@/types/meals/mealstype";
-const api_url = env.API_URL
+import {
+  ICreateMealsData,
+  IGetAllmeals,
+  IGetMealData,
+  IUpdateMealsData
+} from "@/types/meals/mealstype";
+import { ApiErrorResponse, ApiResponse } from "@/types/response.type";
+import { success } from "zod";
+const api_url = env.API_URL;
 
 interface ServiceOptionds {
   cache?: RequestCache;
@@ -11,12 +18,15 @@ interface ServiceOptionds {
 export interface GetMealsParams {
   search?: string;
 }
+export interface IMealStatus{
+  status:string
+}
 
-export const mealsService={
-     createMeals:async (mealsdata:MealData) => {
-      const cookieStore = await cookies()
-     try {
-      const res = await fetch(`${api_url}/api/provider/meals`, {
+export const mealsService = {
+  createMeals: async (mealsdata: ICreateMealsData) => {
+    const cookieStore = await cookies();
+    try {
+      const res = await fetch(`${api_url}/api/provider/meal`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,21 +35,30 @@ export const mealsService={
         body: JSON.stringify(mealsdata),
       });
 
-         const data = await res.json();
+      const data = await res.json();
 
-         if(!res.ok){
-            return {data:null,error:data.result.data[0].message||"meals create failed"}
-         }
-         return {data:mealsdata,error:null}
+      const result = data as ApiResponse<ICreateMealsData>;
+      if (!res.ok) {
+        const error = data as ApiErrorResponse;
+        return {
+          success: error.success,
+          message: error.message || "meal created failed",
+        };
+      }
+      return {
+        success: result.success,
+        message: result.message || "meal created successfully",
+        data: result.data,
+      };
     } catch (error) {
-         return { data: null, error: { message: "Something Went Wrong" } };
+      return { data: null, error: { message: "Something Went Wrong" } };
     }
-},
-getmeals:async(params?:any,options?:ServiceOptionds)=>{
- try {
-  const url = new URL(`${api_url}/api/meals`);
+  },
+  getmeals: async (params?: any, options?: ServiceOptionds) => {
+    try {
+      const url = new URL(`${api_url}/api/meals`);
 
-   if (params) {
+      if (params) {
         Object.entries(params).forEach(([key, value]) => {
           if (value !== undefined && value !== null && value !== "") {
             url.searchParams.append(key, String(value));
@@ -47,152 +66,182 @@ getmeals:async(params?:any,options?:ServiceOptionds)=>{
         });
       }
 
-     const config: RequestInit = {};
-         if (options?.cache) {
+      const config: RequestInit = {};
+      if (options?.cache) {
         config.cache = options.cache;
       }
 
-        if (options?.revalidate) {
+      if (options?.revalidate) {
         config.next = { revalidate: options.revalidate };
       }
-      config.next={...config.next,tags:["mealsPost"]}
+      config.next = { ...config.next, tags: ["mealsPost"] };
 
       const res = await fetch(url.toString(), config);
- 
 
-         
       const data = await res.json();
-
-
-       return safeData(data,{})
- } catch (error) {
-  
- }
-
-},
-
-getmealsforadmin:async(params?:any)=>{
-
-   try {
-              const cookieStore = await cookies()
-              const url = new URL(`${api_url}/api/admin/meals`);
-              if (params) {
-                  Object.entries(params).forEach(([key, value]) => {
-                      if (value !== undefined && value !== null && value !== "") {
-                          url.searchParams.append(key, String(value));
-                      }
-                  });
-              }
-              const res = await fetch(url.toString(), {
-                  credentials: "include",
-                  headers: {
-                      Cookie: cookieStore.toString(),
-                  },
-                  next:{
-                      tags:['mealsPost']
-                  }
-              });
-              const data = await res.json();
-              if (!res.ok) {
-                  return {
-                      data: null,
-                      message: "user retrieve failed",
-                      error: data.error
-                  }
-              }
-  
-              return safeData(data,[])
-          } catch (error: any) {
-              return { data: null, error: error.message, message: "someting went wrong please try again" };
-  
-          }
-
-},
-
-getmealsown:async()=>{
- try {
-  const cookieStore = await cookies()
-      const res = await fetch(`${api_url}/api/provider/meals/own`,
-        {credentials:"include",
-          next:{tags:["mealsPost"]},
-          headers:{
-            Cookie: cookieStore.toString(),
-          }});
-      const data = await res.json();
-       return { data: data, error: null };
- } catch (error) {
-    return { data: null, error: { message: "Something Went Wrong" } };
- }
-
-},
-MealStatusUpdate:async(id:string,mealsdata:string)=>{
- try {
-  const cookieStore = await cookies()
-      const res = await fetch(`${api_url}/api/admin/meals/${id}`,
-        {credentials:"include",
-          next:{tags:["mealsPost"]},
-          headers:{
-            Cookie: cookieStore.toString(),
-          },
-           body: JSON.stringify(mealsdata),
-        });
-      const data = await res.json();
-       return safeData(data,{});
- } catch (error) {
-    return { data: null, error: { message: "Something Went Wrong" } };
- }
-
-},
-
-
-getmealsbyid:async(id:string)=>{
-  try {
-      const res=await fetch(`${api_url}/api/meals/${id}`)
-      const body= await res.json()
-      return safeData(body,{})
-  } catch (error:any) {
-     return {
-        data:null,
-        error:error.message
+      const result = data as ApiResponse<IGetAllmeals>;
+      if (!res.ok) {
+        const error = data as ApiErrorResponse;
+        return {
+          success: error.success,
+          message: error.message || "retrieve all meals failed",
+        };
       }
-  }
-
-},
-
-handleDelete:async (id: string) => {
-  try {
-    const res = await fetch(`${api_url}/api/meals/${id}`, { method: "DELETE" });
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.message || "Failed to delete meal");
+      return {
+        success: result.success,
+        message: result.message || "retrieve all meals successfully",
+        data: result.data,
+      };
+    } catch (error) {
+      return { message: "something went wrong please try again" };
     }
-    return { success: true, message: "Meal deleted successfully" };
-  } catch (error: any) {
-    console.error(error);
-    alert(error.message);
-  }
-},
-updateMeals:async(id:string,mealsdata:UpdateMealsData)=>{  
-  try {
-    const cookieStore = await cookies()
-    const res = await fetch(`${api_url}/api/provider/meals/${id}`, {
-      method: "PUT",
-      credentials:"include",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: cookieStore.toString(),
-      },
-      body: JSON.stringify(mealsdata),
-    });
-    const data = await res.json();
-    if (!res.ok) {
-       return { success: false, error: data.result?.message || "An error occurred while updating the meal" }
+  },
+  getmealsown: async () => {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${api_url}/api/provider/meals/own`, {
+        credentials: "include",
+        next: { tags: ["mealsPost"] },
+        headers: {
+          Cookie: cookieStore.toString(),
+        },
+      });
+      const data = await res.json();
+      const result =data as ApiResponse<IGetMealData[]>
+      if(!res.ok){
+        const error =data as ApiErrorResponse
+        return {success:error.success,message:error.message || "retrieve own meals failed"}
+      }
+      return result;
+    } catch (error) {
+      return { data: null, error: { message: "Something Went Wrong" } };
     }
-    return { success: true, message: "Meal updated successfully", data };
-  } catch (error: any) {
-    console.error(error);
-    return { success: false, error: error.message || "An error occurred while updating the meal" };
-  }
-}
-}
+  },
+  MealStatusUpdate: async (id: string, mealsdata: IMealStatus) => {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${api_url}/api/admin/meal/${id}`, {
+        method:"PUT",
+        credentials: "include",
+        headers: {
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify({mealsdata}),
+      });
+      const data = await res.json();
+       const result =data as ApiResponse<IGetMealData>
+      if(!res.ok){
+        const error =data as ApiErrorResponse
+        return {success:error.success,message:error.message || "meals status update failed"}
+      }
+      return result;
+    } catch (error) {
+      return { data: null, error: { message: "Something Went Wrong" } };
+    }
+  },
+
+  getmealsbyid: async (id: string) => {
+    try {
+      const res = await fetch(`${api_url}/api/meal/${id}`);
+      const body = await res.json();
+      const result = body as ApiResponse<IGetMealData>
+      if(!res.ok){
+        const error=body as ApiErrorResponse
+        return {success:error.success, message:error.message || "retrieve single meal failed"}
+      }
+      return {success:result.success,message:result.message || "retrieve signle meal successfully",result}
+    } catch (error: any) {
+      return {
+        data: null,
+        error: error.message,
+      };
+    }
+  },
+
+  handleDelete: async (id: string) => {
+    try {
+       const cookieStore = await cookies();
+      const res = await fetch(`${api_url}/api/provider/meal/${id}`, {
+        method: "DELETE",
+        credentials:"include",
+        headers:{
+          "Content-Type": "application/json",
+          Cookie:cookieStore.toString()
+        }
+      });
+      const data = await res.json();
+      const result = data as ApiResponse<IGetMealData>
+      if (!res.ok) {
+        const error =data as ApiErrorResponse
+        return {success:error.success,message:error.message}
+      }
+      return {success:result.success,message:result.message,data:result.data};
+    } catch (error: any) {
+      return {success:false,message:"something went wrong please try again"}
+    }
+  },
+  updateMeals: async (id: string, mealsdata: IUpdateMealsData) => {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${api_url}/api/provider/meal/${id}`, {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify(mealsdata),
+      });
+      const data = await res.json();
+      const result = data as ApiResponse<IGetMealData>
+      if (!res.ok) {
+        const error =data as ApiErrorResponse
+        return {
+          success: error.success,
+          message:error.message || "meal update failed",
+        };
+      }
+      return { success: result.success, message:result.message|| "Meal updated successfully", data:result };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message || "An error occurred while updating the meal",
+      };
+    }
+  },
+  getmealsforadmin: async (params?: any) => {
+    try {
+      const cookieStore = await cookies();
+      const url = new URL(`${api_url}/api/admin/meals`);
+      if (params) {
+        Object.entries(params).forEach(([key, value]) => {
+          if (value !== undefined && value !== null && value !== "") {
+            url.searchParams.append(key, String(value));
+          }
+        });
+      }
+      const res = await fetch(url.toString(), {
+        credentials: "include",
+        headers: {
+          Cookie: cookieStore.toString(),
+        },
+        next: {
+          tags: ["mealsPost"],
+        },
+      });
+      const data = await res.json();
+       const result = data as ApiResponse<IGetMealData[]>
+      if (!res.ok) {
+        const error =data as ApiErrorResponse
+        return {success:error.success,message:error.message ||"retrieve admin meal data failed"}
+      }
+      return {success:result.success,message:result.message,data:result.data};
+    } catch (error: any) {
+      return {
+        data: null,
+        error: error.message,
+        message: "someting went wrong please try again",
+      };
+    }
+  },
+};

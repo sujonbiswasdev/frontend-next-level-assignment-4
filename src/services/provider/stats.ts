@@ -1,5 +1,7 @@
 import { env } from "@/env"
-import { OrderStatsApiResponse, OrderStatsResult } from "@/types/order/order.type.stats"
+import { OrderStatsResult } from "@/types/order/order.type.stats"
+import { IProviderMealStats, IProviderRevenueStats } from "@/types/provider.type"
+import { ApiErrorResponse, ApiResponse } from "@/types/response.type"
 import { cookies } from "next/headers"
 
 const api_url=env.API_URL
@@ -17,13 +19,12 @@ export const providerServiceStats={
                 },
             )
              const body = await response.json()
+             const result = body as ApiResponse<IProviderRevenueStats>
             if (!response.ok) {
-                    throw new Error(`Error fetching provider meals: ${response.statusText}`);
+                const error=body as ApiErrorResponse
+                   return {success:error.success,message:error.message||"retrieve revenue stats failed"}
                 }
-            return{
-                data:body,
-                error:null
-            }
+           return result
           
         } catch (error) {
             return{
@@ -46,13 +47,12 @@ export const providerServiceStats={
                 },
             )
              const body = await response.json()
+              const result = body as ApiResponse<IProviderMealStats>
             if (!response.ok) {
-                    throw new Error(`Error fetching provider meals: ${response.statusText}`);
+                const error=body as ApiErrorResponse
+                   return {success:error.success,message:error.message||"retrieve meals stats failed"}
                 }
-            return{
-                data:body,
-                error:null
-            }
+           return result
           
         } catch (error) {
             return{
@@ -74,15 +74,13 @@ export const providerServiceStats={
                     credentials:"include"
                 },
             )
-             const body:OrderStatsApiResponse = await response.json()
+             const body = await response.json()
+             const result = body as ApiResponse<OrderStatsResult>
             if (!response.ok) {
-                    throw new Error(`Error fetching provider meals: ${response.statusText}`);
+                const error=body as ApiErrorResponse
+                    return {success:error.success,message:error.message}
                 }
-            return{
-                data:body,
-                error:null
-            }
-          
+            return result
         } catch (error) {
             return{
                 data:null,

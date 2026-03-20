@@ -1,18 +1,18 @@
 'use client'
-import { ProviderProfile } from '@/types/user/user'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { Label } from './ui/label'
 import { Pencil, Save } from 'lucide-react'
 import { Input } from './ui/input'
 import { Textarea } from './ui/textarea'
+import { IProviderInfo } from '@/types/provider.type'
 
-const Resturantinfo = ({ userinfo }: { userinfo: ProviderProfile }) => {
-    const [useinfo, setuserinfo] = useState<ProviderProfile>({ ...userinfo })
+const Resturantinfo = ({ userinfo }: { userinfo: IProviderInfo }) => {
+    const [useinfo, setuserinfo] = useState<IProviderInfo>({ ...userinfo })
     const [editfield, seteditfield] = useState<string | boolean | 'restaurantName' | 'address' | 'description'>('')
-    const [inputvalue, setinputvalue] = useState<Partial<ProviderProfile>>({})
+    const [inputvalue, setinputvalue] = useState<Partial<IProviderInfo>>({})
 
-    const handleUpdateUser = async <k extends keyof ProviderProfile>(field: k, value: ProviderProfile[k]) => {
+    const handleUpdateUser = async <k extends keyof IProviderInfo>(field: k, value: IProviderInfo[k]) => {
         if (value == null) {
             toast.error("please provide a value", { theme: "colored", position: "bottom-right", autoClose: 2000 })
             return
@@ -93,7 +93,7 @@ const Resturantinfo = ({ userinfo }: { userinfo: ProviderProfile }) => {
                     </div>
                 </div>) :
                     (
-                        <div className="flex items-center justify-between px-6 py-4 gap-1">
+                        <div className="flex items-center justify-between px-2 sm:px-4 md:px-6 lg:px-10 py-4 gap-1">
                             <Textarea onChange={(e) => setinputvalue({ ...inputvalue, description: e.target.value })} placeholder="Enter your description" />
                             <button onClick={() => {
                                 handleUpdateUser('description', inputvalue.description as string)

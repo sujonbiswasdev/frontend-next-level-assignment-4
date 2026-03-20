@@ -1,16 +1,16 @@
 import ProfileModal from "@/components/profilemodel";
-import { getSession } from "@/services/service";
+import { getSession } from "@/services/users/auth.service";
 import { ApiResponse } from "@/types/response.type";
 import { TUser } from "@/types/user/user";
 export default async function ProfilePage() {
   const session = await getSession();
-   const userinfo= session.data as ApiResponse<TUser>
-    if (!userinfo) {
+    if (!session || !session.data || !session.success) {
     return (
       <div className="p-4 text-red-500">
         Failed to load users
       </div>
     );
   }
-  return <ProfileModal user={userinfo}/>;
+   const userinfo=session.data
+  return <ProfileModal user={userinfo as TUser}/>;
 }

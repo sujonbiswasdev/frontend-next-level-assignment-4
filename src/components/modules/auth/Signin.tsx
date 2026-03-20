@@ -19,10 +19,8 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/authClient";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { getSession } from "@/services/service";
 import { LoginSchema } from "@/validations/auth.validation";
 import { userLogin } from "@/actions/user/auth.actions";
-
 export function SigninForm() {
   const signIn = async () => {
     const data = await authClient.signIn.social({
@@ -39,7 +37,7 @@ export function SigninForm() {
       onSubmit: LoginSchema,
     },
     onSubmit: async ({ value }) => {
-      const toastId = toast.loading("signning user");
+      const toastId = toast.loading("user signning.......");
       try {
         const loginuser = await userLogin(value);
         if (loginuser.error) {
@@ -61,10 +59,9 @@ export function SigninForm() {
   return (
     <Card className="w-full sm:max-w-md mx-auto">
       <CardHeader>
-        <CardTitle>Sign In to Your Account</CardTitle>
-        <CardDescription>
-          Please sign in to your account to access your dashboard, manage your
-          activities, and continue using our services securely
+        <CardTitle className="mx-auto fonb">Welcome Back</CardTitle>
+        <CardDescription className="mx-auto">
+          Please sign in to your account
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -77,6 +74,7 @@ export function SigninForm() {
         >
           <FieldGroup>
             <form.Field
+            validators={{ onChange: LoginSchema.shape.email }}
               name="email"
               children={(field) => {
                 const isInvalid =
@@ -103,7 +101,9 @@ export function SigninForm() {
             />
             <form.Field
               name="password"
+               validators={{ onChange: LoginSchema.shape.password }}
               children={(field) => {
+                
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
@@ -137,7 +137,7 @@ export function SigninForm() {
       >
         Continue with Google
       </Button>
-      <CardFooter>
+      <CardFooter className="mx-auto">
         <Field orientation="horizontal">
           <Button type="button" variant="outline" onClick={() => form.reset()}>
             Reset

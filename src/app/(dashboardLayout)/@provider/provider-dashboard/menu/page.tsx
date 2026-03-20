@@ -1,5 +1,6 @@
-import { getMeals, getmealsown } from "@/actions/blog.meals"
+import { getmealsown } from "@/actions/blog.meals"
 import MealTable from "@/components/meals/MealsTable"
+import { IGetMealData } from "@/types/meals/mealstype"
 interface PageProps {
   searchParams: {
     category_name?: string
@@ -8,15 +9,15 @@ interface PageProps {
 }
 const HistoryMeals = async () => {
   const res = await getmealsown();
-  if (!res.data || res.error) {
+  if (!res.success || !res.data) {
     return (
       <div className="p-4 text-red-500">
-        Failed to load users
+        Failed to load data
       </div>
     );
   }
-  const meals = res?.data?.result?.data || [];
-  const pagination = res?.data?.result?.pagination
+  const meals = res.data as IGetMealData[];
+  // const pagination = res?.data?.result?.pagination
 
   return (
     <div>

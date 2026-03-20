@@ -29,6 +29,8 @@ import { Roles } from "@/constants/Roles"
 import { adminRoutes } from "@/routes/adminRoute"
 import { ProviderRoutes } from "@/routes/providerRoute"
 import { Route } from "@/types"
+import { ApiResponse } from "@/types/response.type"
+import { TUser } from "@/types/user/user"
 
 // This is sample data.
 const data = {
@@ -160,9 +162,10 @@ const data = {
   ],
 }
 
-export function AppSidebar({user,...props }:{user:{role:string} & React.ComponentProps<typeof Sidebar>}) {
+export function AppSidebar({user,...props }:{user:TUser & React.ComponentProps<typeof Sidebar>}) {
   let routes:Route[]=[]
-  switch(user.role){
+  const userinfo=user
+  switch(userinfo.role){
     case Roles.Admin:
       routes=adminRoutes;
       break;
@@ -178,11 +181,11 @@ export function AppSidebar({user,...props }:{user:{role:string} & React.Componen
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={routes} />
+        <NavMain items={routes} user={userinfo} />
         <NavProjects siteManu={routes} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user as any} />
+        <NavUser user={userinfo as TUser} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

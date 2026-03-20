@@ -1,111 +1,168 @@
+import { TCategoryStats, TReviewStats } from './../../types/user/adminstats';
 // services/adminService.ts
-import { env } from "@/env"
-import { safeData } from "@/lib/safeResponsive";
-import { CategoryStats, MealStats, OrderStats, RevenueDashboardResponse, ReviewStats, UserStats } from "@/types/user/adminstats";
-import { Award } from "lucide-react";
-import { cookies } from "next/headers"
+import { env } from "@/env";
+import { ApiErrorResponse, ApiResponse } from "@/types/response.type";
+import { TMealStats, TUserStats } from "@/types/user/adminstats";
+import { cookies } from "next/headers";
 
-const api_url = env.API_URL
+const api_url = env.API_URL;
 
 export const adminService = {
-  getUserStats: async ()=> {
+  getUserStats: async () => {
     try {
-      const cookiestore = await cookies()
-      const response = await fetch(`${api_url}/api/admin/users/stats`, {
+      const cookiestore = await cookies();
+      const res = await fetch(`${api_url}/api/admin/users/stats`, {
         headers: { Cookie: cookiestore.toString() },
         cache: "no-store",
         credentials: "include",
-      })
-      const body = await response.json()
-      if (!response.ok) throw new Error(`Error fetching user stats: ${response.statusText}`)
-      return body
+      });
+      const body = await res.json();
+      const result = body as ApiResponse<TUserStats>;
+      if (!res.ok) {
+        const error = body as ApiErrorResponse;
+        return {
+          success: error.success,
+          message: error.message || "retrieve user stats failed",
+        };
+      }
+      return result;
     } catch (error) {
-      return { data: null, error: error instanceof Error ? error.message : "Unknown error" }
+      return {
+        data: null,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
     }
   },
 
-  //  Meals 
-  getMealsStats: async ()=> {
+  //  Meals
+  getMealsStats: async () => {
     try {
-      const cookiestore =await cookies()
-      const response = await fetch(`${api_url}/api/admin/meals/stats`, {
+      const cookiestore = await cookies();
+      const res = await fetch(`${api_url}/api/admin/meals/stats`, {
         headers: { Cookie: cookiestore.toString() },
         cache: "no-store",
         credentials: "include",
-      })
-      const data = await response.json()
-      if (!response.ok) throw new Error(`Error fetching meals stats: ${response.statusText}`)
-      return { data, error: null }
+      });
+      const data = await res.json();
+      const result = data as ApiResponse<TMealStats>;
+      if (!res.ok) {
+        const error = data as ApiErrorResponse;
+        return {
+          success: error.success,
+          message: error.message || "retrieve meals stats failed",
+        };
+      }
+      return result;
     } catch (error) {
-      return { data: null, error: error instanceof Error ? error.message : "Unknown error" }
+      return {
+        data: null,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
     }
   },
 
-  //  Orders 
-  getOrdersStats: async ()=> {
+  //  Orders
+  getOrdersStats: async () => {
     try {
-      const cookiestore = await cookies()
-      const response = await fetch(`${api_url}/api/admin/orders/stats`, {
+      const cookiestore = await cookies();
+      const res = await fetch(`${api_url}/api/admin/orders/stats`, {
         headers: { Cookie: cookiestore.toString() },
         cache: "no-store",
         credentials: "include",
-      })
-      const data = await response.json()
-      if (!response.ok) throw new Error(`Error fetching orders stats: ${response.statusText}`)
-      return { data, error: null }
+      });
+      const data = await res.json();
+      const result = data as ApiResponse<TUserStats>;
+      if (!res.ok) {
+        const error = data as ApiErrorResponse;
+        return {
+          success: error.success,
+          message: error.message || "retrieve order stats failed",
+        };
+      }
+      return result;
     } catch (error) {
-      return { data: null, error: error instanceof Error ? error.message : "Unknown error" }
+      return {
+        data: null,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
     }
   },
 
   //Revenue
   getRevenueStats: async () => {
     try {
-      const cookiestore =await cookies()
-      const response = await fetch(`${api_url}/api/admin/revenue/stats`, {
+      const cookiestore = await cookies();
+      const res = await fetch(`${api_url}/api/admin/revenue/stats`, {
         headers: { Cookie: cookiestore.toString() },
         cache: "no-store",
         credentials: "include",
-      })
-      const data = await response.json()
-      if (!response.ok) throw new Error(`Error fetching revenue stats: ${response.statusText}`)
-      return { data, error: null }
+      });
+      const data = await res.json();
+      const result = data as ApiResponse<TUserStats>;
+      if (!res.ok) {
+        const error = data as ApiErrorResponse;
+        return {
+          success: error.success,
+          message: error.message || "retrieve revenue stats failed",
+        };
+      }
+      return result;
     } catch (error) {
-      return { data: null, error: error instanceof Error ? error.message : "Unknown error" }
+      return {
+        data: null,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
     }
   },
 
   // Reviews
-  getReviewStats: async (): Promise<{ data: ReviewStats | null; error: string | null }> => {
+  getReviewStats: async () => {
     try {
-      const cookiestore = cookies()
-      const response = await fetch(`${api_url}/api/admin/reviews/stats`, {
-        headers: { Cookie: cookiestore.toString() },
+      const cookiestore = await cookies();
+      const res = await fetch(`${api_url}/api/admin/reviews/stats`, {
+          headers: { Cookie: cookiestore.toString() },
         cache: "no-store",
         credentials: "include",
-      })
-      const body: ReviewStats = await response.json()
-      if (!response.ok) throw new Error(`Error fetching review stats: ${response.statusText}`)
-      return { data: body, error: null }
+      });
+      const body = await res.json();
+      const result = body as ApiResponse<TReviewStats>;
+      if(!res.ok){
+        const error=body as ApiErrorResponse
+        return {success:error.success,message:error.message || "retrieve review stats failed"}
+      }
+      return result
     } catch (error) {
-      return { data: null, error: error instanceof Error ? error.message : "Unknown error" }
+      return {
+        data: null,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
     }
   },
 
-  // Categories 
+  // Categories
   getCategoryStats: async () => {
     try {
-      const cookiestore = await cookies()
-      const response = await fetch(`${api_url}/api/admin/category/stats`, {
-        headers: { Cookie: cookiestore.toString() },
+      const cookiestore = await cookies();
+      const res = await fetch(`${api_url}/api/admin/category/stats`, {
+          headers: { Cookie: cookiestore.toString() },
         cache: "no-store",
         credentials: "include",
-      })
-      const data = await response.json()
-      if (!response.ok) throw new Error(`Error fetching category stats: ${response.statusText}`)
-      return data
+      });
+      const data = await res.json();
+       const result = data as ApiResponse<TCategoryStats>;
+      if (!res.ok) {
+        const error = data as ApiErrorResponse;
+        return {
+          success: error.success,
+          message: error.message || "retrieve category stats failed",
+        };
+      }
+      return result;
     } catch (error) {
-      return { data: null, error: error instanceof Error ? error.message : "Unknown error" }
+      return {
+        data: null,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
     }
   },
-}
+};

@@ -1,12 +1,12 @@
 import SingleProfile from '@/components/singleprofile'
 import { AdminService } from '@/services/users/admin'
+import { TUser } from '@/types/user/user'
 import React from 'react'
 
 const UserProfile = async ({ params }: { params: Promise<{ id: string }> }) => {
     const id = await params
     const userprofile = await AdminService.getuserbyid(id.id)
-    const userdata=userprofile
-       if (!userdata.data || userdata.error) {
+       if (!userprofile?.data || !userprofile.success) {
         return (
             <div className="p-4 text-red-500">
                 Failed to load users
@@ -15,7 +15,7 @@ const UserProfile = async ({ params }: { params: Promise<{ id: string }> }) => {
     }
     return (
         <div>
-            <SingleProfile user={userdata} />
+            <SingleProfile user={userprofile.data as TUser} />
         </div>
     )
 }

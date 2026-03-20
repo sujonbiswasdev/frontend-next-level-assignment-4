@@ -1,10 +1,9 @@
 import { getCategory } from "@/actions/categories/category"
 import CategoryTable from "@/components/category/categorytable"
-import { Category } from "@/types/category";
-
+import { TGetCategory } from "@/types/category";
 const CreateCategory = async() => {
   const category=await getCategory()
-    if (!category) {
+    if (!category || !category.data) {
     return (
       <div className="p-4 text-red-500">
         Failed to load users
@@ -13,7 +12,7 @@ const CreateCategory = async() => {
   }
   return (
     <div>
-      <CategoryTable categorydata={category.data as Category[]}/>
+      <CategoryTable categorydata={category.data.data as TGetCategory[]}/>
     </div>
   )
 }

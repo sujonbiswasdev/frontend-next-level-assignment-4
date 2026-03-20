@@ -34,7 +34,7 @@ export interface PaymentCardProps {
   feature2description?: string;
   finalText?: finalTextProps[];
   onPay?: (data: {
-    cardNumber: string;
+    cardNumber: string ;
     expiry: string;
     cvc: string;
   }) => Promise<void> | void;
@@ -49,9 +49,9 @@ export function PaymentCard({title,description,finalText = [],onPay,className,
    const subtotal = getSubtotal()
   const tax = subtotal * 0.1
   const [activeButton,setactiveButton]=useState(false)
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiry, setExpiry] = useState("");
-  const [cvc, setCvc] = useState("");
+  const [cardNumber, setCardNumber] = useState("2122122122122122");
+  const [expiry, setExpiry] = useState("01/28");
+  const [cvc, setCvc] = useState("123");
   const [index, setIndex] = useState(0);
   const [errors, setErrors] = useState<{
     card?: string;
@@ -88,7 +88,6 @@ export function PaymentCard({title,description,finalText = [],onPay,className,
   };
 
   const handlePay = () => {
-    if (validate()) {
       if (onPay) {
         onPay({ cardNumber, expiry, cvc });
         toast.success(<PaymentSuccess amount={getTotal()}/>,{autoClose:3000,theme:"light"})
@@ -98,7 +97,7 @@ export function PaymentCard({title,description,finalText = [],onPay,className,
         toast.error(<PaymentFailed/>,{autoClose:3000,theme:"light"})
         return 
       }
-    }
+  
   };
 
   // Final text animation

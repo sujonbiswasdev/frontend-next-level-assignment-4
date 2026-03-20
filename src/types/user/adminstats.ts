@@ -1,5 +1,5 @@
 
-export type UserStats = {
+export type TUserStats = {
   totalUsers: number
   totalSuspendUser: number
   totalActivateUser: number
@@ -13,7 +13,7 @@ export type UserStats = {
   totalunactiveuser: number
 }
 
-export type MealStats = {
+export type TMealStats = {
   totalmeals: number
   totalavailabemeals: number
   totalunavailabemeals: number,
@@ -22,7 +22,7 @@ export type MealStats = {
   totalrejectedmeals:number
 }
 
-export type OrderStats = {
+export type TOrderStats = {
   totalorders: number
   oneMonth: number
   totalcancelledmeals: number
@@ -43,28 +43,28 @@ export type OrderStats = {
   todayorders: number
 }
 
-export type RevenueAggregation = {
+export type TRevenueAggregation = {
   totalPrice: number | null
 }
 
 export type AvgRevenue = {
-  _avg: RevenueAggregation
+  _avg: TRevenueAggregation
 }
 
 export type SumRevenue = {
-  _sum: RevenueAggregation
+  _sum: TRevenueAggregation
 }
 
-export type RevenueDashboardResponse = {
+export type TRevenueDashboardResponse = {
   avgrevenue: AvgRevenue
   monthlyRevenue: SumRevenue
   todaysRevenue: SumRevenue
   totalrevenue: SumRevenue
-  topProvidersrevenue: TopProviderRevenue[]
+  topProvidersrevenue: TTopProviderRevenue[]
   success: boolean
 }
 
-export type TopProviderRevenue = {
+export type TTopProviderRevenue = {
   providerId: string
   _sum: {
     totalPrice: number | null
@@ -72,7 +72,7 @@ export type TopProviderRevenue = {
 }
 
 
-export type ReviewStats = {
+export type TReviewStats = {
   totalreviews: number
   todayreviews: number
   topRatedMeals: TopRatedMeal[]
@@ -85,7 +85,7 @@ export type TopRatedMeal = {
   }
 }
 
-export type CategoryStats = {
+export type TCategoryStats = {
   totalcategory: number
   totalcategory_name: { name: string }[]
   mealsPerCategory: {
@@ -98,10 +98,10 @@ export type CategoryStats = {
 
 
 export type AdminStats = {
-  userStats: UserStats
-  mealStats: MealStats
-  orderStats: OrderStats
-  revenueStats: RevenueDashboardResponse
-  reviewStats: ReviewStats
-  categoryStats: CategoryStats
+  userStats: TUserStats
+  mealStats: TMealStats
+  orderStats: TOrderStats
+  revenueStats: TRevenueDashboardResponse
+  reviewStats: TReviewStats
+  categoryStats: TCategoryStats
 }

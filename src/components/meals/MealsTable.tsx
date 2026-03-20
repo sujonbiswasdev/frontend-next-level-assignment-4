@@ -5,6 +5,8 @@ import { BadgePlus, Eye, Pen, Trash } from "lucide-react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { Status, StatusIndicator, StatusLabel } from "../ui/status";
+import { DeleteMeals } from "@/actions/blog.meals";
+import { IGetMealData } from "@/types/meals/mealstype";
 
 const columns = [
   { key: "id", label: "ID" },
@@ -19,7 +21,7 @@ const columns = [
   { key: "actions", label: "Actions" },
 ];
 
-const MealTable = ({ initialmeals }: { initialmeals: any[] }) => {
+const MealTable = ({ initialmeals }: { initialmeals: IGetMealData[]}) => {
   const router = useRouter();
   const [meals, setMeals] = useState(initialmeals);
   const [search, setSearch] = useState("");
@@ -28,26 +30,20 @@ const MealTable = ({ initialmeals }: { initialmeals: any[] }) => {
     if (!confirm("Are you sure you want to delete this meal?")) return;
 
     try {
-      const res = await fetch(
-        `https://backend-next-level-assignment-4.vercel.app/api/provider/meals/${id}`,
-        { method: "DELETE", credentials: "include" }
-      );
-      const data = await res.json();
-
-      if (!res.ok) {
-        toast.error(data.message || "Failed to delete meal.");
+      const toastId=toast.loading("meal deleting......")
+      const res = await DeleteMeals(id)
+      if (!res.data || !res.success) {
+        toast.dismiss(toastId)
+        toast.error(res.message || "Failed to delete meal.");
+        return
       }
-
       setMeals(meals.filter((meal: any) => meal.id !== id));
-      toast.success(data.message || "Meal deleted successfully.");
+      toast.dismiss(toastId)
+      toast.success(res.message || "Meal deleted successfully.");
     } catch (error: any) {
       toast.error(error.message || "Something went wrong.");
     }
   };
-
-  
-
-
     const filterData = initialmeals.filter((meal: any) => (meal.meals_name.includes(search.toLowerCase()) || meal.description.includes(search.toLowerCase()) || meal.category_name.includes(search.toLowerCase()) || meal.cuisine.includes(search.toLowerCase())))
 
   return (

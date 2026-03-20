@@ -5,8 +5,9 @@ import MealCard from '../meals/MealCard';
 import MealsCard from '../meals/get-meals';
 import { cuisines, dietaryPreferences } from '@/types/meals/mealstype';
 import { useRouter } from 'next/navigation';
+import { TGetCategory } from '@/types/category';
 
-const Singlecategory = ({ meal }: { meal: any }) => {
+const Singlecategory = ({ category }: { category: TGetCategory }) => {
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false);
   const [priceRange, setPriceRange] = useState([1, 1000]);
@@ -19,7 +20,7 @@ const Singlecategory = ({ meal }: { meal: any }) => {
   const [selectedCuisine, setSelectedCuisine] = useState<string[]>([])
   const [selectedDietary, setSelectedDietary] = useState<string[]>([])
 
-  const meals: any[] = [...meal]
+  const meals: any[] = [...category.meals]
 
   const handleCuisineChange = (value: string) => {
     setSelectedCuisine(prev => prev.includes(value) ? prev.filter(item => item !== value) : [...prev, value])
@@ -157,7 +158,7 @@ const Singlecategory = ({ meal }: { meal: any }) => {
                     className="w-4 h-4 text-emerald-600 focus:ring-emerald-500"
                   />
                   {Array.from({length:r}).map((_,i)=>(
-                     <Star className='w-[20px] bg-amber-300 mt-0.5' key={10} />
+                     <Star className='w-[20px] bg-amber-300 mt-0.5' key={i} />
                   ))}
                 </label>
               })}

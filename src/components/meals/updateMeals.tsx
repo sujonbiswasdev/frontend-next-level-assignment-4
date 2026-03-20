@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 
 import { z } from "zod";
 import { Label } from "../ui/label";
-import { cuisines, dietaryPreferences, UpdateMealsData } from "@/types/meals/mealstype";
+import { cuisines, dietaryPreferences, IUpdateMealsData, UpdateMealsData } from "@/types/meals/mealstype";
 
 const allowedDomains = [
   "res.cloudinary.com",
@@ -36,7 +36,7 @@ export const updateMealSchema = z.object({
 
 
 const UpdateMeal = ({ mealId }: { mealId: string }) => {
-  const [mealData, setMealData] = React.useState<UpdateMealsData>({});
+  const [mealData, setMealData] = React.useState<IUpdateMealsData>({});
   const parsedata = updateMealSchema.safeParse(mealData);
 
   const handleSubmit = async (e: React.FormEvent) => {

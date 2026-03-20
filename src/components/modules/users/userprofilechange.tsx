@@ -1,20 +1,22 @@
 'use client'
 import { updateuserdata } from '@/actions/user/admin'
 import { updateUser } from '@/actions/user/user'
-import { Updateuserdata, Updateuserschema } from '@/types/user/user'
+import { TUpdateUserCommonData, TUpdateUserInput, TUser, TUserRoleType, TUserStatusType } from '@/types/user/user'
+import { UpdateUserCommonData, updateUserSchema } from '@/validations/auth.validation'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 
 const UserUpdate = ({ userid }: { userid: string }) => {
-    const [userdata, setuserdata] = useState<Partial<Updateuserdata>>({});
-      const parsedata = Updateuserschema.safeParse(userdata);
+    const [userdata, setuserdata] = useState<TUpdateUserCommonData>({});
+      const parsedata = UpdateUserCommonData.safeParse(userdata);
      const handleSubmit = async (e: React.FormEvent) => {
        e.preventDefault();
        const data = await updateuserdata(userid,parsedata.data!)
-       if (!data || data === undefined || data.error || data === null) {
-         toast.error("Failed to update meal");
+       if (!data.success) {
+         toast.error(data.message||"Failed to update meal");
+         return
        } else {
-         toast.success("Meal updated successfully");
+         toast.success(data.message||"Meal updated successfully");
          setuserdata({})
        }
      };
@@ -33,7 +35,7 @@ const UserUpdate = ({ userid }: { userid: string }) => {
               type="text"
               placeholder="please enter your role(Admin,Provider,Customer)"
               value={userdata.role}
-              onChange={(e) => setuserdata({ ...updateUser, role: e.target.value })}
+              onChange={(e) => setuserdata({ ...updateUser, role: e.target.value as "Admin"||"Customer" || "Provider"})}
               className="w-full border-2 border-gray-300 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400 transition"
 
             />
@@ -47,7 +49,7 @@ const UserUpdate = ({ userid }: { userid: string }) => {
               type="text"
               placeholder="please enter your status(activate,suspend)"
               value={userdata.status}
-              onChange={(e) => setuserdata({ ...userdata, status: e.target.value })}
+              onChange={(e) => setuserdata({ ...userdata, status: e.target.value as "suspend"||"activate"})}
               className="w-full border-2 border-gray-300 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400 transition"
 
             />

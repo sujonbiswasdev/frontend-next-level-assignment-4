@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/pagination"
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '../ui/button';
-import { pagination } from '@/types/meals/pagination';
-const PaginationPage = ({ pagination }: { pagination: pagination }) => {
+import { Ipagination } from '@/types/meals/pagination';
+const PaginationPage = ({ pagination }: { pagination: Ipagination }) => {
   const { total, page=1, limit, totalpage=1} = pagination
 
   const searchParams = useSearchParams()

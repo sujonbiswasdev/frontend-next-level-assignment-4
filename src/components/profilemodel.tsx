@@ -9,13 +9,12 @@ import { use, useState } from "react";
 import { Input } from "./ui/input";
 import ShareProfileButton from "./profileshare";
 import { deleteuserown, updateUser } from "@/actions/user/user";
-import { ApiResponse } from "@/types/response.type";
 import { TUpdateUserInput, TUser } from "@/types/user/user";
 import { updateUserSchema } from "@/validations/auth.validation";
 
-function ProfileModal({ user }: { user: ApiResponse<TUser> }) {
+function ProfileModal({ user }: { user:TUser}) {
   const router = useRouter();
-  const [useinfo, setuserinfo] = useState<TUser>({ ...user.data });
+  const [useinfo, setuserinfo] = useState<TUser>({ ...user })
   const [inputvalue, setinputvalue] = useState<Partial<TUpdateUserInput>>({});
   const [editfield, seteditfield] = useState<
     string | boolean | "bgimage" | "name" | "phone" | "isActive"
@@ -207,7 +206,7 @@ function ProfileModal({ user }: { user: ApiResponse<TUser> }) {
           </div>
         )}
 
-        <InfoRow label="Email Address" value={user.data.email} />
+        <InfoRow label="Email Address" value={user.email} />
 
         {editfield !== "phone" ? (
           <div className="flex items-center justify-between px-6 py-4">
@@ -237,16 +236,16 @@ function ProfileModal({ user }: { user: ApiResponse<TUser> }) {
             </button>
           </div>
         )}
-        <InfoRow label="role" value={user.data.role as string} />
+        <InfoRow label="role" value={user.role as string} />
         <div className="flex items-center justify-between px-6 py-4">
           <Label className="text-gray-600">status</Label>
           <h4>
-            {user.data.status == "activate" ? (
+            {user.status == "activate" ? (
               <div className="">
                 <Status variant="success">
                   <StatusIndicator />
                   <StatusLabel className="text-gray-900">
-                    {user.data.status}
+                    {user.status}
                   </StatusLabel>
                 </Status>
               </div>
@@ -255,7 +254,7 @@ function ProfileModal({ user }: { user: ApiResponse<TUser> }) {
                 <Status variant="error">
                   <StatusIndicator />
                   <StatusLabel className="text-gray-900">
-                    {user.data.status}
+                    {user.status}
                   </StatusLabel>
                 </Status>
               </>
@@ -266,7 +265,7 @@ function ProfileModal({ user }: { user: ApiResponse<TUser> }) {
         <div className="flex items-center justify-between px-6 py-4">
           <Label className="text-gray-600">emailVerified</Label>
           <h4>
-            {user.data.emailVerified ? (
+            {user.emailVerified ? (
               <div className="">
                 <Status variant="success">
                   <StatusIndicator />
@@ -340,14 +339,14 @@ function ProfileModal({ user }: { user: ApiResponse<TUser> }) {
             </div>
           )}
         </div>
-        <InfoRow
+        {/* <InfoRow
           label="createdAt"
-          value={user.data.createdAt.toLocaleString().slice(0, 10)}
-        />
+          // value={user.createdAt.toLocaleString().slice(0, 10)}
+        /> */}
         <div className="flex items-center justify-between px-6 py-4">
           <h2 className="text-sm font-semibold text-gray-600">Profile</h2>
 
-          <ShareProfileButton userId={user.data.id} userName={user.data.name} />
+          <ShareProfileButton userId={user.id} userName={user.name} />
         </div>
         <div className="flex items-center justify-between px-6 py-4">
           <h2 className="text-sm font-semibold text-gray-600">account</h2>
