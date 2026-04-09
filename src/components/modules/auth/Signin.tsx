@@ -21,7 +21,9 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { LoginSchema } from "@/validations/auth.validation";
 import { userLogin } from "@/actions/user/auth.actions";
+import { createAuthClient } from "better-auth/react";
 export function SigninForm() {
+  const authClient = createAuthClient();
   const signIn = async () => {
     const data = await authClient.signIn.social({
       provider: "google",

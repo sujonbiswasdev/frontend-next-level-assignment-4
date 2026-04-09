@@ -1,6 +1,7 @@
 "use server";
 
 import { env } from "@/env";
+import { deleteCookie } from "@/lib/cookieUtils";
 import { setTokenInCookies } from "@/lib/tokenUtils";
 import { ApiErrorResponse, ApiResponse } from "@/types/response.type";
 import { Ilogin, TAuthData } from "@/types/user/auth.type";
@@ -127,7 +128,8 @@ export async function Logout() {
     },
     cache: "no-store",
   });
-  const body: ApiResponse<TAuthData> = await response.json();
+  const body= await response.json();
+  const result = body as ApiResponse<TAuthData> 
   if (!response.ok || !body.success) {
     const data = body as ApiErrorResponse;
     return {
@@ -135,6 +137,15 @@ export async function Logout() {
       error: data.message || "Logout failed",
     };
   }
-   return { data: body, error: null };
+  await Promise.all([
+    deleteCookie("accessToken"),
+    deleteCookie("refreshToken"),
+    deleteCookie("better-auth.session_token"),
+]);
+return {
+    success: true,
+    message: result.message || "Logged out successfully!",
+    data: result.data,
+};
 
 }

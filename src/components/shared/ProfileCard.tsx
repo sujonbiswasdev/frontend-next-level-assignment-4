@@ -51,7 +51,7 @@ export default function ProfileCard({ profile }: { profile: TUser }) {
       return;
     }
     toast.dismiss(toastId)
-    toast.success(res.data?.message || "user logout successfully")
+    toast.success(res.message || "user logout successfully")
     router.refresh()
   }
 
