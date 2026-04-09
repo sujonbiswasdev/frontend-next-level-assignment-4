@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Star, Send } from "lucide-react";
-import { createReviewAction } from "@/actions/reviews";
+import { createReviewAction } from "@/actions/reviews.order";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 

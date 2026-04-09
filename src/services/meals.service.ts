@@ -66,17 +66,17 @@ export const mealsService = {
         });
       }
 
-      const config: RequestInit = {};
-      if (options?.cache) {
-        config.cache = options.cache;
-      }
+      // const config: RequestInit = {};
+      // if (options?.cache) {
+      //   config.cache = options.cache;
+      // }
 
-      if (options?.revalidate) {
-        config.next = { revalidate: options.revalidate };
-      }
-      config.next = { ...config.next, tags: ["mealsPost"] };
+      // if (options?.revalidate) {
+      //   config.next = { revalidate: options.revalidate };
+      // }
+      // config.next = { ...config.next, revalidate:60};
 
-      const res = await fetch(url.toString(), config);
+      const res = await fetch(url.toString(), {next:{revalidate:60}});
 
       const data = await res.json();
       const result = data as ApiResponse<IGetAllmeals>;

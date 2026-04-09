@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={` antialiased max-w-[1440px] mx-auto overflow-x-hidden`}
+        className={`w-full overflow-x-hidden min-h-screen font-sans antialiased bg-background`}
       >
             {children}
         <Toaster />

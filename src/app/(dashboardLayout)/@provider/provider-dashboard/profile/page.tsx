@@ -1,4 +1,4 @@
-import ProviderProfilePage from '@/components/provider/profileCard'
+import ProviderProfilePage from '@/components/modules/provider/profileCard'
 import { getSession } from '@/services/users/auth.service';
 import { TUser } from '@/types/user/user';
 const ProviderProfile = async () => {

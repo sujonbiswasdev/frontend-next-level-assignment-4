@@ -10,7 +10,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination"
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Button } from '../ui/button';
+import { Button } from '../../ui/button';
 import { Ipagination } from '@/types/meals/pagination';
 const PaginationPage = ({ pagination }: { pagination: Ipagination }) => {
   const { total, page=1, limit, totalpage=1} = pagination

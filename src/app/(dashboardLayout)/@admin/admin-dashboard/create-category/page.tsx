@@ -1,4 +1,4 @@
-import { CreateCategoryForm } from '@/components/category/Create-Category'
+import { CreateCategoryForm } from '@/components/modules/category/Create-Category'
 const CreateCategory = () => {
   return (
     <div>

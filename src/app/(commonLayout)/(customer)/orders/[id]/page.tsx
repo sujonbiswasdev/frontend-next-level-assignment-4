@@ -1,6 +1,6 @@
 import OrderDetails from '@/components/modules/orders/orderdetails';
 import NotFound from '@/components/Notfound';
-import { OrderService } from '@/services/order/order';
+import { OrderService } from '@/services/order.service';
 
 
 export async function generateStaticParams() {

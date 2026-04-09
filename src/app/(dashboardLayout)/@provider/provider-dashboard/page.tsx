@@ -3,7 +3,7 @@ import {
   getprovidermealsStats,
   getrevenueStats,
 } from "@/actions/provider/stats";
-import RevenueStats from "@/components/provider/stats";
+import RevenueStats from "@/components/modules/provider/stats";
 import { OrderStatsResult } from "@/types/order/order.type.stats";
 import {
   IProviderMealStats,

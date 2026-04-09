@@ -9,7 +9,6 @@ const api_url = env.API_URL;
 
 export const AdminService = {
   updateuserdata: async (id: string, updateUser: TUpdateUserCommonData) => {
-    console.log(updateUser,'updateuser')
     try {
       const cookieStore = await cookies();
       const res = await fetch(`${api_url}/api/admin/profile/${id}`, {

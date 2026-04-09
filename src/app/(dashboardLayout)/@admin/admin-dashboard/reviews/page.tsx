@@ -1,4 +1,4 @@
-import { getAllreview } from '@/actions/reviews'
+import { getAllreview } from '@/actions/reviews.order'
 import ReviewsTable from '@/components/modules/review/ReviewTable'
 import { IgetReviewData } from '@/types/reviews.type'
 import React from 'react'

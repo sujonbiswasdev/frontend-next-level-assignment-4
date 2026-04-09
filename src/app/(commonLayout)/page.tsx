@@ -1,9 +1,9 @@
-import { getMeals } from "@/actions/blog.meals";
-import { getCategory } from "@/actions/categories/category";
+import { getMeals } from "@/actions/meals.action";
+import { getCategory } from "@/actions/category";
 import { getAlluserProvider } from "@/actions/provider/provider.action";
-import FoodCategories from "@/components/category/card";
+import FoodCategories from "@/components/modules/category/card";
 import HeroSlider from "@/components/heroslider";
-import MealCard from "@/components/meals/MealCard";
+import MealCard from "@/components/modules/meals/MealCard";
 import Notfounddata from "@/components/Notfounddata";
 import TestimonialSection from "@/components/TestimonialSection";
 import { TGetCategory } from "@/types/category";
@@ -14,10 +14,11 @@ export default async function HomePage() {
   const mealdata = await getMeals();
   const categories = await getCategory();
   const providerinfo = await getAlluserProvider();
+  console.log(mealdata,'mealdata')
   return (
     <div className="">
       <HeroSlider />
-      {categories?.data.data.length==0?<Notfounddata content="categories data not found"/>:<FoodCategories categories={categories?.data.data as TGetCategory[]} />}
+      {(!categories?.success)?<Notfounddata content="categories data not found"/>:<FoodCategories categories={categories?.data.data as TGetCategory[]} />}
       <div className="space-y-8 py-3 mt-4 md:mt-10">
         <div className="mb-2 mx-auto">
           <div className="flex flex-col items-center space-y-2">

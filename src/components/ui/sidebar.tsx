@@ -127,7 +127,7 @@ function SidebarProvider({
   )
 
   return (
-    <SidebarContext.Provider value={contextValue} >
+    <SidebarContext.Provider value={contextValue}  >
       <TooltipProvider delayDuration={0}>
         <div
           data-slot="sidebar-wrapper"
@@ -170,7 +170,7 @@ function Sidebar({
       <div
         data-slot="sidebar"
         className={cn(
-          "bg-sidebar text-sidebar-foreground flex  flex-col",
+          "bg-sidebar text-sidebar-foreground flex max-w-[1440px] mx-auto flex-col",
           className
         )}
         {...props}

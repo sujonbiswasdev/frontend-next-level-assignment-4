@@ -1,5 +1,5 @@
 'use server'
-import { IMealStatus, mealsService } from "@/services/meals";
+import { IMealStatus, mealsService } from "@/services/meals.service";
 import {  ICreateMealsData, IUpdateMealsData, UpdateMealsData } from "@/types/meals/mealstype";
 import { updateTag } from "next/cache";
 

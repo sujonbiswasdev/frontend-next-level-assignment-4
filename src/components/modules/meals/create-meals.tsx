@@ -19,11 +19,11 @@ import {
 import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation"
 import { Textarea } from "@/components/ui/textarea";
-import { createmeals } from "@/actions/blog.meals";
+import { createmeals } from "@/actions/meals.action";
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import { TGetCategory } from "@/types/category"
-import { getCategory } from "@/actions/categories/category"
+import { getCategory } from "@/actions/category"
 import { cuisines, dietaryPreferences, ICreateMealsData } from "@/types/meals/mealstype"
 import { CreateMealData } from "@/validations/meal.validations"
 export function MealsForm() {

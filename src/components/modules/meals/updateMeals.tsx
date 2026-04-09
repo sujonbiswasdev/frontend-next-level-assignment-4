@@ -1,12 +1,12 @@
 "use client";
 
-import { updateMeal } from "@/actions/blog.meals";
+import { updateMeal } from "@/actions/meals.action";
 
 import React from "react";
 import { toast } from "react-toastify";
 
 import { z } from "zod";
-import { Label } from "../ui/label";
+import { Label } from "../../ui/label";
 import { cuisines, dietaryPreferences, IUpdateMealsData, UpdateMealsData } from "@/types/meals/mealstype";
 
 const allowedDomains = [

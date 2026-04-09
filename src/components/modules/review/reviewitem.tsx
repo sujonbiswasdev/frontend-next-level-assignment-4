@@ -1,7 +1,7 @@
 import {
   deleteReviewAction,
   reviewUpdate,
-} from "@/actions/reviews";
+} from "@/actions/reviews.order";
 import ReviewForm from "@/components/modules/review/reviewform";
 import { IGetMealData, MealReview } from "@/types/meals/mealstype";
 import { IUpdatereviewData } from "@/types/reviews.type";

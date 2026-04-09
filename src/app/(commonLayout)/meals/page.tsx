@@ -1,6 +1,7 @@
-import { getMeals } from '@/actions/blog.meals'
-import { getCategory } from '@/actions/categories/category'
-import MealsCard from '@/components/meals/get-meals'
+import { getMeals } from '@/actions/meals.action'
+import { getCategory } from '@/actions/category'
+import MealsCard from '@/components/modules/meals/get-meals'
+import Notfounddata from '@/components/Notfounddata'
 import { TGetCategory } from '@/types/category'
 import { IGetMealData } from '@/types/meals/mealstype'
 import { Ipagination } from '@/types/meals/pagination'
@@ -13,28 +14,29 @@ interface PageProps {
 
 const GetMeals = async ({ searchParams }: PageProps) => {
   const search =await searchParams
-  const response = await getMeals(search);
+  // const response = await getMeals(search,{revalidate:60});
+  const response=await fetch("http://localhost:5000/api/v1/meals",{next:{revalidate:60}})
+  const res=await response.json()
 
-  if (!response || !response.success) {
-  return (
-    <div className="p-4 text-red-500">
-      No data found
-    </div>
-  );
-}
-
-  const categorydata = await getCategory()
-    if (!categorydata) {
-    return (
-      <div className="p-4 text-red-500">
-        Failed to load category
-      </div>
-    );
-  }
+  // const categorydata = await getCategory()
+  //   if (!categorydata) {
+  //   return (
+  //     <div className="p-4 text-red-500">
+  //       Failed to load category
+  //     </div>
+  //   );
+  // }
   return (
     <div className="">
       
-      <MealsCard initialMeals={response.data?.data as IGetMealData[]} initialcategory={categorydata.data?.data as TGetCategory[]} pagination={response.data?.pagination as Ipagination} />
+      {!res.success?(
+        <div>
+          <Notfounddata content='data not found'/>
+        </div>
+      ):(<div>
+
+        {/* <MealsCard initialMeals={res.data?.data as IGetMealData[]} initialcategory={categorydata.data?.data as TGetCategory[]} pagination={res.data?.pagination as Ipagination} /> */}
+      </div>)}
     </div>
   )
 }

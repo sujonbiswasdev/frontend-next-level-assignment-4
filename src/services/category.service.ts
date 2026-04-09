@@ -26,9 +26,9 @@ export const CategoriesService = {
       const result =data as ApiResponse<TGetCategory>
       if(!result.data){
         const error=data as ApiErrorResponse
-        return {message:error.message || "categories retrive failed"}
+        return {success:error.success,message:error.message || "categories retrive failed"}
       }
-      return {message:result.message,data}
+      return {success:result.success,message:result.message,data}
     } catch (error) {
       return {message:"something went wrong,please try again"}
     }

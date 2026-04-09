@@ -1,5 +1,5 @@
-import SignleMealByid from "@/components/meals/singleMeal";
-import { mealsService } from "@/services/meals";
+import SignleMealByid from "@/components/modules/meals/singleMeal";
+import { mealsService } from "@/services/meals.service";
 import { getSession } from "@/services/users/auth.service";
 import { IGetMealData } from "@/types/meals/mealstype";
 import { TUser } from "@/types/user/user";

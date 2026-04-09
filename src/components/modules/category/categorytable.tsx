@@ -1,5 +1,5 @@
 'use client'
-import { deleteCategory } from "@/actions/categories/category";
+import { deleteCategory } from "@/actions/category";
 import { TGetCategory } from "@/types/category";
 import { Eye, Pencil, SquarePlus, Trash2 } from "lucide-react";
 import Image from "next/image";

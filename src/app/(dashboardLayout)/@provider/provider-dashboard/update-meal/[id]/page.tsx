@@ -1,4 +1,4 @@
-import UpdateMeal from '@/components/meals/updateMeals';
+import UpdateMeal from '@/components/modules/meals/updateMeals';
 const UpdateMeals = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
   if (!id) {

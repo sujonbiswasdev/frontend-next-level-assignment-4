@@ -1,8 +1,8 @@
 'use client'
-import { updatecategory } from "@/actions/categories/category";
+import { updatecategory } from "@/actions/category";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { FieldError } from "../ui/field";
+import { FieldError } from "../../ui/field";
 import { UpdateCategory } from "@/validations/category.schema";
 import { IUpdateCategory } from "@/types/category";
 

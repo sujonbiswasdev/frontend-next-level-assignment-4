@@ -4,9 +4,9 @@ import { useState } from "react";
 import { BadgePlus, Eye, Pen, Trash } from "lucide-react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { Status, StatusIndicator, StatusLabel } from "../ui/status";
-import { DeleteMeals } from "@/actions/blog.meals";
+import { Status, StatusIndicator, StatusLabel } from "../../ui/status";
 import { IGetMealData } from "@/types/meals/mealstype";
+import { DeleteMeals } from "@/actions/meals.action";
 
 const columns = [
   { key: "id", label: "ID" },
@@ -21,7 +21,7 @@ const columns = [
   { key: "actions", label: "Actions" },
 ];
 
-const MealTable = ({ initialmeals }: { initialmeals: IGetMealData[]}) => {
+const AdminMealsTable = ({ initialmeals }: { initialmeals: IGetMealData[] }) => {
   const router = useRouter();
   const [meals, setMeals] = useState(initialmeals);
   const [search, setSearch] = useState("");
@@ -30,21 +30,17 @@ const MealTable = ({ initialmeals }: { initialmeals: IGetMealData[]}) => {
     if (!confirm("Are you sure you want to delete this meal?")) return;
 
     try {
-      const toastId=toast.loading("meal deleting......")
-      const res = await DeleteMeals(id)
-      if (!res.data || !res.success) {
-        toast.dismiss(toastId)
+      const res =await DeleteMeals(id)
+      if (!res.success || !res.data) {
         toast.error(res.message || "Failed to delete meal.");
-        return
       }
+
       setMeals(meals.filter((meal: any) => meal.id !== id));
-      toast.dismiss(toastId)
       toast.success(res.message || "Meal deleted successfully.");
     } catch (error: any) {
       toast.error(error.message || "Something went wrong.");
     }
   };
-    const filterData = initialmeals.filter((meal: any) => (meal.meals_name.includes(search.toLowerCase()) || meal.description.includes(search.toLowerCase()) || meal.category_name.includes(search.toLowerCase()) || meal.cuisine.includes(search.toLowerCase())))
 
   return (
     <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 py-8">
@@ -94,7 +90,7 @@ const MealTable = ({ initialmeals }: { initialmeals: IGetMealData[]}) => {
             {/* Table Body */}
             <tbody className="divide-y divide-gray-100">
               {meals.length > 0 ? (
-                filterData.map((meal: any, index: number) => (
+                meals.map((meal: any, index: number) => (
                   <tr
                     key={meal.id}
                     className="hover:bg-indigo-50 transition duration-200"
@@ -179,7 +175,7 @@ const MealTable = ({ initialmeals }: { initialmeals: IGetMealData[]}) => {
                           <Eye className="w-4 h-4 text-indigo-500 hover:text-indigo-700 transition" />
                         </Link>
 
-                        <Link href={`/provider-dashboard/update-meal/${meal.id}`}>
+                        <Link href={`/admin-dashboard/meals/${meal.id}`}>
                           <Pen className="w-4 h-4 text-green-500 hover:text-green-700 transition" />
                         </Link>
 
@@ -206,4 +202,4 @@ const MealTable = ({ initialmeals }: { initialmeals: IGetMealData[]}) => {
   );
 };
 
-export default MealTable;
+export default AdminMealsTable;

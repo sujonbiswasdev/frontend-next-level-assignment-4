@@ -1,16 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-.error {
-  color: #900;
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-}
-.active{
-  color: #090;
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-}
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -152,21 +142,6 @@
     @apply bg-background text-foreground;
   }
 }
-
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px grey; 
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: green; 
-  border-radius: 10px;
-}
-
 @layer utilities {
   .animate-canopy-horizontal {
     animation: canopy-x var(--duration) infinite linear;

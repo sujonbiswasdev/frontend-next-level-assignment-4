@@ -41,7 +41,7 @@ export function CartModal() {
       {SHEET_SIDES.map((side) => (
         <Sheet key={side} >
           <SheetTrigger asChild className="">
-            <button onClick={() => router.push("/cart")}
+            <button 
               className="relative "
             >
               🛒
@@ -52,6 +52,7 @@ export function CartModal() {
             </button>
           </SheetTrigger>
           <SheetContent
+          
             side={side}
             className="data-[side=bottom]:max-h-[50vh] data-[side=top]:max-h-[50vh]"
           >

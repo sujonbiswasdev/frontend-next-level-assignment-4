@@ -1,5 +1,5 @@
-import { getCategory } from "@/actions/categories/category"
-import CategoryTable from "@/components/category/categorytable"
+import { getCategory } from "@/actions/category"
+import CategoryTable from "@/components/modules/category/categorytable"
 import { TGetCategory } from "@/types/category";
 const CreateCategory = async() => {
   const category=await getCategory()

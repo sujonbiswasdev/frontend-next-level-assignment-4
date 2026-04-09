@@ -1,5 +1,5 @@
 import { getProviderwithMeals } from '@/actions/provider/provider.action';
-import ProviderPage from '@/components/provider/singleprovider';
+import ProviderPage from '@/components/modules/provider/singleprovider';
 import { TGetProviderProfileWithMeals } from '@/types/provider.type';
 const SignleProviderwithMenu = async ({params}:{params:Promise<{id:string}>}) => {
     const {id} = await params;

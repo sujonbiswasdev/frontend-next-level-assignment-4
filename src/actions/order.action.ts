@@ -1,6 +1,6 @@
 'use server'
 import { IOrderUpdateStatus } from "@/components/modules/orders/customerordertable";
-import { OrderService } from "@/services/order/order";
+import { OrderService } from "@/services/order.service";
 import { ICreateorderData } from "@/types/order/order.type";
 import { revalidateTag } from "next/cache";
 

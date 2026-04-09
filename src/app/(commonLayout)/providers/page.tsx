@@ -5,7 +5,6 @@ import { IProviderInfo } from "@/types/provider.type"
 
 const ProviderPage = async() => {
   const providerinfo=await getAlluserProvider()
-  console.log(providerinfo,'provider')
   return (
     <div>
       <h2>retrieve all provider info</h2>

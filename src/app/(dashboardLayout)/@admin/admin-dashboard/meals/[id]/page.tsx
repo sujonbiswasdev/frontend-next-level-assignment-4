@@ -1,5 +1,5 @@
-import MealStatus from '@/components/meals/mealstatusupdate';
-import UpdateMeal from '@/components/meals/updateMeals';
+import MealStatus from '@/components/modules/meals/mealstatusupdate';
+import UpdateMeal from '@/components/modules/meals/updateMeals';
 const MealStatusUpdate = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
   if (!id) {

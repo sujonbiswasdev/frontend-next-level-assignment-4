@@ -1,5 +1,5 @@
 'use server'
-import { IModerateData, reviewService } from "@/services/review";
+import { IModerateData, reviewService } from "@/services/review.service";
 import { IUpdatereviewData } from "@/types/reviews.type";
 
 export const createReviewAction = async (mealid:string,data:any) => {

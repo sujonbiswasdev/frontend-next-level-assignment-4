@@ -22,7 +22,5 @@ export const env = createEnv({
     NEXT_PUBLIC_test:process.env.NEXT_PUBLIC_test,
     ACCESS_TOKEN_SECRET:process.env.ACCESS_TOKEN_SECRET,
     REFRESH_TOKEN_SECRET:process.env.REFRESH_TOKEN_SECRET
-
-
   },
 });

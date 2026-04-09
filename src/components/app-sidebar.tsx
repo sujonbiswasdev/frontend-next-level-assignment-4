@@ -176,7 +176,7 @@ export function AppSidebar({user,...props }:{user:TUser & React.ComponentProps<t
       routes=[]
   }
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar className="" collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>

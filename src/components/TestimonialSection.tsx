@@ -10,9 +10,7 @@ export default function TestimonialSection({
 }) {
   const providerdata=testomonialdata.map((item)=>item)
   const mealdata=providerdata.find((item)=>item.meals)
-  console.log(mealdata,'d')
   // const mainReviews = mealdata.filter((r) => r.parentId == null);
-  // console.log(mainReviews,'dd')
   // const totalReviews = mainReviews.length;
   // const avg =
   //   totalReviews > 0

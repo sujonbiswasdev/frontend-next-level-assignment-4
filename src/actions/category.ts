@@ -1,5 +1,5 @@
 'use server'
-import { CategoriesService, Icategory } from "@/services/categories/category";
+import { CategoriesService, Icategory } from "@/services/category.service";
 import { ICreateCategory } from "@/types/category";
 
 export const categoryCreate = async (data:ICreateCategory) => {

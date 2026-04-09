@@ -1,4 +1,4 @@
-import Categoryupdate from '@/components/category/categoryupdate'
+import Categoryupdate from '@/components/modules/category/categoryupdate'
 import React from 'react'
 
 const CategoryUpdatePage = async({params}:{params:Promise<{id:string}>}) => {

@@ -1,4 +1,4 @@
-import { IUpdatereviewData } from "./../types/reviews.type";
+import { IUpdatereviewData } from "../types/reviews.type";
 import { env } from "@/env";
 import { ApiErrorResponse, ApiResponse } from "@/types/response.type";
 import { ICreatereviewData, IgetReviewData } from "@/types/reviews.type";

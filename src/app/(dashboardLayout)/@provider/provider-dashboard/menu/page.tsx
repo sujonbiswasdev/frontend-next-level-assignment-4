@@ -1,5 +1,5 @@
-import { getmealsown } from "@/actions/blog.meals"
-import MealTable from "@/components/meals/MealsTable"
+import { getmealsown } from "@/actions/meals.action"
+import MealTable from "@/components/modules/meals/MealsTable"
 import { IGetMealData } from "@/types/meals/mealstype"
 interface PageProps {
   searchParams: {

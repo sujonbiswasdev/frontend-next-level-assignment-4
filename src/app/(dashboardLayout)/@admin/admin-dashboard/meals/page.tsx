@@ -1,5 +1,5 @@
-import { getmealsforadmin } from "@/actions/blog.meals"
-import AdminMealsTable from "@/components/meals/adminmealsTable"
+import { getmealsforadmin } from "@/actions/meals.action"
+import AdminMealsTable from "@/components/modules/meals/adminmealsTable"
 import { IGetMealData } from "@/types/meals/mealstype"
 
 interface PageProps {

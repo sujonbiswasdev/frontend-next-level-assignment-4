@@ -6,8 +6,8 @@ import { toast } from "react-toastify";
 import { Status, StatusIndicator, StatusLabel } from "@/components/ui/status";
 import { updateorderstatus } from "@/actions/order.action";
 import { IgetReviewData } from "@/types/reviews.type";
-import { deleteReviewAction, moderateReviewAction } from "@/actions/reviews";
-import { IModerateData } from "@/services/review";
+import { deleteReviewAction, moderateReviewAction } from "@/actions/reviews.order";
+import { IModerateData } from "@/services/review.service";
 export interface IOrderUpdateStatus {
   status: string;
 }

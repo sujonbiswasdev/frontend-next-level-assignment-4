@@ -1,28 +1,24 @@
 "use client";
 import { IGetMealData } from "@/types/meals/mealstype";
 import React, { Suspense } from "react";
-import Skeletonmeals from "../ui/skeletonmeals";
-import { CardHoverLift } from "../hover-lift";
+import Skeletonmeals from "../../ui/skeletonmeals";
+import { CardHoverLift } from "../../hover-lift";
 import { Link, Star, StarHalf, StarIcon } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { manageCartStore } from "@/store/CartStore";
 import { useRouter } from "next/navigation";
 
 const MealCard = ({ filterData }: { filterData: IGetMealData[] }) => {
+  console.log(filterData,'filterdata')
   const { addToCart } = manageCartStore();
   const router = useRouter();
   const defaultIamge =
     "https://res.cloudinary.com/drmeagmkl/image/upload/v1771962102/default_meal_kgc6mv.png";
   const mealdata = filterData.find((item) => item.id);
-  const mainReviews = mealdata!.reviews.filter((r: any) => r.parentId == null);
-  const totalReviews = mainReviews.length;
-  const avg =
-    totalReviews > 0
-      ? mainReviews.reduce((sum: any, r: any) => sum + r.rating, 0) /
-        totalReviews
-      : 0;
-  const fullStars = Math.floor(Number(avg));
-  const hasHalfStar = Number(avg) % 1 >= 0.5;
+  const mainReviews = mealdata?.reviews.filter((r: any) => r.parentId == null);
+
+  const fullStars = Math.floor(Number(10));
+  const hasHalfStar = Number(10) % 1 >= 0.5;
 
   return (
     <div>
@@ -98,7 +94,7 @@ const MealCard = ({ filterData }: { filterData: IGetMealData[] }) => {
                             );
                           })}
                           <span className="text-sm text-gray-500 gap-2">
-                            ({totalReviews}reviews)
+                            {/* ({totalReviews}reviews) */}
                           </span>
                         </div>
                       </div>

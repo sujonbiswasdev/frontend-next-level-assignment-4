@@ -21,7 +21,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "react-toastify";
 import { CreateCategory } from "@/validations/category.schema";
-import { categoryCreate } from "@/actions/categories/category";
+import { categoryCreate } from "@/actions/category";
 
 export function CreateCategoryForm() {
   const form = useForm({
