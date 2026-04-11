@@ -20,10 +20,15 @@ import { authClient } from "@/lib/authClient";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { LoginSchema } from "@/validations/auth.validation";
-import { userLogin } from "@/actions/auth.actions";
+import { forgotPasswordEmailOTPAction, userLogin } from "@/actions/auth.actions";
 import { createAuthClient } from "better-auth/react";
+import { FormInput } from "@/components/shared/FormInput";
+import { useState } from "react";
+
 export function SigninForm() {
   const authClient = createAuthClient();
+
+  const [email, setemail] = useState("");
   const signIn = async () => {
     const data = await authClient.signIn.social({
       provider: "google",
@@ -58,6 +63,34 @@ export function SigninForm() {
     },
   });
 
+
+  const handleForgetPassword = async (email: string) => {
+    if (!email) {
+      toast.error("Please enter your email first.", { theme: "dark" });
+      return { success: false };
+    }
+
+    try {
+      const toastId = toast.loading("Sending reset OTP...");
+      const res = await forgotPasswordEmailOTPAction({ email });
+      toast.dismiss(toastId);
+
+      if (res.success) {
+        toast.success(res.message || "Password reset OTP sent!", {
+          theme: "dark",
+        });
+        alert("You have only 10 minutes to validate the OTP sent to your email.");
+        return { success: true };
+      } else {
+        toast.error(res.message || "Failed to send OTP.", { theme: "dark" });
+        return { success: false };
+      }
+    } catch (err: any) {
+      toast.error(err?.message || "Something went wrong.", { theme: "dark" });
+      return { success: false };
+    }
+  };
+
   return (
     <Card className="w-full sm:max-w-md mx-auto">
       <CardHeader>
@@ -76,7 +109,7 @@ export function SigninForm() {
         >
           <FieldGroup>
             <form.Field
-            validators={{ onChange: LoginSchema.shape.email }}
+              validators={{ onChange: LoginSchema.shape.email }}
               name="email"
               children={(field) => {
                 const isInvalid =
@@ -89,7 +122,10 @@ export function SigninForm() {
                       name={field.name}
                       value={field.state.value}
                       onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
+                      onChange={(e) => {
+                        field.handleChange(e.target.value);
+                        setemail(e.target.value);
+                      }}
                       aria-invalid={isInvalid}
                       placeholder="please enter your email"
                       autoComplete="off"
@@ -103,22 +139,45 @@ export function SigninForm() {
             />
             <form.Field
               name="password"
-               validators={{ onChange: LoginSchema.shape.password }}
+              validators={{ onChange: LoginSchema.shape.password }}
               children={(field) => {
-                
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
+                    <div className="flex items-center justify-between">
+                      <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                      <button
+                        type="button"
+                        className="text-xs text-purple-600 hover:underline focus:outline-none"
+                        onClick={async () => {
+                          if (!email) {
+                            toast.error("Please enter your email first.", {
+                              theme: "dark",
+                            });
+                            return;
+                          }
+                          const res = await handleForgetPassword(email);
+                          if (res?.success) {
+                            const encodedEmail = encodeURIComponent(email);
+                            router.push(`/reset-password?email=${encodedEmail}`);
+                          }
+                        }}
+                        tabIndex={0}
+                      >
+                        Forgot password?
+                      </button>
+                    </div>
+                    <FormInput
+                      field={field}
+                      label=""
+                      isPassword
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
                       placeholder="please enter your password"
+                      name={field.name}
+                      value={field.state.value}
                       autoComplete="off"
                     />
                     {isInvalid && (
@@ -128,17 +187,40 @@ export function SigninForm() {
                 );
               }}
             />
+  
           </FieldGroup>
         </form>
       </CardContent>
-      <Button
-        onClick={() => signIn()}
-        variant="outline"
-        type="button"
-        className="w-full"
-      >
-        Continue with Google
-      </Button>
+
+      <div className="flex flex-col gap-2 px-6 mt-3">
+        <Button
+          onClick={() => signIn()}
+          variant="outline"
+          type="button"
+          className="w-full"
+        >
+          Continue with Google
+        </Button>
+        {/* Register button (simple design, design only, no logic) */}
+        <Button
+        onClick={()=>router.push("/register")}
+          variant="ghost"
+          type="button"
+          className="w-full text-purple-600 border border-purple-200 hover:bg-purple-50"
+        >
+          Register
+        </Button>
+        {/* Home button (simple design, design only, no logic) */}
+        <Button
+        onClick={()=>router.push('/')}
+          variant="ghost"
+          type="button"
+          className="w-full text-gray-600 border border-gray-200 hover:bg-gray-50"
+        >
+          Home
+        </Button>
+      </div>
+
       <CardFooter className="mx-auto">
         <Field orientation="horizontal">
           <Button type="button" variant="outline" onClick={() => form.reset()}>

@@ -1,4 +1,4 @@
-import { loginUser, Logout } from "@/services/auth.service"
+import { ForgotPasswordEmailOTP, loginUser, Logout } from "@/services/auth.service"
 import { Ilogin } from "@/types/auth.type"
 import { resendVerificationCode } from "@/services/auth.service";
 import { verifyEmail } from "@/services/auth.service";
@@ -19,4 +19,7 @@ export const userVerifyEmail = async (verifyData: { email: string; otp: string }
 
 export const resendVerificationCodeAction = async ({ email }: { email: string }) => {
   return await resendVerificationCode({ email });
+};
+export const forgotPasswordEmailOTPAction = async ({ email }: { email: string }) => {
+  return await ForgotPasswordEmailOTP({ email });
 };
