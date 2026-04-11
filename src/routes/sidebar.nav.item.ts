@@ -33,12 +33,12 @@ export const providerNavItem: NavSection[] = [
         items: [
             {
                 title: "Create meals",
-                href: "/provider-dashboard/create-meals",
+                href: "/provider/dashboard/create-meals",
                 icon: "PlusSquare"
             },
             {
                 title: "menu",
-                href: "/provider-dashboard/menu",
+                href: "/provider/dashboard/menu",
                 icon: "List"
             }
         ]
@@ -48,7 +48,7 @@ export const providerNavItem: NavSection[] = [
         items: [
             {
                 title: "orders",
-                href: "/provider-dashboard/orders",
+                href: "/provider/dashboard/orders",
                 icon: "ClipboardList"
             }
         ]
@@ -63,12 +63,12 @@ export const adminNavItems: NavSection[] = [
         items: [
             {
                 title: "create-category",
-                href: "/admin-dashboard/create-category",
+                href: "/admin/dashboard/create-category",
                 icon: "Calendar"
             },
             {
                 title: "categories",
-                href: "/admin-dashboard/categories",
+                href: "/admin/dashboard/categories",
                 icon: "Folder"
             },
         ]

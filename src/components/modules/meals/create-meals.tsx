@@ -24,7 +24,7 @@ import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import { TGetCategory } from "@/types/category"
 import { getCategory } from "@/actions/category"
-import { cuisines, dietaryPreferences, ICreateMealsData } from "@/types/meals.type"
+import { cuisines, dietaryPreferences, TCreateMealsData } from "@/types/meals.type"
 import { CreateMealData } from "@/validations/meal.validations"
 export function MealsForm() {
   const [category, setcategory] = useState<TGetCategory[] | undefined>()
@@ -43,7 +43,7 @@ export function MealsForm() {
     validators: {
       onSubmit: CreateMealData,
     },
-    onSubmit: async ({ value }:{value:ICreateMealsData}) => {
+    onSubmit: async ({ value }:{value:TCreateMealsData}) => {
       const toastid = toast.loading("meals creating.........")
       try {
         const res = await createmeals(value)
@@ -55,7 +55,6 @@ export function MealsForm() {
         toast.dismiss(toastid)
         toast.success("meals created successfully")
         form.reset()
-
       } catch (error) {
         toast.dismiss(toastid)
         toast.error("Something went wrong, please try again.");

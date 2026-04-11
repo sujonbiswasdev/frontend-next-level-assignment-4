@@ -1,4 +1,3 @@
-import { getMeals } from "@/actions/meals.action";
 import { getCategory } from "@/actions/category";
 import FoodCategories from "@/components/modules/category/card";
 import HeroSlider from "@/components/heroslider";
@@ -6,12 +5,13 @@ import MealCard from "@/components/modules/meals/MealCard";
 import Notfounddata from "@/components/Notfounddata";
 import TestimonialSection from "@/components/TestimonialSection";
 import { TGetCategory } from "@/types/category";
-import { IGetMealData } from "@/types/meals.type";
+import { IGetMealData, TResponseMeals } from "@/types/meals.type";
 import { IProviderInfo } from "@/types/provider.type";
 import Link from "next/link";
 import { getAlluserProvider } from "@/actions/user.actions";
+import { getAllMeals } from "@/actions/meals.action";
 export default async function HomePage() {
-  const mealdata = await getMeals();
+  const mealdata = await getAllMeals();
   const categories = await getCategory();
   const providerinfo = await getAlluserProvider();
   return (
@@ -41,7 +41,7 @@ export default async function HomePage() {
         </div>
 
         <div className="mt-2 md:mt-10 mb-4">
-          {!mealdata.data?.data || !mealdata.success?<Notfounddata content="no meal found"/>:<MealCard filterData={mealdata.data?.data as IGetMealData[]} />}
+          {!mealdata.data || !mealdata.success?<Notfounddata content="no meal found"/>:<MealCard filterData={mealdata.data as TResponseMeals[]} />}
         </div>
       </div>
       <div className="mt-4 lg:mt-10 bg-[#f8f9fb]">

@@ -7,10 +7,10 @@ import { toast } from "sonner"
 import MealCard from "./MealCard"
 import { Ipagination } from "@/types/pagination.type"
 import { TGetCategory } from "@/types/category"
-import { cuisines, dietaryPreferences, IGetMealData } from "@/types/meals.type"
+import { cuisines, dietaryPreferences, IGetMealData, TResponseMeals } from "@/types/meals.type"
 const MIN_PRICE_LIMIT = 0;
 const MAX_PRICE_LIMIT = 1000;
-export default function MealsCard({ initialMeals, initialcategory, pagination }: { initialMeals: IGetMealData[], initialcategory: TGetCategory[], pagination: Ipagination }) {
+export default function RetrieveAllmeals({ initialMeals, pagination }: { initialMeals: TResponseMeals[], pagination: Ipagination }) {
   const addToCart = manageCartStore((state) => state.addToCart)
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -82,7 +82,7 @@ export default function MealsCard({ initialMeals, initialcategory, pagination }:
             className="p-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-300 bg-white shadow-lg hover:shadow-xl transition-all min-w-[200px]"
           >
             <option value="">All Categories</option>
-            {initialcategory?.map((meal: any, index: number) => (<option key={index} value={meal.name}>{meal.name}</option>))}
+            {/* {initialcategory?.map((meal: any, index: number) => (<option key={index} value={meal.name}>{meal.name}</option>))} */}
           </select>
 
 

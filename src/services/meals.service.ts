@@ -1,14 +1,12 @@
 import { env } from "@/env";
 import { cookies } from "next/headers";
-import { safeData } from "@/lib/safeResponsive";
-import {
-  ICreateMealsData,
-  IGetAllmeals,
-  IGetMealData,
-  IUpdateMealsData
-} from "@/types/meals.type";
 import { ApiErrorResponse, ApiResponse } from "@/types/response.type";
 import { success } from "zod";
+import { TCreateMealsData, TResponseMeals, TUpdateMealsData } from "@/types/meals.type";
+import { revalidateTag } from "next/cache";
+import { IProviderInfo } from "@/types/provider.type";
+import { IgetReviewData } from "@/types/reviews.type";
+import { Ipagination } from "@/types/pagination.type";
 const api_url = env.API_URL;
 
 interface ServiceOptionds {
@@ -23,10 +21,10 @@ export interface IMealStatus{
 }
 
 export const mealsService = {
-  createMeals: async (mealsdata: ICreateMealsData) => {
+  createMeals: async (mealsdata: TCreateMealsData) => {
     const cookieStore = await cookies();
     try {
-      const res = await fetch(`${api_url}/api/provider/meal`, {
+      const res = await fetch(`${api_url}/api/v1/provider/meal`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,10 +32,11 @@ export const mealsService = {
         },
         body: JSON.stringify(mealsdata),
       });
+      revalidateTag("meal",'max')
 
       const data = await res.json();
 
-      const result = data as ApiResponse<ICreateMealsData>;
+      const result = data as ApiResponse<TCreateMealsData>;
       if (!res.ok) {
         const error = data as ApiErrorResponse;
         return {
@@ -54,9 +53,9 @@ export const mealsService = {
       return { data: null, error: { message: "Something Went Wrong" } };
     }
   },
-  getmeals: async (params?: any, options?: ServiceOptionds) => {
+  getAllmeals: async (params?: any, options?: ServiceOptionds) => {
     try {
-      const url = new URL(`${api_url}/api/meals`);
+      const url = new URL(`${api_url}/api/v1/meals`);
 
       if (params) {
         Object.entries(params).forEach(([key, value]) => {
@@ -66,20 +65,21 @@ export const mealsService = {
         });
       }
 
-      // const config: RequestInit = {};
-      // if (options?.cache) {
-      //   config.cache = options.cache;
-      // }
+      const config: RequestInit = {};
+      if (options?.cache) {
+        config.cache = options.cache;
+      }
 
-      // if (options?.revalidate) {
-      //   config.next = { revalidate: options.revalidate };
-      // }
-      // config.next = { ...config.next, revalidate:60};
+      if (options?.revalidate) {
+        config.next = { revalidate: options.revalidate };
+      }
+      config.next = { ...config.next, revalidate:10,tags:["meal","meals"]};
 
-      const res = await fetch(url.toString(), {next:{revalidate:60}});
+      const res = await fetch(url.toString(), config);
 
       const data = await res.json();
-      const result = data as ApiResponse<IGetAllmeals>;
+      console.log(data.data.data,'dataforbuseinse')
+      const result = data.data.data as TResponseMeals<{provider:IProviderInfo,reviews:IgetReviewData}>[]
       if (!res.ok) {
         const error = data as ApiErrorResponse;
         return {
@@ -88,9 +88,10 @@ export const mealsService = {
         };
       }
       return {
-        success: result.success,
-        message: result.message || "retrieve all meals successfully",
-        data: result.data,
+        success: data.success,
+        message: data.message || "retrieve all meals successfully",
+        data: result,
+        pagination:data.data.pagination as Ipagination
       };
     } catch (error) {
       return { message: "something went wrong please try again" };
@@ -107,7 +108,7 @@ export const mealsService = {
         },
       });
       const data = await res.json();
-      const result =data as ApiResponse<IGetMealData[]>
+      const result =data as ApiResponse<TResponseMeals[]>
       if(!res.ok){
         const error =data as ApiErrorResponse
         return {success:error.success,message:error.message || "retrieve own meals failed"}
@@ -129,7 +130,7 @@ export const mealsService = {
         body: JSON.stringify({mealsdata}),
       });
       const data = await res.json();
-       const result =data as ApiResponse<IGetMealData>
+       const result =data as ApiResponse<TResponseMeals>
       if(!res.ok){
         const error =data as ApiErrorResponse
         return {success:error.success,message:error.message || "meals status update failed"}
@@ -144,7 +145,7 @@ export const mealsService = {
     try {
       const res = await fetch(`${api_url}/api/meal/${id}`);
       const body = await res.json();
-      const result = body as ApiResponse<IGetMealData>
+      const result = body as ApiResponse<TResponseMeals>
       if(!res.ok){
         const error=body as ApiErrorResponse
         return {success:error.success, message:error.message || "retrieve single meal failed"}
@@ -170,7 +171,7 @@ export const mealsService = {
         }
       });
       const data = await res.json();
-      const result = data as ApiResponse<IGetMealData>
+      const result = data as ApiResponse<TResponseMeals>
       if (!res.ok) {
         const error =data as ApiErrorResponse
         return {success:error.success,message:error.message}
@@ -180,7 +181,7 @@ export const mealsService = {
       return {success:false,message:"something went wrong please try again"}
     }
   },
-  updateMeals: async (id: string, mealsdata: IUpdateMealsData) => {
+  updateMeals: async (id: string, mealsdata: TUpdateMealsData) => {
     try {
       const cookieStore = await cookies();
       const res = await fetch(`${api_url}/api/provider/meal/${id}`, {
@@ -193,7 +194,7 @@ export const mealsService = {
         body: JSON.stringify(mealsdata),
       });
       const data = await res.json();
-      const result = data as ApiResponse<IGetMealData>
+      const result = data as ApiResponse<TResponseMeals>
       if (!res.ok) {
         const error =data as ApiErrorResponse
         return {
@@ -230,7 +231,7 @@ export const mealsService = {
         },
       });
       const data = await res.json();
-       const result = data as ApiResponse<IGetMealData[]>
+       const result = data as ApiResponse<TResponseMeals[]>
       if (!res.ok) {
         const error =data as ApiErrorResponse
         return {success:error.success,message:error.message ||"retrieve admin meal data failed"}

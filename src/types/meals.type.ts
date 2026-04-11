@@ -32,10 +32,10 @@ export const dietaryPreferences = [
 ] as const;
 
 // create meal
-export type ICreateMealsData=z.infer<typeof CreateMealData>
+export type TCreateMealsData=z.infer<typeof CreateMealData>
 
-export type Cuisine = typeof cuisines[number];
-export type DietaryPreference = typeof dietaryPreferences[number];
+export type TCuisine = typeof cuisines[number];
+export type TDietaryPreference = typeof dietaryPreferences[number];
 
 
 export interface ReviewCustomer {
@@ -45,7 +45,7 @@ export interface ReviewCustomer {
   email: string;
 }
 // update meal
-export type IUpdateMealsData = z.infer<typeof UpdatemealData>;
+export type TUpdateMealsData = z.infer<typeof UpdatemealData>;
 
 export interface IGetAllmeals{
   data:IGetMealData[],
@@ -69,14 +69,13 @@ export interface IGetMealData {
   image: string | null;
   price: number;
   isAvailable: boolean;
-  dietaryPreference: DietaryPreference;
+  dietaryPreference: TDietaryPreference;
   providerId: string;
   category_name: string;
-  cuisine: Cuisine;
+  cuisine: TCuisine;
   status: "PENDING" | "APPROVED" | "REJECTED";
   createdAt: string;
   updatedAt: string;
-
   averageRating?:number
   totalReview?:number
 }
@@ -97,7 +96,7 @@ export type UpdateMealsData = {
   image?: string;
   price?: number;
   isAvailable?: boolean;
-  dietaryPreference?: DietaryPreference;
+  dietaryPreference?: TDietaryPreference;
   category_name?: string;
-  cuisine?: Cuisine;
+  cuisine?: TCuisine;
 };

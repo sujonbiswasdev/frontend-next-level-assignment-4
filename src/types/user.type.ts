@@ -1,11 +1,7 @@
 import { createUserSchema, UpdateUserCommonData, updateUserSchema, UpdateuserschemabyAdmin } from "@/validations/auth.validation"
 import z from "zod"
-import { Ipagination } from "./pagination.type"
 import { IProviderInfo } from "./provider.type"
 export type TUpdateuserbyAdmin = z.infer<typeof UpdateuserschemabyAdmin>
-
-// update user common data
-export type TUpdateUserCommonData = z.infer<typeof UpdateUserCommonData>
 
 export type TUserRoleType = "Provider" | "Admin" | "Customer"
 export type TUserStatusType = "activate" | "suspend"

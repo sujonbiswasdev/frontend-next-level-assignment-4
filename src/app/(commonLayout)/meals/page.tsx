@@ -1,42 +1,33 @@
-import { getMeals } from '@/actions/meals.action'
-import { getCategory } from '@/actions/category'
-import MealsCard from '@/components/modules/meals/get-meals'
+import { getAllMeals } from '@/actions/meals.action'
+import RetrieveAllmeals from '@/components/modules/meals/RetrieveAllmeals';
 import Notfounddata from '@/components/Notfounddata'
-import { TGetCategory } from '@/types/category'
-import { IGetMealData } from '@/types/meals.type'
-import { Ipagination } from '@/types/pagination.type'
-interface PageProps {
-  searchParams: {
-    category_name?: string
-    isAvailable?: string
-  }
-}
+import ErrorBoundary from '@/components/shared/ErrorBoundary';
+import { TResponseMeals } from '@/types/meals.type';
+import { Ipagination } from '@/types/pagination.type';
+import React from 'react';
 
-const GetMeals = async ({ searchParams }: PageProps) => {
+
+const GetMeals = async ({
+  searchParams,
+}: {
+  searchParams:Promise<{ [key: string]: string | string[] | undefined }>;
+}) => {
   const search =await searchParams
-  // const response = await getMeals(search,{revalidate:60});
-  const response=await fetch("http://localhost:5000/api/v1/meals",{next:{revalidate:60}})
-  const res=await response.json()
+  const response = await getAllMeals(search);
 
-  // const categorydata = await getCategory()
-  //   if (!categorydata) {
-  //   return (
-  //     <div className="p-4 text-red-500">
-  //       Failed to load category
-  //     </div>
-  //   );
-  // }
+  if(!response.success || !response.data){
+    return <Notfounddata content='No meals found.' emoji="🍽️"/>
+  }
+  
   return (
     <div className="">
-      
-      {!res.success?(
-        <div>
-          <Notfounddata content='data not found'/>
-        </div>
-      ):(<div>
-
-        {/* <MealsCard initialMeals={res.data?.data as IGetMealData[]} initialcategory={categorydata.data?.data as TGetCategory[]} pagination={res.data?.pagination as Ipagination} /> */}
-      </div>)}
+      {/* Error Boundary for meal data rendering */}
+      <React.Suspense fallback={<div>Loading meals...</div>}>
+        <ErrorBoundary fallback={<Notfounddata content="Something went wrong while loading meals." emoji="⚠️" />}>
+          <RetrieveAllmeals initialMeals={response.data as TResponseMeals[]} pagination={response.pagination as Ipagination} />
+        </ErrorBoundary>
+      </React.Suspense>
+ 
     </div>
   )
 }

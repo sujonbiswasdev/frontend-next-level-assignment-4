@@ -1,16 +1,16 @@
 'use server'
 import { IMealStatus, mealsService } from "@/services/meals.service";
-import {  ICreateMealsData, IUpdateMealsData, UpdateMealsData } from "@/types/meals.type";
+import {  TCreateMealsData, TUpdateMealsData, UpdateMealsData } from "@/types/meals.type";
 import { updateTag } from "next/cache";
 
-export const createmeals = async (data:ICreateMealsData) => {
+export const createmeals = async (data:TCreateMealsData) => {
   const res = await mealsService.createMeals(data);
   updateTag("mealsPost");
   return res;
 };
 
-export const getMeals=async(params?:any,config?:any)=>{
-  return await mealsService.getmeals(params,config)
+export const getAllMeals=async(params?:any,config?:any)=>{
+  return await mealsService.getAllmeals(params,config)
 }
 
 export const getmealsown=async()=>{
@@ -22,7 +22,7 @@ export const getmealsforadmin=async(params:any)=>{
 }
 
 
-export const updateMeal = async (id:string,data:IUpdateMealsData) => {
+export const updateMeal = async (id:string,data:TUpdateMealsData) => {
   const res = await mealsService.updateMeals(id,data);
   updateTag("mealsPost");
   return res;

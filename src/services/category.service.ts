@@ -13,7 +13,7 @@ export const CategoriesService = {
   getcategory: async () => {
     try {
       const cookieStore = await cookies();
-      const res = await fetch(`${api_url}/api/category`, {
+      const res = await fetch(`${api_url}/api/v1/category`, {
         credentials: "include",
         headers: {
           Cookie: cookieStore.toString()
@@ -38,7 +38,7 @@ export const CategoriesService = {
     try {
       const cookieStore = await cookies();
 
-      const response = await fetch(`${api_url}/api/admin/category`, {
+      const response = await fetch(`${api_url}/api/v1/admin/category`, {
         method: "POST",
         credentials: 'include',
         headers: {
@@ -68,7 +68,7 @@ export const CategoriesService = {
   updateCategory: async (id: string, updateUser: IUpdateCategory) => {
     try {
       const cookieStore = await cookies()
-      const res = await fetch(`${api_url}/api/admin/category/${id}`, {
+      const res = await fetch(`${api_url}/api/v1/admin/category/${id}`, {
         method: "PUT",
         credentials: "include",
         headers: {
@@ -94,7 +94,7 @@ export const CategoriesService = {
   deleteCategory: async (id: string) => {
     try {
       const cookieStore = await cookies()
-      const res = await fetch(`${api_url}/api/admin/category/${id}`, {
+      const res = await fetch(`${api_url}/api/v1/admin/category/${id}`, {
         method: "DELETE",
         credentials: "include",
         headers: {
@@ -117,7 +117,7 @@ export const CategoriesService = {
   singlecategory: async (id: string) => {
     try {
       const cookieStore = await cookies()
-      const res = await fetch(`${api_url}/api/category/${id}`, {
+      const res = await fetch(`${api_url}/api/v1/category/${id}`, {
         credentials: "include",
         headers: {
           Cookie: cookieStore.toString(),

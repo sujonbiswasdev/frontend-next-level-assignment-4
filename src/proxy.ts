@@ -90,16 +90,6 @@ async function proxy(request: NextRequest) {
   ) {
     return NextResponse.redirect(new URL("/login?error=provider_access_only_for_Provider", request.url));
   }
-
-  // Customer & Provider can't access admin routes
-  if (
-    (role === Roles.Customer || role === Roles.Provider) &&
-    pathname.startsWith("/admin")
-  ) {
-    return NextResponse.redirect(new URL("/login?error=admin_access_only_for_Admin", request.url));
-  }
-
-  // Provider/Admin can't access Customer order/cart/checkout
   if (
     (role === Roles.Admin || role === Roles.Provider) &&
     (pathname.startsWith("/orders") ||
@@ -112,77 +102,53 @@ async function proxy(request: NextRequest) {
       pathname.startsWith("/checkout") ? "checkout_access_only_for_customer" :
       "access_only_for_customer";
     return NextResponse.redirect(new URL(`/login?error=${error}`, request.url));
-  }
 
-  // If on login/register page, already logged in? Short-circuit redirect to dashboard
-  if (pathname === "/login" || pathname === "/register") {
-    if (role === Roles.Admin)     return NextResponse.redirect(new URL("/admin/dashboard", request.url));
-    if (role === Roles.Provider)  return NextResponse.redirect(new URL("/provider/dashboard", request.url));
-  }
-
-  // Redirect profile shortcut to respective dashboards
-  if (pathname === "/profile") {
-    if (role === Roles.Admin)
-      return NextResponse.redirect(new URL("/admin/dashboard/profile", request.url));
-    if (role === Roles.Provider)
-      return NextResponse.redirect(new URL("/provider/dashboard/profile", request.url));
-  }
-
-  // Customers cannot access dashboard routes at all
-  if (pathname.startsWith("/dashboard") && role === Roles.Customer) {
-    return NextResponse.redirect(new URL("/login?error=access_define", request.url));
-  }
-
-  // Dashboard shortlinks: if dashboard path, always forcefully map by role
-  if (pathname.startsWith("/dashboard")) {
-    if (role === Roles.Admin)
-      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
-    if (role === Roles.Provider)
-      return NextResponse.redirect(new URL("/provider/dashboard", request.url));
-  }
-
-  // Only admin can access admin dashboard
-  if (pathname.startsWith("/admin") && role !== Roles.Admin) {
-    return NextResponse.redirect(new URL("/login?error=admin-dashboard_access_only_for_admin", request.url));
-  }
-  // Only provider can access provider dashboard
-  if (pathname.startsWith("/provider") && role !== Roles.Provider) {
-    return NextResponse.redirect(new URL("/login?error=provider-dashboard_access_only_for_provider", request.url));
-  }
-
-  // Provider dashboard normalization (always /provider/dashboard/...)
-  if (role === Roles.Provider) {
-    if (pathname === "/provider" || pathname.startsWith("/provider/")) {
-      const fixedPath = pathname.replace(/^\/provider/, "/provider/dashboard");
-      return NextResponse.redirect(new URL(fixedPath, request.url));
-    }
-    // Prevent providers from admin dashboard
-    if (pathname.startsWith("/admin/dashboard")) {
-      return NextResponse.redirect(new URL("/login?error=admin_cannot_access_provider", request.url));
-    }
-    return NextResponse.next();
-  }
-
-  // Admin dashboard normalization (always /admin/dashboard/...)
-  if (role === Roles.Admin) {
-    if (pathname === "/admin" || pathname.startsWith("/admin/")) {
-      const fixedPath = pathname.replace(/^\/admin/, "/admin/dashboard");
-      return NextResponse.redirect(new URL(fixedPath, request.url));
-    }
-    // Prevent admins from provider dashboard
-    if (pathname.startsWith("/provider/dashboard")) {
-      return NextResponse.redirect(new URL("/login?error=provider_cannot_access_provider", request.url));
-    }
-    return NextResponse.next();
-  }
-
-  // Default: let go through
-  return NextResponse.next();
 }
 
+
+if (
+  pathname.startsWith("/admin") &&
+  role !== Roles.Admin
+) {
+  return NextResponse.redirect(new URL("/login?error=admin_access_only", request.url));
+}
+
+if (
+  pathname.startsWith("/provider") &&
+  role !== Roles.Provider
+) {
+  return NextResponse.redirect(new URL("/login?error=provider_access_only", request.url));
+}
+
+if (role === Roles.Provider && pathname === "/dashboard") {
+  return NextResponse.redirect(new URL("/provider/dashboard", request.url));
+}
+
+if (role === Roles.Provider && pathname === "/provider") {
+  return NextResponse.redirect(new URL("/provider/dashboard", request.url));
+}
+
+if (role === Roles.Admin && pathname === "/dashboard") {
+  return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+}
+
+if (role === Roles.Admin && pathname === "/admin") {
+  return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+}
+
+
+}
 export const config = {
   matcher: [
-  
+    "/profile",
+    "/admin/:path*",
+    "/provider",
+    "/dashboard/:path*",
+    "/provider/:path*",
+    "/cart",
+    "/checkout",
+    "/orders/:path*",
+    "/admin/:path*",
   ],
 };
 
