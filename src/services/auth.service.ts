@@ -172,3 +172,61 @@ return {
 };
 
 }
+
+export const verifyEmail = async (verifyData: { email: string; otp: string }) => {
+  try {
+    const storeCookies = await cookies();
+    const response = await fetch(`${api_url}/api/v1/auth/verify-email`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: storeCookies.toString(),
+      },
+      cache: "no-store",
+      body: JSON.stringify(verifyData),
+    });
+    const body = await response.json();
+    const result = body as ApiResponse<any>;
+    if (!response.ok) {
+      const error = body as ApiErrorResponse;
+      return { success: error.success, message: error.message };
+    }
+    return {
+      success: true,
+      message: result.message || "Email successfully verified!",
+      data: result.data,
+    };
+  } catch (error: any) {
+    return { success: false, message: error.message || "Server error" };
+  }
+};
+
+export const resendVerificationCode = async ({ email }: { email: string }) => {
+  try {
+    const storeCookies = await cookies();
+    const response = await fetch(`${api_url}/api/v1/auth/send-otp`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: storeCookies.toString(),
+      },
+      cache: "no-store",
+      body: JSON.stringify({ email, type: "email-verification" }),
+    });
+    const body = await response.json();
+    const result = body as ApiResponse<any>;
+    if (!response.ok) {
+      const error = body as ApiErrorResponse;
+      return { success: error.success, message: error.message };
+    }
+    return {
+      success: true,
+      message: result.message || "Verification code resent successfully!",
+      data: result.data,
+    };
+  } catch (error: any) {
+    return { success: false, message: error.message || "Server error" };
+  }
+};
+
+
