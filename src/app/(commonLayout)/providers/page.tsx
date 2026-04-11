@@ -1,4 +1,4 @@
-import { getAlluserProvider } from "@/actions/provider/provider.action"
+import { getAlluserProvider } from "@/actions/user.actions"
 import Notfounddata from "@/components/Notfounddata"
 import TestimonialSection from "@/components/TestimonialSection"
 import { IProviderInfo } from "@/types/provider.type"

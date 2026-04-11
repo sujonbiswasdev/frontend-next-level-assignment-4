@@ -1,5 +1,4 @@
-import { getAllusers } from '@/actions/user/admin'
-import UsersTable from '@/components/modules/users/usertable'
+import { getAllusers } from '@/actions/user.actions'
 import React from 'react'
 
 interface PageProps {
@@ -22,7 +21,7 @@ const Userpage =async ({ searchParams }: PageProps) => {
   
   return (
     <div>
-        <UsersTable users={res.data.data} pagination={res.data.pagination}/>
+        {/* <UsersTable users={res.data as any} pagination={res as any}/> */}
       
     </div>
   )

@@ -1,4 +1,5 @@
-import { Route } from "@/types";
+import { Route } from "@/types/route.type";
+
 
 export const ProviderRoutes: Route[] = [
     {

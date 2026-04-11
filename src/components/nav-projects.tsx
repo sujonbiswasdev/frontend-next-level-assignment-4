@@ -24,7 +24,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { Route } from "@/types"
+import { Route } from "@/types/route.type"
 
 export function NavProjects({siteManu}: {siteManu:Route[]}) {
   const { isMobile } = useSidebar()

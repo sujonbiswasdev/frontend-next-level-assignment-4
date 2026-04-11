@@ -42,7 +42,6 @@ export function SigninForm() {
       const toastId = toast.loading("user signning.......");
       try {
         const loginuser = await userLogin(value);
-        console.log(loginuser,'loinuser')
         if (!loginuser || !loginuser.success) {
           toast.dismiss(toastId);
           toast.error(loginuser.message || "login failed", { theme: "dark" });

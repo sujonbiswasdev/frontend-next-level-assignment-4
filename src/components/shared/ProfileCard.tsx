@@ -1,38 +1,20 @@
 'use client'
 import { userLogout } from '@/actions/auth.actions';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { authClient } from '@/lib/authClient';
 import { TUser } from '@/types/user.type';
 import {
-  Bug,
-  FileText,
-  Globe,
   LogOut,
-  Mail,
-  Monitor,
-  Package,
-  Plus,
-  Server,
   Settings,
-  Shield,
-  Trash,
-  UserPlus,
-  Users,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -45,7 +27,7 @@ export default function ProfileCard({ profile }: { profile: TUser }) {
   const handleLogout = async () => {
     const toastId=toast.loading("user logouting........")
     const res=await userLogout()
-    if(res.error){
+    if(!res.data || !res.success){
       toast.dismiss(toastId)
       toast.error("user logout failed")
       return;

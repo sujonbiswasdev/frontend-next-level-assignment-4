@@ -76,7 +76,7 @@ export default function CategoryTable({categorydata}:{categorydata:TGetCategory[
                             </td>
                             {/* adminId */}
                             <td className="px-6 py-4 font-medium text-gray-600">
-                               <Link className="text-blue-600 hover:underline" href={`/admin-dashboard/profile/${item.user.id}`}> {item.user.id.slice(0,7)}....</Link>
+                               {/* <Link className="text-blue-600 hover:underline" href={`/admin-dashboard/profile/${item.user.id}`}> {item.user.id.slice(0,7)}....</Link> */}
                             </td>
 
                             {/* name */}

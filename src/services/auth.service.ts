@@ -1,11 +1,10 @@
-"use server";
-
+"use server"
 import { env } from "@/env";
 import { deleteCookie } from "@/lib/cookieUtils";
 import { setTokenInCookies } from "@/lib/tokenUtils";
 import { ApiErrorResponse, ApiResponse } from "@/types/response.type";
 import { Ilogin, TAuthData } from "@/types/auth.type";
-import { TUser } from "@/types/user.type";
+import { TUser, UserCreateInput } from "@/types/user.type";
 import { cookies } from "next/headers";
 const api_url = env.API_URL;
 
@@ -68,7 +67,6 @@ export async function getSession() {
       cache: "no-store",
     });
     const session = await res.json();
-    console.log(session,'data')
     if (!session) {
       return { data: null, error: "No session" };
     }
@@ -77,25 +75,18 @@ export async function getSession() {
     return { data: null, error: "server error" };
   }
 }
-export async function registerUser(registerData: any) {
-  const formData = new FormData();
-
-        const { image, ...rest } = registerData;
-    
-        formData.append("data", JSON.stringify(rest));
-        if (image) {
-          formData.append("file", image);
-        }
-        console.log(formData,'fd')
+export async function registerUser(registerData: UserCreateInput) {
   try {
     const response = await fetch(`${api_url}/api/v1/auth/register`, {
       method: "POST",
-      cache: "no-store",
-      body: formData,
+      headers:{
+        "Content-Type":"application/json"
+      },
+      cache:"no-store",
+      body: JSON.stringify(registerData)
     });
 
     const body= await response.json();
-    console.log(body,'s')
     if (!response.ok || !body.success) {
       const data = body as ApiErrorResponse;
       return {
@@ -123,11 +114,9 @@ export async function loginUser(logindata: Ilogin) {
       body: JSON.stringify(logindata),
     });
     const body = await response.json();
-    console.log(body,'dsfd')
     const result =body as ApiResponse<TAuthData>
     if (!response.ok || !body.success) {
       const error = body as ApiErrorResponse;
-      console.log(error,'sdf')
       return {
         success:error.success,
         message: error.message || "Login failed",
@@ -173,11 +162,9 @@ export async function Logout() {
       error: data.message || "Logout failed",
     };
   }
-  await Promise.all([
     deleteCookie("accessToken"),
     deleteCookie("refreshToken"),
-    deleteCookie("better-auth.session_token"),
-]);
+    deleteCookie("better-auth.session_token")
 return {
     success: true,
     message: result.message || "Logged out successfully!",

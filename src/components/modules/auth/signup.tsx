@@ -36,7 +36,7 @@ export function SignupForm() {
             name: "",
             email: "",
             password: "",
-            image: null as File | null,
+            image:"",
             phone: "",
             role: "",
             restaurantName: "",
@@ -47,10 +47,9 @@ export function SignupForm() {
             onSubmit: createUserSchema as any,
         },
         onSubmit: async ({ value }) => {
-            console.log(value,'value')
             const toastId = toast.loading("user creating.........");
             try {
-                const data  = await registerUser(value);
+                const data  = await registerUser(value as any);
                 if (!data || !data.success ||data.error) {
                     toast.dismiss(toastId)
                     toast.error(data.message || 'user create failed')
@@ -186,7 +185,7 @@ export function SignupForm() {
                                 );
                             }}
                         />
-
+{/* 
 <form.Field
               name="image"
               children={(field) => (
@@ -220,7 +219,34 @@ export function SignupForm() {
                   )}
                 </Field>
               )}
-            />
+            /> */}
+
+<form.Field
+                            name="image"
+                               validators={{ onChange: createUserSchema.shape.image }}
+                            children={(field) => {
+                                const isInvalid =
+                                    field.state.meta.isTouched && !field.state.meta.isValid
+                                return (
+                                    <Field data-invalid={isInvalid}>
+                                        <FieldLabel htmlFor={field.name}>Image</FieldLabel>
+                                        <Input
+                                            id={field.name}
+                                            name={field.name}
+                                            value={field.state.value}
+                                            onBlur={field.handleBlur}
+                                            onChange={(e) => field.handleChange(e.target.value)}
+                                            aria-invalid={isInvalid}
+                                            placeholder="please enter your image"
+                                            autoComplete="off"
+                                        />
+                                        {isInvalid && (
+                                            <FieldError errors={field.state.meta.errors} />
+                                        )}
+                                    </Field>
+                                )
+                            }}
+                        />
 
                         <form.Field
                             name="phone"

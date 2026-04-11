@@ -43,7 +43,7 @@ export function NavUser({ user }: { user: TUser }) {
       return;
     }
     toast.dismiss(toastId);
-    toast.success(res.data?.message || "user logout successfully");
+    // toast.success(res.data?.message || "user logout successfully");
     router.refresh();
   };
   return (

@@ -1,6 +1,5 @@
 import { getMeals } from "@/actions/meals.action";
 import { getCategory } from "@/actions/category";
-import { getAlluserProvider } from "@/actions/provider/provider.action";
 import FoodCategories from "@/components/modules/category/card";
 import HeroSlider from "@/components/heroslider";
 import MealCard from "@/components/modules/meals/MealCard";
@@ -10,11 +9,11 @@ import { TGetCategory } from "@/types/category";
 import { IGetMealData } from "@/types/meals.type";
 import { IProviderInfo } from "@/types/provider.type";
 import Link from "next/link";
+import { getAlluserProvider } from "@/actions/user.actions";
 export default async function HomePage() {
   const mealdata = await getMeals();
   const categories = await getCategory();
   const providerinfo = await getAlluserProvider();
-  console.log(mealdata,'mealdata')
   return (
     <div className="">
       <HeroSlider />

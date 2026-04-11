@@ -1,5 +1,3 @@
-"use server"
-
 import { loginUser, Logout } from "@/services/auth.service"
 import { Ilogin } from "@/types/auth.type"
 

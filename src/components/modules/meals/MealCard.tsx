@@ -9,13 +9,11 @@ import { manageCartStore } from "@/store/CartStore";
 import { useRouter } from "next/navigation";
 
 const MealCard = ({ filterData }: { filterData: IGetMealData[] }) => {
-  console.log(filterData,'filterdata')
   const { addToCart } = manageCartStore();
   const router = useRouter();
   const defaultIamge =
     "https://res.cloudinary.com/drmeagmkl/image/upload/v1771962102/default_meal_kgc6mv.png";
   const mealdata = filterData.find((item) => item.id);
-  const mainReviews = mealdata?.reviews.filter((r: any) => r.parentId == null);
 
   const fullStars = Math.floor(Number(10));
   const hasHalfStar = Number(10) % 1 >= 0.5;
