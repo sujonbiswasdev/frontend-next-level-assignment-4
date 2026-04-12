@@ -34,7 +34,7 @@ const slides: Slide[] = [
 
 export default function HeroSlider() {
   const [current, setCurrent] = useState(0);
-  const router=useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -45,8 +45,10 @@ export default function HeroSlider() {
   }, []);
 
   return (
-    <section className="relative w-full h-[90vh] min-h-[600px] overflow-hidden">
-
+    <section
+      className="
+        relative w-full h-[100vh] min-h-[450px] max-h-[620px] overflow-hidden"
+    >
       {/* Slides */}
       {slides.map((slide, index) => (
         <div
@@ -61,37 +63,66 @@ export default function HeroSlider() {
             alt={slide.title}
             fill
             priority
-            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1480px"
+            className="object-cover object-center"
           />
 
           {/* Dark Overlay */}
           <div className="absolute inset-0 bg-black/60"></div>
 
           {/* Content */}
-          <div className="relative z-30 h-full flex items-center">
-            <div className="max-w-[1440px] mx-auto  w-full">
-              <div className="max-w-2xl text-white space-y-6">
-
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight">
+          <div className="relative z-30 h-full flex items-center px-4 md:px-10">
+            <div className="w-full max-w-[1480px] mx-auto">
+              <div className="max-w-[95vw] sm:max-w-xl md:max-w-2xl text-white space-y-4 sm:space-y-6 lg:space-y-8 py-8">
+                <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight drop-shadow-md">
                   {slide.title}
                 </h1>
 
-                <p className="text-lg sm:text-xl text-gray-200">
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-200 font-medium drop-shadow">
                   {slide.subtitle}
                 </p>
 
-                <div className="flex flex-wrap gap-4">
-
-                  <button onClick={()=>router.push('/cart')} className=" py-3 bg-gradient-to-r from-orange-500 to-red-500 rounded-full text-white font-semibold shadow-xl hover:scale-105 transition">
+                <div className="flex flex-wrap gap-3 sm:gap-4">
+                  <button
+                    onClick={() => router.push("/cart")}
+                    className="
+                        px-6
+                        py-2.5
+                        sm:py-3
+                        text-base sm:text-lg
+                        bg-gradient-to-r 
+                        from-orange-500 to-red-500 
+                        rounded-full 
+                        text-white 
+                        font-semibold 
+                        shadow-xl 
+                        hover:scale-105
+                        transition 
+                        min-w-[130px] sm:min-w-[160px]
+                    "
+                  >
                     Order Now
                   </button>
 
-                  <button onClick={()=>router.push('/meals')} className=" py-3 border border-white rounded-full backdrop-blur-md hover:bg-white hover:text-black transition">
+                  <button
+                    onClick={() => router.push("/meals")}
+                    className="
+                        px-6
+                        py-2.5
+                        sm:py-3
+                        text-base sm:text-lg
+                        border border-white 
+                        rounded-full 
+                        backdrop-blur-md 
+                        hover:bg-white 
+                        hover:text-black 
+                        transition
+                        min-w-[130px] sm:min-w-[160px]
+                    "
+                  >
                     View Menu
                   </button>
-
                 </div>
-
               </div>
             </div>
           </div>
@@ -99,14 +130,15 @@ export default function HeroSlider() {
       ))}
 
       {/* Dots */}
-      <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-3 z-40">
+      <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-2 sm:gap-3 z-40">
         {slides.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrent(index)}
-            className={`w-3 h-3 rounded-full transition ${
-              current === index ? "bg-white scale-125" : "bg-white/50"
+            className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition ${
+              current === index ? "bg-white scale-110 sm:scale-125" : "bg-white/50"
             }`}
+            aria-label={`Go to slide ${index + 1}`}
           />
         ))}
       </div>

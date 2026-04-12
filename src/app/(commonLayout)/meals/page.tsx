@@ -28,7 +28,7 @@ const GetMeals = async ({
   }
   
   return (
-    <div className="">
+    <div className="px-4">
       {/* Error Boundary for meal data rendering */}
       <React.Suspense fallback={<div>Loading meals...</div>}>
         <ErrorBoundary fallback={<Notfounddata content="Something went wrong while loading meals." emoji="⚠️" />}>

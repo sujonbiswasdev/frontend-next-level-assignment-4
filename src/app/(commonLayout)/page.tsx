@@ -44,7 +44,7 @@ export default async function HomePage() {
           />
         )}
       </ErrorBoundary>
-      <div className="space-y-8 py-3 mt-4 md:mt-10">
+      <div className="space-y-8 py-3 mt-4 md:mt-10 px-4">
         <div className="mb-2 mx-auto">
           <div className="flex flex-col items-center space-y-2">
             <h2 className="flex items-center font-bold lg:text-4xl pr-2">
@@ -72,7 +72,7 @@ export default async function HomePage() {
             />
           }
         >
-          <div className="mt-2 md:mt-10 mb-4">
+          <div className="mt-2 md:mt-10 mb-4 px-4">
             {!mealdata.data || !mealdata.success ? (
               <Notfounddata content="no meal found" />
             ) : (

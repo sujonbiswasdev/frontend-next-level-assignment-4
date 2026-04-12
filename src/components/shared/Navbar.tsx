@@ -1,7 +1,6 @@
 "use client";
 
 import { Book, Menu, Sunset, Trees, Zap } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 
 import {
@@ -60,16 +59,15 @@ interface Navbar1Props {
       url: string;
     };
   };
-  user:TUser | null
+  user: TUser | null;
 }
-export interface User<T>{
-  user:{
-    data:T
-  }
+export interface User<T> {
+  user: {
+    data: T;
+  };
 }
 
 const Navbar = ({
-
   logo = {
     url: "/",
     src: "https://res.cloudinary.com/drmeagmkl/image/upload/v1772007286/logo_rcsr8h.png",
@@ -85,79 +83,119 @@ const Navbar = ({
     login: { title: "Login", url: "/login" },
     signup: { title: "Sign up", url: "/register" },
   },
-  className,user
+  className,
+  user,
 }: Navbar1Props) => {
-  const userinfo=user as TUser
+  const userinfo = user as TUser;
   return (
-    <section className={cn("fixed max-w-[1480px] mx-auto top-0 left-0 right-0 z-50 backdrop-blur-md bg-white/80 dark:bg-gray-900/80 border-b border-border", className)} >
-      <div className="container">
+    <section
+      className={cn(
+        "fixed top-0 left-1/2 -translate-x-1/2 w-full z-50 backdrop-blur-md bg-white/80 dark:bg-gray-900/80 border-b border-border",
+        "px-1 sm:px-4 ",
+        className
+      )}
+      style={{ maxWidth: "1480px" }}
+    >
+      <div
+        className={cn(
+          "w-full mx-auto flex flex-col relative px-0 md:px-2 lg:px-4",
+        )}
+        style={{ maxWidth: 1480 }}
+      >
         {/* Desktop Menu */}
-        <nav className="flex justify-between">
-          <div className="flex items-center gap-0">
+        <nav
+          className={cn(
+            "hidden lg:flex w-full items-center justify-between min-h-[60px] py-2 gap-2"
+          )}
+        >
+          <div className="flex items-center min-w-fit">
             {/* Logo */}
-            <a href={logo.url} className="flex items-center gap-2">
+            <a
+              href={logo.url}
+              className="flex items-center gap-2 min-w-[40px]"
+              tabIndex={0}
+            >
               <img
                 src={logo.src}
-                className="max-w-[50px] dark:invert"
+                className="w-[38px] h-[38px] md:w-[44px] md:h-[44px] lg:w-[50px] lg:h-[50px] aspect-square dark:invert object-contain min-w-[32px] max-h-[56px]"
                 alt={logo.alt}
+                style={{
+                  objectFit: "contain",
+                  height: "auto",
+                  width: "100%",
+                  minWidth: 32,
+                  maxHeight: 56,
+                }}
               />
-              <span className="text-lg font-semibold tracking-tighter">
+              <span className="hidden xs:inline text-base md:text-lg font-semibold tracking-tighter leading-tight max-w-[150px] truncate">
                 {logo.title}
               </span>
             </a>
           </div>
-          <div className="hidden lg:flex items-center">
+          <div className="flex-1 flex justify-center items-center">
             <NavigationMenu>
-              <NavigationMenuList className="text-[20px] ">
+              <NavigationMenuList className="text-base lg:text-[20px] flex flex-row gap-2 items-center">
                 {menu.map((item) => renderMenuItem(item))}
               </NavigationMenuList>
             </NavigationMenu>
           </div>
-
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-3 md:gap-4 min-w-fit">
             <CartModal />
-            {userinfo? (<>
-              <ProfileCard profile={user as TUser} />
-            </>) :
-
-              (<div className="flex gap-2">
-
-                <Button asChild variant="outline" size="sm">
+            {userinfo ? (
+              <>
+                <ProfileCard profile={user as TUser} />
+              </>
+            ) : (
+              <div className="flex gap-2 min-w-fit">
+                <Button asChild variant="outline" size="sm" className="px-3 md:px-5 text-xs md:text-sm">
                   <a href={auth.login.url}>{auth.login.title}</a>
                 </Button>
-                <Button asChild size="sm">
+                <Button asChild size="sm" className="px-3 md:px-5 text-xs md:text-sm">
                   <a href={auth.signup.url}>{auth.signup.title}</a>
                 </Button>
-              </div>)}
+              </div>
+            )}
           </div>
         </nav>
 
         {/* Mobile Menu */}
-        <div className="block lg:hidden">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <a href={logo.url} className="flex items-center gap-2">
-              <img
-                src={logo.src}
-                className="max-h-8 dark:invert"
-                alt={logo.alt}
-              />
-            </a>
+        <div className="flex lg:hidden w-full flex-row items-center justify-between mt-1 mb-1 py-1">
+          {/* Logo */}
+          <a
+            href={logo.url}
+            className="flex items-center gap-2 min-w-[32px]"
+            tabIndex={0}
+          >
+            <img
+              src={logo.src}
+              className="max-h-8 min-w-[32px] aspect-square dark:invert object-contain"
+              alt={logo.alt}
+              style={{
+                objectFit: "contain",
+                width: 36,
+                maxHeight: 36,
+              }}
+            />
+            <span className="hidden xs:inline text-sm font-semibold tracking-tighter">{logo.title}</span>
+          </a>
+          <div className="flex items-center gap-2">
+            {/* NavigationMenu hidden on <lg */}
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline" size="icon">
+                <Button variant="outline" size="icon" className="ml-1 sm:ml-2">
                   <Menu className="size-4" />
                 </Button>
               </SheetTrigger>
-              <SheetContent className="overflow-y-auto">
+              <SheetContent className="overflow-y-auto p-0 min-w-[72vw] sm:min-w-[320px] md:min-w-[350px] max-w-full">
                 <SheetHeader>
                   <SheetTitle>
-                    <Link href={logo.url} className="flex items-center gap-2">
+                    <Link href={logo.url} className="flex items-center gap-2 my-3">
                       <img
                         src={logo.src}
-                        className="max-h-8 dark:invert"
+                        className="max-h-8 min-w-[32px] aspect-square dark:invert object-contain"
                         alt={logo.alt}
                       />
+                      <span className="hidden xs:inline text-base font-semibold tracking-tighter">{logo.title}</span>
                     </Link>
                   </SheetTitle>
                 </SheetHeader>
@@ -165,22 +203,31 @@ const Navbar = ({
                   <Accordion
                     type="single"
                     collapsible
-                    className="flex w-full flex-col gap-4"
+                    className="flex w-full flex-col gap-2"
                   >
                     {menu.map((item) => renderMobileMenuItem(item))}
                   </Accordion>
-
-                  {userinfo ? "profile" : (<div className="flex flex-col gap-3">
-                    <Button asChild variant="outline">
-                      <a href={auth.login.url}>{"Login"}</a>
-                    </Button>
-                    <Button asChild>
-                      <a href={auth.signup.url}>{auth.signup.title}</a>
-                    </Button>
-                  </div>)}
+                  {userinfo ? (
+                    <div className="py-2">
+                      <ProfileCard profile={user as TUser} />
+                    </div>
+                  ) : (
+                    <div className="flex flex-col gap-3">
+                      <Button asChild variant="outline" className="text-sm">
+                        <a href={auth.login.url}>{"Login"}</a>
+                      </Button>
+                      <Button asChild className="text-sm">
+                        <a href={auth.signup.url}>{auth.signup.title}</a>
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </SheetContent>
             </Sheet>
+            {/* Cart on mobile */}
+            <div className="flex items-center ml-1">
+              <CartModal />
+            </div>
           </div>
         </div>
       </div>
@@ -188,14 +235,17 @@ const Navbar = ({
   );
 };
 
+// Desktop navigation menu item with responsive text and spacing
 const renderMenuItem = (item: MenuItem) => {
   if (item.items) {
     return (
       <NavigationMenuItem key={item.title}>
-        <NavigationMenuTrigger>{item.title}</NavigationMenuTrigger>
-        <NavigationMenuContent className="bg-popover text-popover-foreground">
+        <NavigationMenuTrigger className="text-base lg:text-[20px] px-2 md:px-3">
+          {item.title}
+        </NavigationMenuTrigger>
+        <NavigationMenuContent className="bg-popover text-popover-foreground w-[90vw] max-w-md md:max-w-xl p-2">
           {item.items.map((subItem) => (
-            <NavigationMenuLink asChild key={subItem.title} className="w-80">
+            <NavigationMenuLink asChild key={subItem.title} className="w-full max-w-[340px]">
               <SubMenuLink item={subItem} />
             </NavigationMenuLink>
           ))}
@@ -203,28 +253,37 @@ const renderMenuItem = (item: MenuItem) => {
       </NavigationMenuItem>
     );
   }
-
-   const currentPath = usePathname();
+  const currentPath = usePathname();
   const isActive = currentPath === item.url;
   return (
     <NavigationMenuItem key={item.title}>
       <NavigationMenuLink
-        className="group text-[20px] inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-accent-foreground"
-       asChild>
-        <Link className={isActive ? 'text-blue-500 font-bold' : 'text-gray-500'} href={item.url}>{item.title}</Link>
+        className={cn(
+          "group inline-flex h-10 min-w-[60px] md:min-w-[72px] md:w-auto items-center justify-center rounded-md bg-background px-2 md:px-4 text-xs md:text-sm font-medium transition-colors hover:bg-muted hover:text-accent-foreground",
+          "whitespace-nowrap"
+        )}
+        asChild
+      >
+        <Link
+          className={isActive ? "text-blue-600 font-bold" : "text-gray-600"}
+          href={item.url}
+        >
+          {item.title}
+        </Link>
       </NavigationMenuLink>
     </NavigationMenuItem>
   );
 };
 
+// Mobile: Collapsible with good touch padding and breakpoints
 const renderMobileMenuItem = (item: MenuItem) => {
   if (item.items) {
     return (
       <AccordionItem key={item.title} value={item.title} className="border-b-0">
-        <AccordionTrigger className="text-md py-0 font-semibold hover:no-underline">
+        <AccordionTrigger className="text-[15px] md:text-base py-1 font-semibold hover:no-underline">
           {item.title}
         </AccordionTrigger>
-        <AccordionContent className="mt-2">
+        <AccordionContent className="mt-2 flex flex-col gap-2">
           {item.items.map((subItem) => (
             <SubMenuLink key={subItem.title} item={subItem} />
           ))}
@@ -232,25 +291,33 @@ const renderMobileMenuItem = (item: MenuItem) => {
       </AccordionItem>
     );
   }
-
   return (
-    <a key={item.title} href={item.url} className="text-md font-semibold">
+    <a
+      key={item.title}
+      href={item.url}
+      className="block w-full py-2 text-[15px] md:text-base font-semibold pl-1"
+    >
       {item.title}
     </a>
   );
 };
 
+// Used in dropdowns and mobile for full width/clickable menu items
 const SubMenuLink = ({ item }: { item: MenuItem }) => {
   return (
     <a
-      className="flex min-w-80 flex-row gap-4 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none hover:bg-muted hover:text-accent-foreground"
+      className={cn(
+        "flex flex-row gap-4 rounded-md py-2 px-2 md:py-3 md:px-3 leading-none no-underline transition-colors outline-none select-none hover:bg-muted hover:text-accent-foreground",
+        "items-center",
+        "w-full"
+      )}
       href={item.url}
     >
-      <div className="text-foreground">{item.icon}</div>
-      <div>
-        <div className="text-sm font-semibold">{item.title}</div>
+      {item.icon && <div className="text-foreground">{item.icon}</div>}
+      <div className="flex-1">
+        <div className="text-xs md:text-sm font-semibold">{item.title}</div>
         {item.description && (
-          <p className="text-sm leading-snug text-muted-foreground">
+          <p className="text-xs md:text-sm leading-snug text-muted-foreground">
             {item.description}
           </p>
         )}
