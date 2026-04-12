@@ -12,6 +12,7 @@ type Props = {
 };
 
 const ProviderCard: React.FC<Props> = ({ data }) => {
+  console.log(data,'data')
     const router=useRouter()
   const {
     restaurantName,
@@ -22,8 +23,8 @@ const ProviderCard: React.FC<Props> = ({ data }) => {
     rating,
   } = data;
 
-  const avgRating = rating?.averageRating ?? 0;
-  const totalReview = rating?.totalReview ?? 0;
+  const avgRating = data?.avgRating ?? 0;
+  const totalReview = data?.totalReviews ?? 0;
 
   return (
     <div className="w-full mt-7 max-w-sm mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">

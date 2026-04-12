@@ -17,7 +17,7 @@ import { TUser } from "@/types/user.type";
 const ProviderPage = ({ data }: { data:TResponseproviderData<{user:TUser,meals:IGetAllmeals[]}> }) => {
   const { cart, addToCart } = manageCartStore();
   const fullStars = Math.floor(Number(data));
-  const hasHalfStar = Number(data.averageRating) % 1 >= 0.5;
+  const hasHalfStar = Number(data.avgRating) % 1 >= 0.5;
   return (
     <div className="min-h-screen bg-gray-50 mt-10">
       {/* Header Bar */}
@@ -38,7 +38,7 @@ const ProviderPage = ({ data }: { data:TResponseproviderData<{user:TUser,meals:I
                   <div className="flex items-center gap-2.5 mt-1 md:mt-0">
                     <div className="flex items-center">
                       {Array.from({ length: 5 }).map((_, i) => {
-                        if (i < Math.floor(Number(data.averageRating) || 0)) {
+                        if (i < Math.floor(Number(data.avgRating) || 0)) {
                           return (
                             <Star
                               key={i}
@@ -48,8 +48,8 @@ const ProviderPage = ({ data }: { data:TResponseproviderData<{user:TUser,meals:I
                         }
 
                         if (
-                          i === Math.floor(Number(data.averageRating) || 0) &&
-                          ((Number(data.averageRating) || 0) % 1) >= 0.5
+                          i === Math.floor(Number(data.avgRating) || 0) &&
+                          ((Number(data.avgRating) || 0) % 1) >= 0.5
                         ) {
                           return (
                             <StarHalf
@@ -67,11 +67,11 @@ const ProviderPage = ({ data }: { data:TResponseproviderData<{user:TUser,meals:I
                       })}
                     </div>
                     <span className="text-xs sm:text-sm text-gray-500 ml-2">
-                      <span className="font-medium text-gray-700">{Number(data.averageRating)?.toFixed(1) || "0.0"}</span>
+                      <span className="font-medium text-gray-700">{Number(data.avgRating)?.toFixed(1) || "0.0"}</span>
                       <span className="hidden sm:inline ml-1 align-middle">/ 5</span>
                       <span className="mx-1">·</span>
                       <span>
-                        {Number(data.totalReview) || 0} {Number(data.totalReview) === 1 ? "review" : "reviews"}
+                        {Number(data.totalReviews) || 0} {Number(data.totalReviews) === 1 ? "review" : "reviews"}
                       </span>
                     </span>
                   </div>

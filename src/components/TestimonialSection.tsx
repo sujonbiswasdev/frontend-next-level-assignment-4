@@ -13,7 +13,7 @@ type TopProviderItem = {
   description: string;
   image: string;
   totalReviews: number;
-  averageRating: number;
+  avgRating: number;
 };
 
 export default function TestimonialSection({
@@ -58,7 +58,7 @@ export default function TestimonialSection({
         <Marquee>
           <div className="grid gap-6 sm:gap-8 md:gap-10 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
             {testomonialdata.map((item) => {
-              const avgRating = item.averageRating ?? 0;
+              const avgRating = item.avgRating ?? 0;
               const totalReviews = item.totalReviews ?? 0;
               return (
                 <div

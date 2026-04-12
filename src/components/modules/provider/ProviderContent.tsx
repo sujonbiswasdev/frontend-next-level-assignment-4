@@ -61,16 +61,13 @@ const ProviderContent = ({data}:{data:TResponseproviderData<{user:TUser}>}) => {
       </p>
  
       </div>
-   <div className="grid grid-cols-1 md:grid-cols-2">
+   <div className="">
      <section className="mb-8 w-full px-2 sm:px-4">
         <FilterPanel
           fields={fields}
           onApply={handleApply}
           onReset={handleReset}
           isPending={isPending}
-          className='flex flex-wrap max-w-[300px]'
-          classRoot='bg-none max-w-[300px]'
-          buttonClassName='px-2 py-1 text-[14px]'
         />
       </section>
 
@@ -81,7 +78,7 @@ const ProviderContent = ({data}:{data:TResponseproviderData<{user:TUser}>}) => {
             <p className="text-sm font-medium">Filtering data...</p>
           </div>
         )}
-        <div className="flex w-full flex-col lg:flex-row gap-6">
+        <div className="flex w-full flex-col lg:flex-row gap-6 px-4">
           <div className="w-full lg:max-w-sm lg:w-[400px] xl:w-[450px] 2xl:w-[500px] mx-auto lg:mx-0">
             <div className="w-full">
               {!data ? (

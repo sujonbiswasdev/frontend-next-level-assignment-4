@@ -71,7 +71,20 @@ const Singlecategory = ({ category }: { category:TResponseCategoryData<{user:TUs
   }
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
+
+      {/* Single Category Title & Description (AI Generated) */}
+      <div className="mb-8 flex flex-col justify-center text-center items-center mt-4 px-2 mx-auto mt-5 md:mt-10 lg:mt-20">
+        <h1 className="text-3xl font-bold text-emerald-700">
+          My Project
+     
+        </h1>
+          <p className="mt-2 text-gray-600 text-base max-w-2xl">
+          Explore delicious meals within this category. Browse varied cuisines and dietary preferences, compare prices, and discover dishes that suit your taste—all tailored for you.
+     
+          </p>
+      </div>
+ 
       {/* Mobile Toggle Button */}
       <button
         onClick={() => setIsOpen(true)}
@@ -126,7 +139,12 @@ const Singlecategory = ({ category }: { category:TResponseCategoryData<{user:TUs
               <div className="grid grid-cols-1 gap-3">
                 {categories.cuisines.map((item) => (
                   <label key={item} className="flex items-center group cursor-pointer">
-                    <input type="checkbox" onChange={() => handleCuisineChange(item)} className="w-2.5 h-2.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500" />
+                    <input
+                      type="checkbox"
+                      checked={selectedCuisine.includes(item)}
+                      onChange={() => handleCuisineChange(item)}
+                      className="w-2.5 h-2.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                    />
                     <span className="ml-3 text-slate-700 text-[14px] group-hover:text-emerald-700 transition-colors">{item}</span>
                   </label>
                 ))}
@@ -190,8 +208,8 @@ const Singlecategory = ({ category }: { category:TResponseCategoryData<{user:TUs
             <div className="text-center text-gray-500 py-10">No meals found.</div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredMeals.map((meal, idx) => (
-                <MealCard key={meal.id || idx} className="justify-center" meal={meal as any} />
+              {filteredMeals.map((meal, idx) => ( 
+                <MealCard key={meal.id || idx} className="justify-center space-x-2 items-center" meal={meal as any} />
               ))}
             </div>
           )}

@@ -112,7 +112,7 @@ export const FilterPanel = ({
                 </label>
                 <input
                   type="number"
-                  value={field.value}
+                  value={field.value??""}
                   onChange={(e) => field.onChange(Number(e.target.value))}
                   className={base}
                 />

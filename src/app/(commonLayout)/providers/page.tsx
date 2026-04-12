@@ -10,6 +10,7 @@ const ProviderPage = async ({
 }) => {
   const search = await searchParams;
   const providerinfo = await getAlluserProvider(search);
+  console.log(providerinfo,'providerinfor')
   if (!providerinfo || !providerinfo.success) {
     return <Notfounddata content="Something went wrong loading providers" />;
   }

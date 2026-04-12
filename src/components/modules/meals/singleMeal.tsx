@@ -15,6 +15,7 @@ import { TUser } from '@/types/user.type'
 import { TGetCategory } from '@/types/category'
 import { IProviderInfo } from '@/types/provider.type'
 import { IgetReviewData } from '@/types/reviews.type'
+import ImageCard from '@/components/shared/ImageCardSkeleton'
 
 const SignleMealByid = ({ meal,userinfo }: { meal:TResponseMeals<{category:TGetCategory,provider:IProviderInfo,reviews:IgetReviewData[],providerRating:any}>,userinfo:TUser}) => {
   console.log(meal,'me1')
@@ -38,12 +39,13 @@ const SignleMealByid = ({ meal,userinfo }: { meal:TResponseMeals<{category:TGetC
           <div className="relative w-full h-[300px] sm:h-[450px] lg:h-[550px] rounded-3xl overflow-hidden shadow-xl">
 
         <Suspense fallback={<p>image loading..........</p>}>
-              <img
-              src={meal.image || defaultIamge}
-              alt={meal.meals_name}
-              className="w-full h-full object-cover rounded-2xl"
-            />
-
+                {meal.image ? (
+          <ImageCard src={meal.image} alt={meal.meals_name} />
+        ) : (
+          <div className="flex items-center justify-center h-full w-full bg-gray-200 dark:bg-gray-800">
+            <span className="text-sm text-gray-500">No Image</span>
+          </div>
+        )}
         </Suspense>
 
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
