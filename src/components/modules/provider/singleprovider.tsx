@@ -58,7 +58,6 @@ const ProviderPage = ({ data }: { data:TResponseproviderData<{user:TUser,meals:I
                             />
                           );
                         }
-
                         return (
                           <Star
                             key={i}

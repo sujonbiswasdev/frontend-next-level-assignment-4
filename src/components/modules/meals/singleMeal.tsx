@@ -17,6 +17,7 @@ import { IProviderInfo } from '@/types/provider.type'
 import { IgetReviewData } from '@/types/reviews.type'
 
 const SignleMealByid = ({ meal,userinfo }: { meal:TResponseMeals<{category:TGetCategory,provider:IProviderInfo,reviews:IgetReviewData[],providerRating:any}>,userinfo:TUser}) => {
+  console.log(meal,'me1')
   const addToCart = manageCartStore((state) => state.addToCart)
   const router = useRouter()
   const defaultIamge = 'https://res.cloudinary.com/drmeagmkl/image/upload/v1771962102/default_meal_kgc6mv.png'
@@ -42,6 +43,7 @@ const SignleMealByid = ({ meal,userinfo }: { meal:TResponseMeals<{category:TGetC
               alt={meal.meals_name}
               className="w-full h-full object-cover rounded-2xl"
             />
+
         </Suspense>
 
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -155,7 +157,7 @@ const SignleMealByid = ({ meal,userinfo }: { meal:TResponseMeals<{category:TGetC
               {/* REVIEWS SECTION */}
               <div className="bg-white rounded-2xl shadow p-8">
                 <h2 className="text-2xl font-bold mb-6">
-                  Customer Reviews ({meal.providerRating.totalReviews})
+                  Customer Reviews ({meal.totalReviews})
                 </h2>
 
                 {/* Rating Summary */}
@@ -163,7 +165,8 @@ const SignleMealByid = ({ meal,userinfo }: { meal:TResponseMeals<{category:TGetC
                   <div>
 
                     <div className="text-5xl font-bold text-orange-500">
-                      {meal.providerRating.averageRating.toFixed(1)}
+                      {meal.avgRating !== undefined ? meal.avgRating.toFixed(1) : "0.0"}
+                 
                     </div>
                     <p className="text-gray-500">Average Rating</p>
                   </div>
@@ -177,7 +180,7 @@ const SignleMealByid = ({ meal,userinfo }: { meal:TResponseMeals<{category:TGetC
                         <div className="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
                           <div
                             className="h-full bg-yellow-400"
-                            style={{ width: `${meal.providerRating.totalReview ? (count / meal.providerRating.totalReview) * 100 : 0}%` }}
+                            style={{ width: `${meal.totalReviews ? (count / meal.totalReviews) * 100 : 0}%` }}
                           />
                         </div>
 

@@ -15,7 +15,6 @@ export default async function HomePage() {
   const mealdata = await getAllMeals();
   const categories = await getCategory();
   const providerinfo = await getTopProviderUser();
-  console.log(providerinfo.data,'data')
   if (!categories?.success || !providerinfo.success || !mealdata.success) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[40vh]">

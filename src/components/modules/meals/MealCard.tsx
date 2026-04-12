@@ -6,13 +6,18 @@ import { useRouter } from "next/navigation";
 import { TResponseproviderData } from "@/types/provider.type";
 import AdvancedImageSkeleton from "@/components/shared/ImageCardSkeleton";
 import ImageCard from "@/components/shared/ImageCardSkeleton";
+import { cn } from "@/lib/utils";
 
-const MealCard = ({ meal }: { meal: TResponseMeals<{provider:TResponseproviderData}> }) => {
-  console.log(meal,'meas')
+const MealCard = ({ meal,className }: { meal: TResponseMeals<{provider:TResponseproviderData}> ,className?:string}) => {
   const { addToCart } = manageCartStore();
   const router = useRouter();
+  console.log(meal.avgRating,'mealdata')
   const fullStars = Math.floor(Number(meal.avgRating));
-  const hasHalfStar = Number(meal.avgRating) % 1 >= 0.5;
+    const hasHalfStar = Number(meal.avgRating) % 1 >= 0.5;
+
+
+    console.log(fullStars,'full')
+    console.log(hasHalfStar,'hals')
 
   return (
     <div className="w-full mx-auto p-4">
@@ -56,24 +61,24 @@ const MealCard = ({ meal }: { meal: TResponseMeals<{provider:TResponseproviderDa
                 {Array.from({ length: 5 }).map((_, i) => {
                   if (i < fullStars) {
                     return (
-                      <span key={i} className="text-amber-400">★</span>
+                      <span key={i} className="text-yellow-400">★</span>
                     );
                   }
-
                   if (i === fullStars && hasHalfStar) {
                     return (
-                      <span key={i} className="text-amber-400">☆</span>
+                      <span key={i} className="text-yellow-300">★</span>
                     );
                   }
-
                   return (
                     <span key={i} className="text-gray-300">★</span>
                   );
                 })}
+           
                 <span className="text-[10px] text-gray-500 ml-2">
                   ({meal.totalReviews || 0} reviews)
                 </span>
               </div>
+         
             </div>
 
             {/* Description */}
@@ -93,7 +98,7 @@ const MealCard = ({ meal }: { meal: TResponseMeals<{provider:TResponseproviderDa
           </div>
 
           {/* Actions */}
-          <div className="flex flex-wrap justify-between items-center mb-4 px-4 pb-y">
+          <div className={cn(`flex flex-wrap justify-between items-center mb-4 px-4 pb-y space-y-1`,className)}>
             <button
               onClick={() => router.push(`/meals/${meal.id}`)}
               className="bg-gradient-to-r from-gray-900 to-black text-white text-[14px] px-2 py-1 rounded-md font-semibold hover:from-gray-800 hover:shadow-2xl transition-all"
