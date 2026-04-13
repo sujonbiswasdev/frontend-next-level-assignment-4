@@ -57,12 +57,12 @@ export default function ProfileCard({ profile }: { profile: TUser }) {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <Link className='w-full' href={`${profile.role == 'Customer' ? "/profile" : profile.role == "Admin" ? "/profile" : profile.role == 'Provider' ? "/provider-dashboard/profile" : "/"}`}>👤 profile</Link>
+            <Link className='w-full' href={`${profile.role == 'Customer' ? "/profile" : profile.role == "Admin" ? "/admin/dashboard/profile" : profile.role == 'Provider' ? "/provider/dashboard/profile" : "/"}`}>👤 profile</Link>
           </DropdownMenuItem>
           {profile.role === 'Customer' ? "" : <DropdownMenuItem><Link className='w-full' href={'/dashboard'}> 📊 Dashboard</Link></DropdownMenuItem>}
           <DropdownMenuItem>
             <Settings />
-            <Link href={"/profile/settings"}><span>Settings</span></Link>
+            <Link href={profile.role==="Customer"?"/profile/setting":profile.role=="Provider"?"/provider/dashboard/setting":profile.role==="Admin"?"/admin/dashboard/setting":"/"}><span>Settings</span></Link>
             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuGroup>

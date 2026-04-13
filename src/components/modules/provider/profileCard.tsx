@@ -24,8 +24,6 @@ export default function ProviderProfilePage({ userdata }: { userdata: TUser }) {
     const year = getDate.getFullYear()
     const month = getDate.getMonth()
     const day = getDate.getDay()
-
-
     const handleUpdateUser = async <k extends keyof TUser>(field: k, value: TUser[k]) => {
         if (value == null) {
             toast.error("please provide a value", { theme: "colored", position: "bottom-right", autoClose: 2000 })

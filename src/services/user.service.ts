@@ -10,8 +10,9 @@ const api_url=env.API_URL
 export const userService={
     updateUser:async(updateUser:TUpdateUserInput)=>{  
   try {
+    console.log(JSON.stringify(updateUser),'dsdfsfsdfsdfd')
     const cookieStore = await cookies()
-    const res = await fetch(`${api_url}/api/user/profile/update`, {
+    const res = await fetch(`${api_url}/api/v1/user/profile/update`, {
       method: "PUT",
       credentials:"include",
       headers: {
@@ -22,6 +23,7 @@ export const userService={
     });
     revalidateTag("userdata",'max')
     const data= await res.json();
+    console.log(data,'datas')
     const result =data as ApiResponse<TUser> 
     if (!res.ok) {
       const error=data as ApiErrorResponse
@@ -36,7 +38,7 @@ export const userService={
      DeleteUserown: async () => {
             try {
                 const cookieStore = await cookies()
-                const res = await fetch(`${api_url}/api/user/profile/own`, {
+                const res = await fetch(`${api_url}/api/v1/user/profile/own`, {
                     method:"DELETE",
                     credentials: "include",
                     headers: {

@@ -60,7 +60,7 @@ const DashboardLayout = async ({ admin, provider, children }: { admin: React.Rea
                   </svg>
                 </div>
               </div>
-              <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+              <div className="flex shrink-0 items-center gap-2 sm:gap-3 px-4 sm:px-6 md:px-8">
                 <ProfileCard  profile={userinfo.data as TUser} />
               </div>
             </div>

@@ -53,6 +53,17 @@ export const providerNavItem: NavSection[] = [
             }
         ]
     },
+    {
+        title: "settings",
+        items: [
+            {
+                title: "setting",
+                href: "/provider/dashboard/setting",
+                icon: "Settings"
+           
+            }
+        ]
+    },
 ];
 
 
@@ -101,6 +112,17 @@ export const adminNavItems: NavSection[] = [
                 href: "/admin/reviews",
                 icon: "Star"
             },
+        ]
+    },
+    {
+        title: "settings",
+        items: [
+            {
+                title: "setting",
+                href: "/provider/dashboard/setting",
+                icon: "Settings"
+           
+            }
         ]
     },
 ]

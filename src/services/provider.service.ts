@@ -3,6 +3,7 @@ import { IGetMealData } from "@/types/meals.type";
 import { IProviderInfo, TResponseproviderData } from "@/types/provider.type";
 import { ApiErrorResponse, ApiResponse } from "@/types/response.type";
 import { TUser } from "@/types/user.type";
+import { cookies } from "next/headers";
 
 const api_url=env.API_URL
 
@@ -91,6 +92,42 @@ export const providerService = {
       return {
         data: null,
         error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  },
+  updateProvider: async (updateProvider: Partial<IProviderInfo>) => {
+    try {
+      const cookieStore = await cookies();
+      const response = await fetch(`${api_url}/api/v1/provider/update`, {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify(updateProvider),
+        next: { tags: ["provider", "providers"] }
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        const error = data as ApiErrorResponse;
+        return {
+          success: false,
+          message: error.message || "Provider update failed",
+        };
+      }
+
+      return {
+        success: true,
+        message: data.message || "Provider updated successfully",
+        data: data.data,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message || "Something went wrong, please try again",
       };
     }
   },

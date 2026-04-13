@@ -6,6 +6,7 @@ import { Pencil, Save } from 'lucide-react'
 import { Input } from './ui/input'
 import { Textarea } from './ui/textarea'
 import { IProviderInfo } from '@/types/provider.type'
+import { updateProvider } from '@/actions/provider.actions'
 
 const Resturantinfo = ({ userinfo }: { userinfo: IProviderInfo }) => {
     const [useinfo, setuserinfo] = useState<IProviderInfo>({ ...userinfo })
@@ -19,16 +20,8 @@ const Resturantinfo = ({ userinfo }: { userinfo: IProviderInfo }) => {
         }
         try {
             const toastid = toast.loading(`"user ${field} updating...."`, { theme: "dark", position: "bottom-right", autoClose: 2000 })
-            const res = await fetch(`http://localhost:5000/api/providers/update`, {
-                method: "PUT",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                    Cookie: cookieStore.toString(),
-                },
-                body: JSON.stringify({ [field]: value }),
-            });
-            if (!res.ok) {
+            const res = await updateProvider({ [field]: value })
+            if (!res.success || !res.data) {
                 toast.dismiss(toastid)
                 toast.error(`"user ${field} update failed"`, { theme: "dark", position: "bottom-right", autoClose: 2000 })
                 return

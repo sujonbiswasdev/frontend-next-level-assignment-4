@@ -35,7 +35,7 @@ const ProviderPage = async ({
               ) : (
                 providerinfo.data.map((item, index) => (
                   <div key={index}>
-                    <div className="">
+                    <div className="px-4 sm:px-6 md:px-8">
                       <ProviderContent data={item} />
                     </div>
                   </div>

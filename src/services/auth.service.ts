@@ -301,3 +301,42 @@ export const ResetPassword = async ({
     return { success: false, message: error.message || "Server error" };
   }
 };
+
+export const changePassword = async (
+  currentPassword: string,
+  newPassword: string
+) => {
+  try {
+    const storeCookies = await cookies();
+    const response = await fetch(`${api_url}/api/v1/auth/change-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: storeCookies.toString(),
+      },
+      cache: "no-store",
+      body: JSON.stringify({
+        currentPassword,
+        newPassword,
+      }),
+    });
+    const body = await response.json();
+
+    if (!response.ok) {
+      const error = body as ApiErrorResponse;
+      return {
+        success: error.success || false,
+        message: error.message || "Failed to change password",
+      };
+    }
+
+    const result = body as ApiResponse<any>;
+    return {
+      success: result.success,
+      message: result.message || "Password changed successfully!",
+      data: result.data,
+    };
+  } catch (error: any) {
+    return { success: false, message: error.message || "Server error" };
+  }
+};
