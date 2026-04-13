@@ -167,7 +167,6 @@ const MealTable = ({pagination,categories, initialmeals }: {pagination:Ipaginati
         },
       ]
 
-      console.log(initialmeals,'dad')
     
 
 

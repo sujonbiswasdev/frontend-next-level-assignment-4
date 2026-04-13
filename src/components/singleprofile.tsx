@@ -29,21 +29,21 @@ function SingleProfile({user}:{user:TUser}) {
       {/* Details */}
       <div className="divide-y">
         <div className="flex justify-between items-center px-6 py-2">
-          <label className="text-sm text-gray-600 font-semibold">Name</label>
+          <label className="text-sm text-gray-600 ">Name</label>
           <p className="text-gray-900">{singleuser.name}</p>
         </div>
 
         <InfoRow label="Email" value={singleuser.email} />
 
         <div className="flex justify-between items-center px-6 py-2">
-              <label className="text-sm text-gray-600 font-semibold">phone</label>
+              <label className="text-sm text-gray-600">phone</label>
           <p className="text-gray-900">{singleuser.phone || "N/A"}</p>
         </div>
 
         <InfoRow label="Role" value={singleuser.role as string} />
 
         <div className="flex justify-between items-center px-6 py-2">
-               <label className="text-sm text-gray-600 font-semibold">status</label>
+               <label className="text-sm text-gray-600 ">status</label>
           <Status variant={singleuser.status === "activate" ? "success" : "error"}>
             <StatusIndicator />
             <StatusLabel>{singleuser.status}</StatusLabel>
@@ -51,7 +51,7 @@ function SingleProfile({user}:{user:TUser}) {
         </div>
 
         <div className="flex justify-between items-center px-6 py-2">
-               <label className="text-sm text-gray-600 font-semibold">Email Verified</label>
+               <label className="text-sm text-gray-600 ">Email Verified</label>
           <Status variant={singleuser.emailVerified ? "success" : "error"}>
             <StatusIndicator />
             <StatusLabel>{singleuser.emailVerified ? "Yes" : "No"}</StatusLabel>
@@ -59,7 +59,7 @@ function SingleProfile({user}:{user:TUser}) {
         </div>
 
         <div className="flex justify-between items-center px-6 py-2">
-                 <label className="text-sm text-gray-600 font-semibold">online</label>
+                 <label className="text-sm text-gray-600 ">online</label>
           <Status variant={singleuser.isActive ? "success" : "error"}>
             <StatusIndicator />
             <StatusLabel>{singleuser.isActive ? "Online" : "Offline"}</StatusLabel>
@@ -68,7 +68,7 @@ function SingleProfile({user}:{user:TUser}) {
 
         <InfoRow label="Created At" value={singleuser.createdAt.toString().slice(0, 10)} />
         <div className="flex items-center justify-between px-6 py-4">
-          <h2 className="text-sm font-semibold text-gray-600">Profile</h2>
+          <h2 className="text-sm  text-gray-600">Profile</h2>
 
           <ShareProfileButton userId={user.id} userName={user.name} />
         </div>

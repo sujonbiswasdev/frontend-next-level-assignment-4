@@ -1,6 +1,7 @@
 import { IOrderUpdateStatus } from "@/components/modules/orders/customerordertable"
 import { env } from "@/env"
-import { ICreateorderData, IGetOrderData } from "@/types/order/order.type"
+import { ICreateorderData, IGetOrderData, TResponseOrderData } from "@/types/order/order.type"
+import { Ipagination } from "@/types/pagination.type"
 import { ApiErrorResponse, ApiResponse } from "@/types/response.type"
 import { cookies } from "next/headers"
 
@@ -19,12 +20,17 @@ export const OrderService = {
                 },
             )
             const body = await response.json()
-            const result = body as ApiResponse<IGetOrderData[]>
             if (!response.ok) {
                 const error = body as ApiErrorResponse
                 return {success:error.success,message:error.message || "retrieve own orders data failed"};
             }
-            return result
+            return {
+                success:body.success,
+                message:body.message,
+                data:body.data.result as TResponseOrderData[],
+                pagination:body.data.pagination as Ipagination
+                
+            }
 
         } catch (error) {
             return {
@@ -35,6 +41,7 @@ export const OrderService = {
     },
 
     updateOrderStatus: async (id: string, orderdata: IOrderUpdateStatus) => {
+        console.log(orderdata,'sss')
         try {
             const cookieStore = await cookies()
             const res = await fetch(`${api_url}/api/v1/provider/orders/${id}`, {

@@ -1,5 +1,8 @@
 import { getownorder } from '@/actions/order.action';
 import OrderTable from '@/components/modules/orders/orderTable';
+import Notfounddata from '@/components/Notfounddata';
+import { TResponseOrderData } from '@/types/order/order.type';
+import { Ipagination } from '@/types/pagination.type';
 import React from 'react'
 
 const OrderHistory = async() => {
@@ -7,15 +10,15 @@ const OrderHistory = async() => {
     const res = await getownorder();
       if (!res.data || !res.success) {
     return (
-      <div className="p-4 text-red-500">
-        Failed to load orders history
-      </div>
+      <Notfounddata content='No orders found.' btntext='dashboard' path='/provider/dashboard' emoji="📦" />
+ 
     );
   }
-      const orders = res.data
+      const orders = res.data as TResponseOrderData[]
+      const pagination=res.pagination as Ipagination
   return (
     <div>
-      <OrderTable initialorder={orders}/>
+      <OrderTable pagination={pagination} initialorder={orders}/>
     </div>
   )
 }

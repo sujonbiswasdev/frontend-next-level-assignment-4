@@ -35,6 +35,8 @@ export interface IGetOrderData {
     createdAt:string,
     updatedAt:string
   }[];
-  provider?:IProviderInfo
 
 }
+
+
+export type TResponseOrderData<T = unknown> = IGetOrderData & T;

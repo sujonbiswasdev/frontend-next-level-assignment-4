@@ -20,3 +20,6 @@ export const deleteUser=async(id:string)=>{
   return await userService.DeleteUser(id)
 }
 
+export const getuserbyid = async (id: string) => {
+  return await userService.getuserbyid(id);
+}
