@@ -4,10 +4,11 @@ import { ApiErrorResponse, ApiResponse } from "@/types/response.type";
 import { success } from "zod";
 import { TCreateMealsData, TResponseMeals, TUpdateMealsData } from "@/types/meals.type";
 import { revalidateTag } from "next/cache";
-import { IProviderInfo } from "@/types/provider.type";
+import { IProviderInfo, TResponseproviderData } from "@/types/provider.type";
 import { IgetReviewData } from "@/types/reviews.type";
 import { Ipagination } from "@/types/pagination.type";
 import { TGetCategory } from "@/types/category";
+import { TUser } from "@/types/user.type";
 const api_url = env.API_URL;
 
 export interface ServiceOptionds {
@@ -79,7 +80,7 @@ export const mealsService = {
       const res = await fetch(url.toString(), config);
 
       const data = await res.json();
-      const result = data.data.data as TResponseMeals<{provider:IProviderInfo,reviews:IgetReviewData}>[]
+      const result = data.data.data as TResponseMeals<{provider:TResponseproviderData<{user:TUser}>,reviews:IgetReviewData}>[]
       if (!res.ok) {
         const error = data as ApiErrorResponse;
         return {

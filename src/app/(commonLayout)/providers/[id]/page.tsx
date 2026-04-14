@@ -17,7 +17,7 @@ const SignleProviderwithMenu = async ({params}:{params:Promise<{id:string}>}) =>
     const providerData = res.data.result as any;
 
   return (
-    <div>
+    <div className="mt-6 md:mt-10 lg:mt-14 xl:mt-18">
      <ProviderPage data={providerData as TResponseproviderData<{user:TUser,meals:IGetAllmeals[]}>}/>
     </div>
   )

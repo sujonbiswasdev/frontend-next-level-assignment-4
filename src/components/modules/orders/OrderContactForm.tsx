@@ -83,7 +83,7 @@ export function OrderForm({
                     <Button type="button" variant="outline">
                         Cancel
                     </Button>
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit">Submit & pay</Button>
                 </Field>
             </FieldGroup>
         </form>

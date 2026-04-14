@@ -83,11 +83,6 @@ const ProviderPage = ({ data }: { data:TResponseproviderData<{user:TUser,meals:I
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="text-sm text-gray-600 hidden sm:block">
-                25-35 mins • Free delivery
-              </div>
-            </div>
           </div>
         </div>
       </div>

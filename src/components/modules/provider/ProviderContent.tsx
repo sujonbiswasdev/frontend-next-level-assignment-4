@@ -8,7 +8,7 @@ import React, { useCallback, useState } from 'react'
 import ProviderCard from './ProviderCard';
 import Notfounddata from '@/components/Notfounddata';
 
-const ProviderContent = ({data}:{data:TResponseproviderData<{user:TUser}>}) => {
+const ProviderContent = ({data}:{data:TResponseproviderData<{user:TUser}>[]}) => {
   const { updateFilters, reset, isPending } = useFilter();
   const [form, setForm] = useState({
     search: "",
@@ -49,52 +49,48 @@ const ProviderContent = ({data}:{data:TResponseproviderData<{user:TUser}>}) => {
     }
   ];
 
+  const hasProviders = Array.isArray(data) && data.length > 0;
+
   return (
-    <section className="w-full flex justify-center py-10 max-w-[1480px] mx-auto">
-  <div className="w-full">
-      <div className="text-center mb-10 space-y-3 mt-10">
-      <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-        Provider Management
-      </h1>
-      <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-        Easily discover, filter, and manage food providers. Use the search tools below to find providers by name, email, or status. This dashboard streamlines the process of connecting with trusted restaurants and home chefs on FoodHub.
-      </p>
- 
-      </div>
-   <div className="">
-     <section className="mb-8 w-full px-2 sm:px-4">
+    <section className="mx-auto w-full max-w-[1480px] px-3 py-8 sm:px-5 sm:py-10 lg:px-8">
+      <div className="w-full">
+        <div className="mx-auto mb-8 mt-4 max-w-3xl space-y-3 text-center sm:mb-10 sm:mt-8">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl md:text-4xl">
+            Provider Management
+          </h1>
+          <p className="mx-auto max-w-2xl text-sm text-gray-600 dark:text-gray-400 sm:text-base">
+            Easily discover, filter, and manage food providers. Use the search tools below to find providers by name, email, or status.
+          </p>
+        </div>
+
+        <section className="mb-6 w-full sm:mb-8">
         <FilterPanel
           fields={fields}
           onApply={handleApply}
           onReset={handleReset}
           isPending={isPending}
         />
-      </section>
+        </section>
 
-      <div className="relative dark:bg-gray-950 w-full ">
+        <div className="relative w-full">
         {isPending && (
-          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/50 dark:bg-black/50 backdrop-blur-sm">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mb-2"></div>
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-2xl bg-white/50 backdrop-blur-sm dark:bg-black/50">
+            <div className="mb-2 h-10 w-10 animate-spin rounded-full border-b-2 border-blue-600"></div>
             <p className="text-sm font-medium">Filtering data...</p>
           </div>
         )}
-        <div className="flex w-full flex-col lg:flex-row gap-6 px-4">
-          <div className="w-full lg:max-w-sm lg:w-[400px] xl:w-[450px] 2xl:w-[500px] mx-auto lg:mx-0">
-            <div className="w-full">
-              {!data ? (
-                <Notfounddata content="No provider data found." path='/providers' btntext='providers' emoji="📦"/>
-              ) : (
-                <ProviderCard data={data}/>
-              )}
+          {!hasProviders ? (
+            <Notfounddata content="No provider data found." path='/providers' btntext='providers' emoji="📦"/>
+          ) : (
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {data.map((provider) => (
+                <ProviderCard key={provider.id} data={provider} />
+              ))}
             </div>
-          </div>
+          )}
         </div>
       </div>
- 
-   </div>
-    
-  </div>
-      </section>
+    </section>
   )
 }
 

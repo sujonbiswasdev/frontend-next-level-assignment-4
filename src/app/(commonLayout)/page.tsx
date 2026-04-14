@@ -11,6 +11,7 @@ import Link from "next/link";
 import { getAllMeals } from "@/actions/meals.action";
 import ErrorBoundary from "@/components/shared/ErrorBoundary";
 import { getTopProviderUser } from "@/actions/provider.actions";
+import { TUser } from "@/types/user.type";
 export default async function HomePage() {
   const mealdata = await getAllMeals();
   const categories = await getCategory();
@@ -83,7 +84,7 @@ export default async function HomePage() {
                     key={meal.id}
                     meal={
                       meal as TResponseMeals<{
-                        provider: TResponseproviderData;
+                        provider: TResponseproviderData<{user:TUser}>;
                       }>
                     }
                   />

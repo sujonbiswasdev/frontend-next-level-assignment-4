@@ -66,7 +66,7 @@ export default function CartComponent() {
                     </div>
 
                     <button onClick={()=>router.push("/checkout")} className="mt-6 w-full bg-black text-white py-3 rounded-xl font-medium hover:bg-gray-900 transition-all duration-300 active:scale-95">
-                        checkout
+                        next
                     </button>
                 </aside>
             </div>

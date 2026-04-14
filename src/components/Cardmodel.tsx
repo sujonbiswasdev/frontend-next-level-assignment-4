@@ -74,14 +74,14 @@ export function CartModal() {
                         <span className="font-medium">RestaurantName:</span> {restaurantName || "Unknown Restaurant"}
                       </div>
                       <h3>{item.name}</h3>
-                      <p>${item.price * item.quantity}</p>
+                      <p>{item.price * item.quantity}</p>
                       <div className="max-w-[40px] max-h-[40px]">
                         <img src={item.image} className="rounded-full size-10 " alt="" />
                       </div>
                       <div className="flex items-center gap-2 mt-2 text-sm text-gray-700">
                         <span className="font-medium">Delivery Charge:</span>
                         <span className="font-mono text-base text-orange-600">
-                          ${getDeliveryCharge().toFixed(2)}
+                          ৳ {getDeliveryCharge().toFixed(2)}
                         </span>
                       </div>
                  
@@ -121,6 +121,9 @@ export function CartModal() {
               <Button type="submit" onClick={() => {
                 router.push("/checkout")
               }}>checkout</Button>
+              <Button type="submit" onClick={() => {
+                router.push("/cart")
+              }}>cart</Button>
               <SheetClose asChild>
                 <Button variant="outline">Cancel</Button>
               </SheetClose>

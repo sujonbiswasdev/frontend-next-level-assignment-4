@@ -32,13 +32,9 @@ const ProviderPage = async ({
               {!providerinfo.success || providerinfo.data.length === 0 ? (
                 <Notfounddata btntext="providers" path="/providers" content="No provider data found." emoji="📦" />
               ) : (
-                providerinfo.data.map((item, index) => (
-                  <div key={index}>
                     <div className="px-4 sm:px-6 md:px-8">
-                      <ProviderContent data={item} />
+                      <ProviderContent data={providerinfo.data} />
                     </div>
-                  </div>
-                ))
               )}
             </div>
           </ErrorBoundary>
