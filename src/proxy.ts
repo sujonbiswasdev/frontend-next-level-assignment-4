@@ -84,6 +84,10 @@ async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
+  if(role!==Roles.Customer && pathname.startsWith("/settings")){
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
   if (
     (role === Roles.Customer || role === Roles.Admin) &&
     pathname.startsWith("/provider")
@@ -149,6 +153,7 @@ export const config = {
     "/checkout",
     "/orders/:path*",
     "/admin/:path*",
+    "/settings"
   ],
 };
 

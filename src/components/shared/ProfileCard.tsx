@@ -62,7 +62,7 @@ export default function ProfileCard({ profile }: { profile: TUser }) {
           {profile.role === 'Customer' ? "" : <DropdownMenuItem><Link className='w-full' href={'/dashboard'}> 📊 Dashboard</Link></DropdownMenuItem>}
           <DropdownMenuItem>
             <Settings />
-            <Link href={profile.role==="Customer"?"/profile/setting":profile.role=="Provider"?"/provider/dashboard/setting":profile.role==="Admin"?"/admin/dashboard/setting":"/"}><span>Settings</span></Link>
+            <Link href={profile.role==="Customer"?"/settings":profile.role=="Provider"?"/provider/dashboard/setting":profile.role==="Admin"?"/admin/dashboard/setting":"/"}><span>Settings</span></Link>
             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuGroup>
