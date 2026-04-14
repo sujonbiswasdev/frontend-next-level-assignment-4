@@ -43,6 +43,7 @@ const OrderTable = ({ pagination,initialorder }: {pagination:Ipagination, initia
         createdat: "",
         price: null,
         quantity: null,
+        paymentStatus:""
    
       });
     
@@ -68,6 +69,7 @@ const OrderTable = ({ pagination,initialorder }: {pagination:Ipagination, initia
             status: "",
             customerId: "",
             phone: "",
+            paymentStatus:'',
             totalprice: null,
             createdat: "",
             price: null,
@@ -95,9 +97,23 @@ const OrderTable = ({ pagination,initialorder }: {pagination:Ipagination, initia
           onChange: (val: string) => handleChange("status", val),
           options: [
             { label: "All", value: "" },
-            { label: "Pending", value: "PENDING" },
-            { label: "Approved", value: "APPROVED" },
-            { label: "Rejected", value: "REJECTED" },
+            { label: "Placed", value: "PLACED" },
+            { label: "Preparing", value: "PREPARING" },
+            { label: "Ready", value: "READY" },
+            { label: "Delivered", value: "DELIVERED" },
+            { label: "Cancelled", value: "CANCELLED" },
+          ],
+        },
+        {
+          type: "select",
+          name: "paymentStatus",
+          label: "paymentStatus",
+          value: form.paymentStatus,
+          onChange: (val: string) => handleChange("paymentStatus", val),
+          options: [
+            { label: "All", value: "" },
+            { label: "paid", value: "PAID" },
+            { label: "unpaid", value: "UNPAID" },
           ],
         },
         {
@@ -176,6 +192,8 @@ const OrderTable = ({ pagination,initialorder }: {pagination:Ipagination, initia
           },
         },
           ]
+
+          console.log(initialorder,'inti')
     
 
     return (

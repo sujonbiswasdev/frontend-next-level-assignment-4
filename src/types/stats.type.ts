@@ -31,5 +31,7 @@ export interface IMealsStatus {
 export interface DashboardData {
   counts: ICounts;
   mealStatus:IMealsStatus;
+  totalRevenue: number;
+  monthlyRevenue: MonthlyRevenue[];
   order:IMealsStatus
 }

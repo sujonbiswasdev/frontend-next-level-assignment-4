@@ -22,6 +22,7 @@ interface OrderData {
   customerId: string;
   first_name: string;
   last_name: string;
+  paymentStatus:string;
   id: string;
   orderitem: OrderItem[];
   phone: string;
@@ -39,7 +40,7 @@ const ViewOrdersData = ({
   viewData?: OrderData;
 }) => {
   if (!viewMode || !viewData) return null;
-
+  console.log(viewData,'view')
   return (
     <div>
       <div className="rounded-2xl border border-gray-100 bg-white shadow-xl px-4 sm:px-6 py-6 space-y-8 overflow-y-scroll">
@@ -121,6 +122,25 @@ const ViewOrdersData = ({
                   {viewData.status}
                 </span>
               </div>
+            <div className="flex items-center gap-2">
+              <span className="text-gray-500 font-medium">Payment Status:</span>
+              <span
+                className={`inline-block px-2 py-[2px] rounded font-semibold text-xs border
+                  ${
+                    viewData.paymentStatus === "PENDING"
+                      ? "bg-yellow-50 text-yellow-700 border-yellow-200"
+                      : viewData.paymentStatus === "PAID"
+                      ? "bg-green-50 text-green-700 border-green-200"
+                      : viewData.paymentStatus === "FAILED"
+                      ? "bg-red-50 text-red-700 border-red-200"
+                      : "bg-gray-50 text-gray-500 border"
+                  }`
+                }
+              >
+                {viewData.paymentStatus ?? "-"}
+              </span>
+            </div>
+       
             </div>
             <div className="flex flex-wrap gap-4 mt-2">
               <div>

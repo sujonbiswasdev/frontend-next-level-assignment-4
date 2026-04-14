@@ -11,7 +11,7 @@ const ProviderStats = async () => {
   const role=userinfo?.data.role
 
   return (
-    <div className="w-full">
+    <div className="w-full overflow-hidden">
     <ErrorBoundary fallback={<ErrorFallback title="Dashboard Error" message="An error occurred while loading your dashboard. Please refresh the page or try again later." />}>
       {statsData ? (
         <div>

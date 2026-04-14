@@ -88,6 +88,19 @@ async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
+  if(role===Roles.Customer && pathname.startsWith("/profile")){
+    return NextResponse.redirect(new URL("/profile", request.url));
+  }
+
+
+  if(role===Roles.Admin && pathname.startsWith("/profile")){
+    return NextResponse.redirect(new URL("/admin/dashboard/profile", request.url));
+  }
+
+  if(role===Roles.Provider && pathname.startsWith("/profile")){
+    return NextResponse.redirect(new URL("/provider/dashboard/profile", request.url));
+  }
+
   if (
     (role === Roles.Customer || role === Roles.Admin) &&
     pathname.startsWith("/provider")

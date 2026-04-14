@@ -7,41 +7,53 @@ import { cookies } from "next/headers"
 
 const api_url = env.API_URL
 export const OrderService = {
-    getownorder: async () => {
+    getownorder: async (params?: any, options?: { cache?: RequestCache; revalidate?: number }) => {
+        console.log(params,'params')
         try {
-            const cookiestore = await cookies()
-            const response = await fetch(`${api_url}/api/v1/orders`,
-                {
-                    headers: {
-                        Cookie: cookiestore.toString(),
-                    },
-                    credentials: "include",
-                    next: { tags: ['orderupdate'] }
-                },
-            )
-            const body = await response.json()
-            if (!response.ok) {
-                const error = body as ApiErrorResponse
-                return {success:error.success,message:error.message || "retrieve own orders data failed"};
+            const cookieStore = await cookies();
+            const url = new URL(`${api_url}/api/v1/orders`);
+            if (params) {
+                Object.entries(params).forEach(([key, value]) => {
+                    if (value !== undefined && value !== null && value !== "") {
+                        url.searchParams.append(key, String(value));
+                    }
+                });
+            }
+            const config: RequestInit & { next?: any } = {
+                credentials: "include",
+                headers: { Cookie: cookieStore.toString() },
+            };
+            if (options?.cache) {
+                config.cache = options.cache;
+            }
+            if (options?.revalidate) {
+                config.next = { ...config.next, revalidate: options.revalidate };
+            }
+            config.next = { ...config.next, tags: ["order","orders"] };
+
+            const res = await fetch(url.toString(), config);
+            const data = await res.json()
+            if (!res.ok) {
+                const error = data as ApiErrorResponse;
+                return {
+                    success: error.success,
+                    message: error.message || "retrieve own orders data failed",
+                };
             }
             return {
-                success:body.success,
-                message:body.message,
-                data:body.data.result as TResponseOrderData[],
-                pagination:body.data.pagination as Ipagination
-                
-            }
-
+                success: data.success,
+                message: data.message || "retrieve own orders data successfully",
+                data: data.data.result as TResponseOrderData[],
+                pagination: data.data.pagination as Ipagination
+            };
         } catch (error) {
             return {
-                data: null,
-                error: error instanceof Error ? error.message : "Unknown error"
-            }
+                message: "something went wrong please try again"
+            };
         }
     },
 
     updateOrderStatus: async (id: string, orderdata: IOrderUpdateStatus) => {
-
         try {
             const cookieStore = await cookies()
             const res = await fetch(`${api_url}/api/v1/provider/orders/${id}`, {

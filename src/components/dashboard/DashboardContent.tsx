@@ -1,5 +1,6 @@
-import { DashboardData, ICounts, IMealsStatus, IOrderStatus } from "@/types/stats.type";
+import { DashboardData, ICounts, IMealsStatus, IOrderStatus, MonthlyRevenue } from "@/types/stats.type";
 import { StatsCard } from "./DashbaordStatsCard";
+import Earnings from "./chart/EarningChart";
 
 const DashboardContent = ({
     data,
@@ -8,6 +9,7 @@ const DashboardContent = ({
     data: DashboardData;
   role: string;
 }) => {
+  console.log(data.monthlyRevenue)
   const sectionTitle =
     role === "Admin" ? "Admin Dashboard Overview" : "Your Dashboard Overview";
   return (
@@ -24,6 +26,11 @@ const DashboardContent = ({
         <StatsCounts statsCount={data.counts as ICounts} role={role} />
         <MealStatus mealStatus={data.mealStatus} role={role} />
         <OrderStats orderstats={data.order as unknown as IOrderStatus} role={role} />
+
+        <Earnings
+        stats={data.monthlyRevenue as MonthlyRevenue[]}
+        earningRate={data.totalRevenue}
+      />
    
    
       </div>
