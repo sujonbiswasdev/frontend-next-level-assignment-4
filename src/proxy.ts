@@ -17,7 +17,6 @@ async function refreshTokenIfNeeded(refreshToken: string): Promise<boolean> {
     const result = await getNewTokensWithRefreshToken(refreshToken);
     return !!result;
   } catch (err) {
-    console.error("Token refresh failed:", err);
     return false;
   }
 }

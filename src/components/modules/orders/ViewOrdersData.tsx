@@ -40,7 +40,6 @@ const ViewOrdersData = ({
   viewData?: OrderData;
 }) => {
   if (!viewMode || !viewData) return null;
-  console.log(viewData,'view')
   return (
     <div>
       <div className="rounded-2xl border border-gray-100 bg-white shadow-xl px-4 sm:px-6 py-6 space-y-8 overflow-y-scroll">

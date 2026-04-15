@@ -192,8 +192,6 @@ const OrderTable = ({ pagination,initialorder }: {pagination:Ipagination, initia
           },
         },
           ]
-
-          console.log(initialorder,'inti')
     
 
     return (

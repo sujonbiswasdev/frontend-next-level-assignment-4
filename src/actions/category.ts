@@ -7,7 +7,6 @@ export const categoryCreate = async (data:ICreateCategory) => {
     const res = await CategoriesService.createCategory(data);
     return res;
   } catch (error) {
-    console.error("Failed to create category:", error);
     return null; 
   }
 }
@@ -17,7 +16,6 @@ export const getCategory = async () => {
     const res = await CategoriesService.getcategory();
     return res;
   } catch (error) {
-    console.error("Failed to fetch categories:", error);
     return null;
   }
 }

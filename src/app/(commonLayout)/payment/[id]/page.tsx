@@ -88,7 +88,6 @@ const PaymentSuccessPage = async ({
       (resolvedSearchParams?.paymentId as string | undefined) ?? "-";
 
     const orderResult = await getOwnPaymentActions(id);
-    console.log(orderResult, 'orderResult');
     const orderList = Array.isArray(orderResult?.data) ? orderResult.data : [];
     const hasOrderData = orderList.length > 0;
     const isServiceSuccess = Boolean(orderResult?.success);

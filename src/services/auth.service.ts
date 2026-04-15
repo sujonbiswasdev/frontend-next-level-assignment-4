@@ -42,7 +42,7 @@ export async function getNewTokensWithRefreshToken(refreshToken  : string) : Pro
 
         return true;
     } catch (error) {
-        console.error("Error refreshing token:", error);
+       
         return false;
     }
 }

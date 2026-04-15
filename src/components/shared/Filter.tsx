@@ -26,7 +26,7 @@ export const useFilter = () => {
         router.push(`${pathname}?${newParams.toString()}`);
       });
     } catch (e) {
-      console.error("Filter crash prevented", e);
+     
     }
   };
 

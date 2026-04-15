@@ -26,7 +26,7 @@ export default class ErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: any, errorInfo: any) {
-    console.error("🔥 Error:", error, errorInfo);
+   
   }
 
   handleReset = () => {

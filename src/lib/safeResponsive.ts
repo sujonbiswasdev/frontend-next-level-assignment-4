@@ -16,7 +16,7 @@ export const safeData = (response: any, defaultValue: any = null) => {
 
     return defaultValue;
   } catch (err) {
-    console.error("safeData parse error:", err);
+  
     return defaultValue;
   }
 };

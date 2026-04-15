@@ -9,7 +9,6 @@ const DashboardContent = ({
     data: DashboardData;
   role: string;
 }) => {
-  console.log(data.monthlyRevenue)
   const sectionTitle =
     role === "Admin" ? "Admin Dashboard Overview" : "Your Dashboard Overview";
   return (

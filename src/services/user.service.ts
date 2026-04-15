@@ -29,7 +29,7 @@ export const userService={
     }
     return { success: true, message: "user updated successfully", result };
   } catch (error: any) {
-    console.error(error);
+  
     return { success: false, error: error.message || "An error occurred while updating" };
   }
     },
@@ -87,7 +87,7 @@ export const userService={
             }
             return result;
           } catch (error: any) {
-            console.error(error);
+         
             return {
               success: false,
               error: error.message || "something went wrong please  try again",

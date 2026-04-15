@@ -1,6 +1,7 @@
 import { env } from "@/env";
 import {ICreateCategory, IUpdateCategory, TGetCategory, TResponseCategoryData } from "@/types/category";
 import { IGetMealData } from "@/types/meals.type";
+import { Ipagination } from "@/types/pagination.type";
 import { ApiErrorResponse, ApiResponse } from "@/types/response.type";
 import { TUser } from "@/types/user.type";
 import { revalidateTag } from "next/cache";
@@ -25,12 +26,13 @@ export const CategoriesService = {
         }
       })
       const data = await res.json()
-      const result =data as ApiResponse<TResponseCategoryData<{meals:IGetMealData,user:TUser}>[]>
-      if(!result.data){
+      console.log(data,'d')
+     
+      if(!res.ok){
         const error=data as ApiErrorResponse
         return {success:error.success,message:error.message || "categories retrive failed"}
       }
-      return {success:result.success,message:result.message,data:result.data}
+      return {success:data.success,message:data.message,data:data.data.result as TResponseCategoryData<{meals:IGetMealData,user:TUser}>[],pagination:data.data.pagination as Ipagination}
     } catch (error) {
       return {message:"something went wrong,please try again"}
     }
@@ -88,7 +90,7 @@ export const CategoriesService = {
       }
       return { success: result.success, message:result.message ||  "category data update successfully", data };
     } catch (error: any) {
-      console.error(error);
+  
       return { success: false, error: error.message || "something went wrong please try again" };
     }
   },
@@ -112,7 +114,7 @@ export const CategoriesService = {
       }
       return {success:result.success,message:result.message || "category deleted sucessfully",data:result};
     } catch (error: any) {
-      console.error(error);
+    
       return { success: false, error: error.message || "something went wrong please try again" };
     }
   },
@@ -136,7 +138,7 @@ export const CategoriesService = {
       }
       return {success:result.success,message:result.message,data:result};
     } catch (error: any) {
-      console.error(error);
+    
       return { success: false, error: error.message || "something went wrong please try again" };
     }
   },

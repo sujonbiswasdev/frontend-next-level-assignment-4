@@ -8,7 +8,7 @@ import { cookies } from "next/headers"
 const api_url = env.API_URL
 export const OrderService = {
     getownorder: async (params?: any, options?: { cache?: RequestCache; revalidate?: number }) => {
-        console.log(params,'params')
+    
         try {
             const cookieStore = await cookies();
             const url = new URL(`${api_url}/api/v1/orders`);
@@ -74,7 +74,7 @@ export const OrderService = {
             }
             return { success: result.success, message:result.message|| "order updated successfully", data:result };
         } catch (error: any) {
-            console.error(error);
+        
             return { success: false, error: error.message || "An error occurred while updating the meal" };
         }
     },
@@ -97,7 +97,7 @@ export const OrderService = {
                 const error=data as ApiErrorResponse
                 return { success:error.success, message:error.message || "meals create failed" }
             }
-            console.log(data.data.paymentUrl,'ss')
+            
             return { success:data.success,message:data.message,data:data.data.order as TResponseOrderData,paymentUrl:data.data.paymentUrl }
         } catch (error) {
             return { data: null, error: { message: `${error} Something Went Wrong` } };
