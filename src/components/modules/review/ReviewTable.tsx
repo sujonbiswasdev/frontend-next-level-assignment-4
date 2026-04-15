@@ -1,222 +1,384 @@
 "use client";
-import Link from "next/link";
-import { useState } from "react";
-import { Pen, Trash2, X } from "lucide-react";
+
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
-import { Status, StatusIndicator, StatusLabel } from "@/components/ui/status";
-import { updateorderstatus } from "@/actions/order.action";
-import { IgetReviewData } from "@/types/reviews.type";
-import { deleteReviewAction, moderateReviewAction } from "@/actions/reviews.order";
-import { IModerateData } from "@/services/review.service";
-export interface IOrderUpdateStatus {
-  status: string;
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+} from "@/components/ui/dialog";
+import { TResponseReviewData } from "@/types/reviews.type";
+import { Ipagination } from "@/types/pagination.type";
+import { deleteReviewAction } from "@/actions/reviews.order";
+import { useFilter } from "@/components/shared/filter/ReuseableFilter";
+import CopyableId from "@/components/shared/CopyAndRoutebyId";
+import { TFilterField } from "@/types/filter.types";
+import { FilterPanel } from "@/components/shared/filter/FilterInput";
+import { ReusableTable } from "@/components/shared/ReuseableTable";
+import ViewReviewData from "./ViewReviewData";
+import ModerateUpdateForm from "./ModeratorUpdateForm";
+import UpdateReviewContent from "./UpdateReviewCount";
+import PaginationPage from "@/components/shared/pagination";
+import { IGetMealData } from "@/types/meals.type";
+import { TUser } from "@/types/user.type";
+
+const STATUS_COLOR_MAP: Record<string, string> = {
+  APPROVED: "bg-green-200 text-green-800",
+  PENDING: "bg-yellow-200 text-yellow-800",
+  REJECTED: "bg-red-200 text-red-800"
+};
+
+const ACTION_COLOR_MAP = {
+  view: "text-fuchsia-500 hover:bg-fuchsia-50",
+  edit: "text-cyan-700 hover:bg-cyan-50",
+  delete: "text-rose-600 hover:bg-rose-50"
+};
+
+interface MyReviewsTableProps {
+  reviews: TResponseReviewData<{meal:IGetMealData,customer:TUser,replies:any[]}>[];
+  pagination?: Ipagination;
+  role: string;
 }
 
-const ReviewsTable = ({
-  initialreviews,
-}: {
-  initialreviews: IgetReviewData[];
-}) => {
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [reviews, setreviews] = useState(initialreviews);
-  const [status, setStatus] = useState<IModerateData>({ status: "" });
-  const handleUpdate = async (id: string, data: IModerateData) => {
-    try {
-      const toastId = toast.loading("review status updating.......");
-      const res = await moderateReviewAction(id, data);
-      if (!res.success || res.error || !res.data) {
-        toast.dismiss(toastId);
-        toast.error(res.message || "reviews status update failed");
-        return;
-      }
-      toast.dismiss(toastId);
-      toast.success(res.message || "reviews status updated successfully");
-      setreviews((prev) =>
-        prev.map((order) =>
-          order.id === id ? { ...order, status: status.status } : order,
-        ),
-      );
+export default function MyReviewsTable({ reviews, pagination, role }: MyReviewsTableProps) {
+  const router = useRouter();
+  const [tableReviews, setTableReviews] = useState<TResponseReviewData<any>[]>(reviews);
+  console.log(tableReviews,'tablereviws')
+  const [loading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [viewData, setViewData] = useState<any>(null);
+  const [viewMode, setViewMode] = useState(false);
+  const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
+  const [editReviewDefaultValues, setEditReviewDefaultValues] = useState<{ rating?: number, comment?: string } | undefined>();
+  const [form, setForm] = useState({
+    rating: 0,
+    search: "",
+    createdAt: "",
+    parentId:"",
+    status: "",
+  });
+  // Keep a ref to the original reviews to handle local filtering/editing
+  const originalReviewsRef = useRef<TResponseReviewData<any>[]>(reviews);
+  useEffect(() => {
+    originalReviewsRef.current = reviews;
+    setTableReviews(reviews);
+  }, [reviews]);
 
-      setEditingId(null);
-      setStatus({ status: "" });
-    } catch (error) {
-      toast.error("Something went wrong.please try again");
+  const handleDeleteReview = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this review? This action cannot be undone.")) {
+      return;
+    }
+    try {
+      const toastId = toast.loading("Deleting review...");
+      const result = await deleteReviewAction(id);
+      toast.dismiss(toastId);
+
+      if (result && result.success) {
+        toast.success(result.message || "Review deleted successfully!");
+        setTableReviews(prev => prev.filter((review) => review.id !== id));
+        originalReviewsRef.current = originalReviewsRef.current.filter((review) => review.id !== id);
+      } else {
+        toast.error(result?.message || "Failed to delete review");
+      }
+    } catch (e: any) {
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
-  const handleDelete = async (id: string) => {
-    try {
-      const toastId = toast.loading("revieww deleting.......");
-      const res = await deleteReviewAction(id);
-      if (!res.success || !res.data) {
-        toast.dismiss(toastId);
-        toast.error(res.message || "review delete failed");
-        return;
-      }
-      toast.dismiss(toastId);
-      toast.success(res.message || "review deleted successfully");
-      setreviews((prev) =>
-        prev.filter((review) => (review.id !== id ? null : review)),
-      );
+  const { updateFilters, reset ,isPending} = useFilter();
 
-      setEditingId(null);
-      setStatus({ status: "" });
-    } catch (error) {
-      toast.error("Something went wrong.please try again");
-    }
+  const handleChange = useCallback(
+    (key: keyof typeof form, value: string | number) => {
+      const updated = { ...form, [key]: value };
+      setForm(updated);
+    },
+    []
+  );
+
+  const handleApply = () => {
+    updateFilters(form);
   };
+
+
+  const handleReset = () => {
+    const defaultForm = {
+      rating: 0,
+    search: "",
+    createdAt: "",
+    parentId:"",
+    status: "",
+    };
+    setForm(defaultForm);
+    reset();
+  };
+
+  useEffect(() => {
+    let filtered = [...originalReviewsRef.current];
+    if (form.search) {
+      const s = form.search.toLowerCase();
+      filtered = filtered.filter(
+        (r) =>
+          (r.comment?.toLowerCase().includes(s) ?? false) ||
+          (r.event?.title?.toLowerCase().includes(s) ?? false)
+      );
+    }
+    if (form.rating > 0) {
+      filtered = filtered.filter((r) => r.rating >= form.rating);
+    }
+    if (form.status) {
+      filtered = filtered.filter((r) => r.status === form.status);
+    }
+    setTableReviews(filtered);
+  }, [form, reviews]);
+
+  const columns = [
+    {
+      key: "id",
+      label: "ID",
+      render: (r: any) => (
+        <span className="font-mono text-blue-900 text-[11px]">{r.id?.slice(0, 6)}</span>
+      )
+    },
+    {
+      key: "mealId",
+      label: "MealId",
+      render: (r: any) => (
+        <CopyableId id={r.meal.id} href={`/meals/${r.meal.id}`} showShort={r.meal?.id}></CopyableId>
+      )
+    },
+    
+    {
+      key: "comment",
+      label: "Comment",
+      render: (r: any) => (
+        <span className="text-gray-700 italic text-[11px]">
+          {r.comment
+            ? r.comment.slice(0, 24) + (r.comment.length > 24 ? "..." : "")
+            : ""}
+        </span>
+      )
+    },
+    {
+      key: "rating",
+      label: "Rating",
+      render: (r: any) => (
+        <span className="bg-purple-200 px-2 py-1 rounded-md font-semibold text-purple-800 text-[11px]">{r.rating}</span>
+      )
+    },
+    {
+      key: "status",
+      label: "Status",
+      render: (r: any) => (
+        <span className={`rounded-full px-3 py-1 text-xs font-bold uppercase tracking-widest shadow-md ${STATUS_COLOR_MAP[r.status] || "bg-gray-200 text-gray-800"} text-[11px]`}>
+          {r.status}
+        </span>
+      )
+    },
+    {
+      key: "createdAt",
+      label: "Created At",
+      render: (r: any) => (
+        <span className="text-indigo-600 text-[11px]">{r.createdAt?.slice(0, 10)}</span>
+      )
+    },
+  ];
+
+  const actions = [
+    {
+      icon: Eye,
+      label: "View",
+      onClick: (review: any) =>{
+        setViewData(review);
+        setViewMode(true);
+        setOpen(true);
+      },
+      className: ACTION_COLOR_MAP.view + " text-[11px]",
+    },
+    {
+      icon: Pencil,
+      label: "Edit",
+      onClick: (review: any) => {
+        setSelectedReviewId(review.id);
+        setEditReviewDefaultValues({
+          rating: review.rating,
+          comment: review.comment,
+        });
+        setViewMode(false);
+
+        setOpen(true);
+      },
+      className: ACTION_COLOR_MAP.edit + " text-[11px]",
+    },
+    {
+      icon: Trash2,
+      label: "Delete",
+      onClick: async (review: any) => {
+        await handleDeleteReview(review.id);
+      },
+      className: ACTION_COLOR_MAP.delete + " text-[11px]",
+    },
+  ];
+
+  const fields: TFilterField[] = [
+    {
+      type: "text",
+      name: "search",
+      value: form.search || "",
+      placeholder: "Search by comment or event title",
+      onChange: (val) => handleChange("search", val),
+    },
+
+    {
+      type: "text",
+      name: "parentId",
+      value: form.parentId || "",
+      placeholder: "Search by parent ID",
+      onChange: (val) => handleChange("parentId", val),
+    },
+
+    {
+      type: "date",
+      name: "createdat",
+      label: "Created At",
+      placeholder: "YYYY-MM-DD",
+      value: form.createdAt,
+      onChange: (val: string) => handleChange("createdAt", val),
+    },
+    
+    {
+      type: "range",
+      name: "rating",
+      label: "Minimum Rating",
+      min: 0,
+      max: 5,
+      value: form.rating,
+      onChange: (val) => handleChange("rating", Number(val)),
+    },
+    {
+      type: "select",
+      name: "status",
+      label: "Status",
+      value: form.status,
+      onChange: (val) => handleChange("status", val),
+      options: [
+        { label: "Approved", value: "APPROVED" },
+        { label: "Rejected", value: "REJECTED" },
+      ],
+    },
+  ];
 
   return (
-    <div className="w-full px-4 md:px-8 py-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
-          reviews Management
-        </h1>
-        <div className="text-sm text-gray-500">
-          Total reviews: {reviews.length}
+    <div className="w-full py-6 sm:py-8">
+      {/* Filter panel */}
+      <section className="mb-8 w-full">
+        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 bg-gradient-to-tr from-sky-50 via-white to-indigo-50 dark:bg-gradient-to-tr dark:from-gray-900 dark:to-slate-900 shadow-lg rounded-2xl p-6 md:p-8 border border-sky-200 dark:border-blue-900/40 transition-all">
+          <div className="flex-1">
+            <FilterPanel
+               fields={fields}
+               onApply={handleApply}
+               onReset={handleReset}
+               isPending={isPending}
+            />
+          </div>
         </div>
+      </section>
+
+      {/* Table container */}
+      <div
+        className="w-full"
+        style={{
+          maxHeight: "60vh",
+          overflowY: "auto",
+          overflowX: "auto",
+          borderRadius: "1rem",
+          background: "linear-gradient(135deg, #f0f9ff 0%, #fcf6fd 100%)"
+        }}
+      >
+
+<div className="relative w-full overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
+       {isPending && (
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/50 dark:bg-black/50 backdrop-blur-sm">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mb-2"></div>
+            <p className="text-sm font-medium">Filtering data...</p>
+          </div>
+        )}
+        {loading ? (
+          <p className="text-center text-lg text-cyan-500 font-semibold py-8">Loading...</p>
+        ) : (
+          <ReusableTable
+            columns={columns as any}
+            data={tableReviews}
+            actions={actions}
+            emptyMessage="No reviews found"
+          />
+        )}
+      </div>
       </div>
 
-      <div className="w-full overflow-x-auto rounded-2xl shadow-lg border border-gray-200 bg-white">
-        <table className="min-w-[1100px] w-full text-sm">
-          <thead className="bg-gray-50 text-gray-600 text-xs uppercase tracking-wider">
-            <tr>
-              {[
-                "SL",
-                "customerId",
-                "MealId",
-                "parentId",
-                "rating",
-                "status",
-                "comment",
-                "createdAt",
-                "updatedAt",
-                "Actions",
-              ].map((head) => (
-                <th
-                  key={head}
-                  className="px-6 py-4 text-left whitespace-nowrap"
-                >
-                  {head}
-                </th>
-              ))}
-            </tr>
-          </thead>
-
-          <tbody className="divide-y divide-gray-100">
-            {reviews.length > 0 ? (
-              reviews.map((item, index) => (
-                <tr
-                  key={item.id}
-                  className="hover:bg-gray-50 transition-all duration-200"
-                >
-                  <td className="px-6 py-4 font-medium text-gray-500">
-                    {index + 1}
-                  </td>
-
-                  <td className="px-6 py-4">
-                    <Link
-                      href={`/orders/${item.id}`}
-                      className="text-blue-600 hover:underline font-medium"
-                    >
-                      {item.customerId.slice(0, 8)}...
-                    </Link>
-                  </td>
-
-                  <td className="px-6 py-4">
-                    <Link
-                      href={`/meals/${item.mealId}`}
-                      className="text-blue-600 hover:underline font-medium"
-                    >
-                      {item.mealId.slice(0, 8)}...
-                    </Link>
-                  </td>
-                  <td className="px-6 py-4 font-semibold text-gray-800">
-                    {item.parentId ? item.parentId : "null"}
-                  </td>
-                  <td className="px-6 py-4 text-gray-600">{item.rating}</td>
-                  <td className="px-6 py-4">
-                    <Status
-                      variant={item.status === "APPROVED" ? "success" : "error"}
-                      className="px-3 py-1 rounded-full"
-                    >
-                      <StatusIndicator />
-                      <StatusLabel>{item.status}</StatusLabel>
-                    </Status>
-                  </td>
-                  <td className="px-6 py-4 text-gray-600">
-                    {item.comment.slice(0, 10)}...
-                  </td>
-
-                  <td className="px-6 py-4 text-gray-500 max-w-[200px] truncate">
-                    {new Date(item.createdAt).toLocaleDateString()}
-                  </td>
-
-                  <td className="px-6 py-4 text-gray-400 text-xs">
-                    {new Date(item.updatedAt).toLocaleDateString()}
-                  </td>
-
-                  <td className="px-4 py-2 flex items-center flex-wrap">
-                    {editingId === item.id ? (
-                      <div className="flex flex-col gap-2 flex-1">
-                        <input
-                          type="text"
-                          placeholder="Update status(APPROVED,REJECTED)"
-                          className="border rounded-lg px-2 py-1 text-sm focus:ring-2 focus:ring-blue-400 outline-none placeholder:text-[10px]"
-                          value={status.status}
-                          onChange={(e) =>
-                            setStatus({ status: e.target.value })
-                          }
-                        />
-
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleUpdate(item.id, status)}
-                            className="bg-blue-600 text-white px-3 py-1 rounded-lg text-xs hover:bg-blue-700 transition"
-                          >
-                            Save
-                          </button>
-
-                          <button
-                            onClick={() => setEditingId(null)}
-                            className="bg-gray-200 p-1 rounded-lg hover:bg-gray-300 transition"
-                          >
-                            <X size={14} />
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <Pen
-                        size={16}
-                        className="text-blue-600 cursor-pointer hover:scale-110 transition"
-                        onClick={() => setEditingId(item.id)}
-                      />
-                    )}
-
-                    <button
-                      onClick={() => handleDelete(item.id)}
-                      className="p-2 rounded-lg hover:bg-red-50 text-red-600 transition flex-1"
-                    >
-                      <Trash2 size={18}/>
-                    </button>
-                  </td>
-                </tr>
-              ))
+      {/* Edit Review Dialog */}
+      <Dialog
+        open={open}
+        onOpenChange={(val) => {
+          setOpen(val);
+          if (!val) {
+            setSelectedReviewId(null);
+            setEditReviewDefaultValues(undefined);
+          }
+        }}
+      >
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto bg-gradient-to-br from-indigo-50 via-white to-lime-50">
+        {viewData && viewMode && <ViewReviewData viewData={viewData as  TResponseReviewData<{meal:IGetMealData,customer:TUser,replies:any[]}>} />}
+          <DialogHeader />
+          {!viewMode && selectedReviewId ? (
+            role === "Admin" ? (
+              <ModerateUpdateForm
+                id={selectedReviewId}
+                onSuccess={(updated) => {
+                  setTableReviews((prev) =>
+                    prev.map((r) =>
+                      r.id === updated.id ? { ...r, ...updated } : r
+                    )
+                  );
+                  originalReviewsRef.current = originalReviewsRef.current.map((r) =>
+                    r.id === updated.id ? { ...r, ...updated } : r
+                  );
+                  setOpen(false);
+                  setSelectedReviewId(null);
+                  setEditReviewDefaultValues(undefined);
+                }}
+              />
             ) : (
-              <tr>
-                <td
-                  colSpan={10}
-                  className="text-center py-12 text-gray-400 text-sm"
-                >
-                  No orders found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              <UpdateReviewContent
+                reviewId={selectedReviewId}
+                defaultValues={editReviewDefaultValues}
+                onSuccess={(updated) => {
+                  setTableReviews((prev) =>
+                    prev.map((r) =>
+                      r.id === updated.id ? { ...r, ...updated } : r
+                    )
+                  );
+                  originalReviewsRef.current = originalReviewsRef.current.map((r) =>
+                    r.id === updated.id ? { ...r, ...updated } : r
+                  );
+                  setOpen(false);
+                  setSelectedReviewId(null);
+                  setEditReviewDefaultValues(undefined);
+                }}
+              />
+            )
+          ) : (
+            <div className="text-center text-sm text-gray-400 py-8">
+              Please select a review to update.
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <div className="flex justify-center py-4">
+        {pagination && <PaginationPage pagination={pagination as Ipagination} />}
       </div>
     </div>
   );
-};
-
-export default ReviewsTable;
+}

@@ -1,8 +1,11 @@
-import { IUpdatereviewData } from "../types/reviews.type";
+import { IGetMealData } from "@/types/meals.type";
+import { IUpdatereviewData, TResponseReviewData } from "../types/reviews.type";
 import { env } from "@/env";
 import { ApiErrorResponse, ApiResponse } from "@/types/response.type";
 import { ICreatereviewData, IgetReviewData } from "@/types/reviews.type";
 import { cookies } from "next/headers";
+import { TUser } from "@/types/user.type";
+import { Ipagination } from "@/types/pagination.type";
 
 export interface IModerateData {
   status:string;
@@ -128,16 +131,15 @@ export const reviewService = {
         cache: "no-store",
       });
 
-      const result = await res.json();
-      const data = result as ApiResponse<IgetReviewData[]>;
+      const data = await res.json();
       if (!res.ok) {
-        const error = result as ApiErrorResponse;
+        const error = data as ApiErrorResponse;
         return {
           success: error.success,
           message: error.message || "retrieve all reviews failed",
         };
       }
-      return { success: data.success, message: data.message, data: data.data };
+      return { success: data.success, message: data.message, data: data.data.result as TResponseReviewData<{meal:IGetMealData,customer:TUser,replies:any[]}>[],pagination:data.data.pagination as Ipagination};
     } catch (e: any) {
       return { success: false, message: e.message, error: "Server error" };
     }

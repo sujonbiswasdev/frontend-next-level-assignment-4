@@ -40,7 +40,7 @@ const OrderTable = ({ pagination,initialorder }: {pagination:Ipagination, initia
         customerId: "",
         phone: "",
         totalprice: null,
-        createdat: "",
+        createdAt: "",
         price: null,
         quantity: null,
         paymentStatus:""
@@ -71,7 +71,7 @@ const OrderTable = ({ pagination,initialorder }: {pagination:Ipagination, initia
             phone: "",
             paymentStatus:'',
             totalprice: null,
-            createdat: "",
+            createdAt: "",
             price: null,
             quantity: null,
      
@@ -137,8 +137,8 @@ const OrderTable = ({ pagination,initialorder }: {pagination:Ipagination, initia
           name: "createdat",
           label: "Created At",
           placeholder: "YYYY-MM-DD",
-          value: form.createdat,
-          onChange: (val: string) => handleChange("createdat", val),
+          value: form.createdAt,
+          onChange: (val: string) => handleChange("createdAt", val),
         },
         {
           type: "number",

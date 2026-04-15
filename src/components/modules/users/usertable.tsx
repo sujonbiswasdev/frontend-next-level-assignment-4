@@ -254,7 +254,7 @@ export default function UserTable({
       </Dialog>
 
       <div className="flex justify-center py-4">
-        {/* <PaginationPage pagination={pagination as TPagination} /> */}
+        <PaginationPage pagination={pagination as Ipagination} />
       </div>
     </div>
   );

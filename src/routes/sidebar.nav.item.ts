@@ -119,8 +119,8 @@ export const adminNavItems: NavSection[] = [
         items: [
             {
                 title: "setting",
-                href: "/admin/dashboard/settings",
-                icon: "Settings"
+                href: "/admin/dashboard/setting",
+                icon: "Setting"
            
             }
         ]
