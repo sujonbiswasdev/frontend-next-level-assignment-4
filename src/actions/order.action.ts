@@ -32,3 +32,14 @@ export const getOwnPaymentActions = async (id:string) => {
   const response = await OrderService.getOwnPayment(id);
   return response;
 };
+
+export const getAllOrders = async (params?: any) => {
+  const res = await OrderService.getAllOrders(params);
+  return res;
+};
+
+export const deleteOrder = async (id: string) => {
+  const res = await OrderService.deleteOrder(id);
+  revalidateTag("order", "max");
+  return res;
+};

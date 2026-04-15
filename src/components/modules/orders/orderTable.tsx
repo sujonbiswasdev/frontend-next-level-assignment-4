@@ -1,10 +1,10 @@
 "use client";
 import Link from "next/link";
 import {  useCallback, useEffect, useState } from "react";
-import { Eye, Pen, Pencil, X } from "lucide-react";
+import { Eye, Pen, Pencil, Trash2, X } from "lucide-react";
 import { toast } from "react-toastify";
 import { Status, StatusIndicator, StatusLabel } from "@/components/ui/status";
-import { updateorderstatus } from "@/actions/order.action";
+import { deleteOrder, updateorderstatus } from "@/actions/order.action";
 import { TResponseOrderData } from "@/types/order/order.type";
 import { useRouter } from "next/navigation";
 import { useFilter } from "@/components/shared/filter/ReuseableFilter";
@@ -139,6 +139,27 @@ const OrderTable = ({ role,pagination,initialorder }: {role:string,pagination:Ip
    
       ];
 
+
+      const handleDeleteOrder = async (id: string) => {
+        if (!window.confirm("Are you sure you want to delete this order? This action cannot be undone.")) {
+          return;
+        }
+        try {
+          const toastId = toast.loading("Deleting order...");
+          const result = await deleteOrder(id);
+          toast.dismiss(toastId);
+
+          if (result && result.success) {
+            toast.success(result.message || "Order deleted successfully!");
+            // Assuming you have table state, e.g. setTableOrders
+            setTableData(prev => prev.filter((order: any) => order.id !== id));
+          } else {
+            toast.error(result?.message || "Failed to delete order");
+          }
+        } catch (e: any) {
+          toast.error("Something went wrong. Please try again.");
+        }
+      };
       const actions = [
         {
           icon: Eye,
@@ -160,6 +181,20 @@ const OrderTable = ({ role,pagination,initialorder }: {role:string,pagination:Ip
             setOpen(true);
           },
         },
+        ...(role === "Admin"
+          ? [
+              {
+                icon: Trash2,
+                label: "delete",
+                onClick: async (item: any) => {
+                  await handleDeleteOrder(item.id);
+                },
+              },
+            ]
+          : []
+        )
+   
+        
           ]
     
 
@@ -190,7 +225,8 @@ const OrderTable = ({ role,pagination,initialorder }: {role:string,pagination:Ip
         )}
       <div className="mb-6 overflow-x-auto rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950">
         {tableData && Array.isArray(tableData) && tableData.length > 0 ? (
-          <ReusableTable columns={columns as any} data={tableData} actions={actions} />
+          <ReusableTable columns={columns as any} data={tableData} actions={actions as any} />
+     
         ) : (
           <div className="p-8 text-center text-gray-400 dark:text-gray-500 text-base select-none">
             No orders data found.

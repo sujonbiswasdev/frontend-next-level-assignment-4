@@ -181,7 +181,7 @@ const ViewOrdersData = ({
                     </span>
                     <span>
                       <span className="text-gray-500">Price:</span>{" "}
-                      <span className="font-semibold text-gray-800">${item.price}</span>
+                      <span className="font-semibold text-gray-800">{item.price}</span>
                     </span>
                     <span>
                       <span className="text-gray-500">Quantity:</span>{" "}
@@ -199,7 +199,7 @@ const ViewOrdersData = ({
         <div className="flex flex-wrap gap-10 items-center justify-between text-[16px] font-medium">
           <span>
             <span className="text-gray-500">Total Price: </span>
-            <span className="text-indigo-900 font-bold text-xl">${viewData.totalPrice}</span>
+            <span className="text-indigo-900 font-bold text-xl">৳{viewData.totalPrice}</span>
           </span>
           <span>
             <span className="text-gray-500">Customer ID: </span>

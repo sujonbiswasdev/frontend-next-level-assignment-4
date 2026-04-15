@@ -154,7 +154,7 @@ const ViewMealsData = ({
           </div>
           <div>
             <span className="text-gray-500 font-medium">Price:</span>
-            <span className="block mt-0.5 font-semibold text-gray-800">${viewData.price}</span>
+            <span className="block mt-0.5 font-semibold text-gray-800">৳{viewData.price}</span>
           </div>
           <div>
             <span className="text-gray-500 font-medium">Available:</span>

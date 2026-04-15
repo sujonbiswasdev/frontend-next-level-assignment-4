@@ -105,12 +105,33 @@ export const adminNavItems: NavSection[] = [
         ]
     },
     {
+        title: "order Management",
+        items: [
+            {
+                title: "orders",
+                href: "/admin/dashboard/orders",
+                icon: "ShoppingCart"
+           
+            },
+        ]
+    },
+    {
         title: "reviews Management",
         items: [
             {
                 title: "reviews",
                 href: "/admin/dashboard/reviews",
                 icon: "Star"
+            },
+        ]
+    },
+    {
+        title: "payment Management",
+        items: [
+            {
+                title: "payment",
+                href: "/admin/dashboard/payments",
+                icon: "CreditCard"           
             },
         ]
     },

@@ -53,6 +53,65 @@ export const OrderService = {
         }
     },
 
+    getAllOrders: async (
+        params?: any,
+        options?: { cache?: RequestCache; revalidate?: number }
+    ) => {
+        try {
+            const cookieStore = await cookies();
+            const url = new URL(`${api_url}/api/v1/orders/all`);
+            if (params) {
+                for (const [key, value] of Object.entries(params)) {
+                    if (value !== undefined && value !== null && value !== "") {
+                        url.searchParams.append(key, String(value));
+                    }
+                }
+            }
+            const config: RequestInit & { next?: any } = {
+                credentials: "include",
+                headers: { 
+                    Cookie: cookieStore.toString()
+                }
+            };
+            if (options?.cache) {
+                config.cache = options.cache;
+            }
+            if (options?.revalidate) {
+                config.next = { ...config.next, revalidate: options.revalidate };
+            }
+            config.next = { ...config.next, tags: ["order", "orders"] };
+
+            const res = await fetch(url.toString(), config);
+            const data = await res.json();
+
+            if (!res.ok) {
+                const error = data as ApiErrorResponse;
+                return {
+                    success: error.success ?? false,
+                    message:
+                        error.message ||
+                        "Failed to fetch all orders (admin only).",
+                };
+            }
+
+            // Validate shape, fallback empty array
+            const resultList = Array.isArray(data?.data?.result) ? data.data.result : [];
+            const pagination = data?.data?.pagination ?? null;
+
+            return {
+                success: data.success ?? true,
+                message: data.message || "Fetched all orders (admin) successfully.",
+                data: resultList as TResponseOrderData[],
+                pagination: pagination as Ipagination
+            };
+        } catch (error: any) {
+            return {
+                success: false,
+                message: error?.message || "An unexpected error occurred while fetching all orders (admin)."
+            };
+        }
+    },
+
     updateOrderStatus: async (id: string, orderdata: IOrderUpdateStatus) => {
         try {
             const cookieStore = await cookies()
@@ -160,5 +219,33 @@ export const OrderService = {
         }
       },
 
+    deleteOrder: async (id: string) => {
+        try {
+            const cookieStore = await cookies();
+            const res = await fetch(`${api_url}/api/v1/order/${id}`, {
+                method: "DELETE",
+                headers: {
+                    Cookie: cookieStore.toString(),
+                },
+            });
+            const body = await res.json();
+            if (!res.ok) {
+                return {
+                    success: false,
+                    message: body.message || "Failed to delete order",
+                };
+            }
+            return {
+                success: true,
+                data: body.data,
+                message: body.message || "Order deleted successfully",
+            };
+        } catch (error: any) {
+            return {
+                success: false,
+                message: error?.message || "Something went wrong while deleting the order",
+            };
+        }
+    },
 
 }
