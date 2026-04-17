@@ -14,21 +14,27 @@ interface Slide {
 const slides: Slide[] = [
   {
     id: 1,
-    title: "SUPER DELICIOUS BURGERS",
-    subtitle: "Experience the taste of premium handcrafted burgers.",
-    image: "https://images.pexels.com/photos/1352274/pexels-photo-1352274.jpeg",
+    title: "Miso Soup",
+    subtitle: "Classic Japanese soup made with miso paste, tofu, and seaweed.",
+    image: "https://images.pexels.com/photos/13065217/pexels-photo-13065217.jpeg",
   },
   {
     id: 2,
-    title: "FRESH HOT PIZZA",
-    subtitle: "Loaded with cheese & baked to perfection.",
-    image: "/images/food1.jpg",
+    title: "Chicken Roast",
+    subtitle: "Traditional Bangladeshi style roasted chicken cooked with aromatic spices and rich gravy.",
+    image: "https://images.pexels.com/photos/2673353/pexels-photo-2673353.jpeg",
   },
   {
     id: 3,
-    title: "CRISPY FRIED BERGER",
-    subtitle: "Golden crispy bites with signature spices.",
-    image: "/images/food2.jpg",
+    title: "Kacchi Biryani",
+    subtitle: "Fragrant basmati rice layered with tender marinated mutton and authentic spices.",
+    image: "https://images.pexels.com/photos/4439740/pexels-photo-4439740.jpeg",
+  },
+  {
+    id: 4,
+    title: "Pizza",
+    subtitle: "Freshly baked Italian pizza topped with cheese, sauce, and delicious toppings.",
+    image: "https://images.pexels.com/photos/31596394/pexels-photo-31596394.jpeg",
   },
 ];
 
