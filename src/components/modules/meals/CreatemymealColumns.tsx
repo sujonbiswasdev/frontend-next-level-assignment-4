@@ -55,7 +55,7 @@ export const createMyMealColumns = () => [
     render: (row: any) =>
       typeof row.price !== "undefined" ? (
         <span className="font-semibold text-green-700 bg-green-50 px-2 py-0.5 rounded">
-          ${Number(row.price).toFixed(2)}
+          ৳{Number(row.price).toFixed(2)}
         </span>
       ) : (
         <span className="text-gray-400 italic">N/A</span>

@@ -27,7 +27,7 @@ export const createPaymentColumns = () => [
     render: (row: TResponsePayment<any>) => (
       <CopyableId
         id={row.userId}
-        href={row.userId ? `/profile/${row.userId}` : undefined}
+        href={row.userId ? `/profile/user/${row.userId}` : undefined}
         showShort={row.userId}
       />
     ),

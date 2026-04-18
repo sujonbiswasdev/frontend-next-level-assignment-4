@@ -297,7 +297,7 @@ const MealCard = ({ meal, onAddToCart, cartItems }: any) => {
         </div>
 
         <div className="flex items-center justify-between pt-6 border-t border-gray-200">
-          <div className="text-3xl font-black text-gray-900">${meal.price}</div>
+          <div className="text-3xl font-black text-gray-900">৳{meal.price}</div>
           <button
             disabled={!meal.isAvailable}
             onClick={() =>

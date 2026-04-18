@@ -70,7 +70,7 @@ const UpdateMeal = ({ mealId }: { mealId: string }) => {
           </div>
           <div className="flex-1 flex flex-col gap-1.5">
             <Label htmlFor="price" className="font-medium">
-              Price ($)
+              Price (৳)
             </Label>
             <input
               id="price"

@@ -74,7 +74,7 @@ export function PaymentCard({
         {/* Right: Order Form */}
         <div className="order-1 md:order-2 flex flex-col justify-center">
           <div className="w-full max-w-lg mx-auto">
-            <OrderForm setactiveButton={setactiveButton} />
+            <OrderForm deliveryCharge={deliveryCharge} setactiveButton={setactiveButton} />
           </div>
         </div>
       </div>

@@ -111,7 +111,7 @@ export function UpdateMealsForm({
             >
               {(field) => (
                 <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid}>
-                  <FieldLabel>Price ($)</FieldLabel>
+                  <FieldLabel>Price (৳)</FieldLabel>
                   <input
                     type="number"
                     value={field.state.value}

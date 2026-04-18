@@ -69,6 +69,7 @@ async function proxy(request: NextRequest) {
   }
 
   const session = await getSession();
+  console.log(session,'session')
 
   if (!session?.data || session.error || !session.success) {
     return NextResponse.redirect(new URL("/login", request.url));
@@ -78,18 +79,20 @@ async function proxy(request: NextRequest) {
   const role: string = user.role;
   const status: string = user.status;
 
+
+
   // Block suspended users
   if (status === "suspend") {
     return NextResponse.redirect(new URL("/login", request.url));
+  }
+  if(role==="Customer" && pathname.startsWith("/profile")){
+    return NextResponse.redirect(new URL("/profile/user", request.url));
   }
 
   if(role!==Roles.Customer && pathname.startsWith("/settings")){
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if(role===Roles.Customer && pathname.startsWith("/profile")){
-    return NextResponse.redirect(new URL("/profile", request.url));
-  }
 
 
   if(role===Roles.Admin && pathname.startsWith("/profile")){

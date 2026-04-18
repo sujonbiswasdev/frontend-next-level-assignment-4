@@ -21,7 +21,7 @@ export const createOrderColumns = () => [
     render: (row: any) => (
         <CopyableId 
           id={row.customerId}
-          href={`/profile/${row.customerId}`} 
+          href={`/profile/user/${row.customerId}`} 
           className="" 
           showShort={row.customerId.slice(0,10)?"...":row.customerId} 
           key={row.customerId}

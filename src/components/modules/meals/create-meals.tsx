@@ -56,7 +56,7 @@ export function MealsForm({data}:{data:TResponseCategoryData<{meals:IGetMealData
           return;
         }
         toast.dismiss(toastid)
-        toast.success("meals created successfully")
+        toast.success("Meal created successfully! 🎉 Please wait about 10 seconds for it to appear.")
         setPreview(null)
         form.reset()
       } catch (error) {
@@ -178,19 +178,23 @@ export function MealsForm({data}:{data:TResponseCategoryData<{meals:IGetMealData
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>deliverycharge</FieldLabel>
-                    <Input
+                    <select
                       id={field.name}
                       name={field.name}
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(Number(e.target.value))}
                       aria-invalid={isInvalid}
-                      placeholder="please enter your price"
-                      autoComplete="off"
-                    />
+                      className="border-amber-50 shadow-sm px-2 py-2.5"
+                    >
+                      <option value="">Select delivery charge</option>
+                      <option value={0}>0</option>
+                      <option value={120}>120</option>
+                    </select>
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
                     )}
+               
                   </Field>
                 )
               }}

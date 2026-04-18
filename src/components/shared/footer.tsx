@@ -78,7 +78,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/profile" className="hover:text-primary transition">
+                <Link href="/profile/user" className="hover:text-primary transition">
                   Profile
                 </Link>
               </li>

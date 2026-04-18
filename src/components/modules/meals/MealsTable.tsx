@@ -105,7 +105,6 @@ const MealTable = ({role,pagination,categories, initialmeals }: {role?:string,pa
       name: "search",
       label: "Search",
       placeholder: "Meal name or description",
- 
       value: form.search,
       onChange: (val: string) => handleChange("search", val),
     },
@@ -134,7 +133,8 @@ const MealTable = ({role,pagination,categories, initialmeals }: {role?:string,pa
       ],
     },
     { type: "select", name: "cuisine", value: form.cuisine, placeholder: "cuisine...", label: "cuisine", onChange: (val) => handleChange("cuisine", val), options: cuisines.map(v => ({ label: v, value: v })) },
-    { type: "select", name: "dietaryPreference", value: form.dietaryPreference, placeholder: "e.g. Gluten Free", label: "dietaryPreference", onChange: (val) => handleChange("dietaryPreference", val), options: dietaryPreferences.map(v => ({ label: v, value: v })) }
+    { type: "select", name: "dietaryPreference", value: form.dietaryPreference, placeholder: "e.g. Gluten Free", label: "dietaryPreference", onChange: (val) => handleChange("dietaryPreference", val), options: dietaryPreferences.map(v => ({ label: v, value: v })) },
+    { type: "number", name: "price", label: "Price", value: form.price as any, onChange: (val) => handleChange("price", val) },
   ];
 
 

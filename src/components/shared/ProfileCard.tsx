@@ -20,6 +20,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+import { Button } from '../ui/button';
 export default function ProfileCard({ profile }: { profile: TUser }) {
   const defaultProfile = 'https://res.cloudinary.com/drmeagmkl/image/upload/v1766941482/chatgpt_m8tmep.png'
 
@@ -58,7 +59,7 @@ export default function ProfileCard({ profile }: { profile: TUser }) {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <Link className='w-full' href={`${profile.role == 'Customer' ? "/profile" : profile.role == "Admin" ? "/admin/dashboard/profile" : profile.role == 'Provider' ? "/provider/dashboard/profile" : "/"}`}>👤 profile</Link>
+            <Link className='w-full' href={`${profile.role == 'Customer' ? "/profile/user" : profile.role == "Admin" ? "/admin/dashboard/profile" : profile.role == 'Provider' ? "/provider/dashboard/profile" : "/"}`}>👤 profile</Link>
           </DropdownMenuItem>
           {profile.role === 'Customer' ? "" : <DropdownMenuItem><Link className='w-full' href={'/dashboard'}> 📊 Dashboard</Link></DropdownMenuItem>}
           <DropdownMenuItem>
@@ -69,11 +70,11 @@ export default function ProfileCard({ profile }: { profile: TUser }) {
         </DropdownMenuGroup>
         {/* Logout */}
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout}>
+        <Button onClick={handleLogout}>
           <LogOut />
           Log out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-        </DropdownMenuItem>
+        </Button>
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -116,7 +116,7 @@ const ViewReviewData = ({ viewData }:{viewData: TResponseReviewData<{meal:IGetMe
             </div>
             <div>
               <span className="font-semibold text-gray-700 dark:text-gray-300">User ID</span>
-              <CopyableId id={viewData.customer?.id} href={`/profile/${viewData.customer?.id}`} showShort={viewData.customer?.id?.slice(0, 8) as any} />
+              <CopyableId id={viewData.customer?.id} href={`/profile/user/${viewData.customer?.id}`} showShort={viewData.customer?.id?.slice(0, 8) as any} />
             </div>
             <div>
               <span className="font-semibold text-gray-700 dark:text-gray-300">Joined</span>

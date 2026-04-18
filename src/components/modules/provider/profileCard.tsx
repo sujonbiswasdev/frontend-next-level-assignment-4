@@ -167,7 +167,7 @@ export default function ProviderProfilePage({ userdata }: { userdata: TUser }) {
 
 
                                             {editfield !== 'name' ? (<div className="flex items-center shadow-sm justify-between px-6 py-4">
-                                                <Label className="text-gray-600 font-bold">Name</Label>
+                                                <Label className="text-gray-600 text-sm">Name</Label>
                                                 <div className="flex gap-1 pr-1">
                                                     <p className="text-gray-900 break-all">{userinfo?.name}</p>
                                                     <button className="w-[5px]" onClick={() => seteditfield('name')}><Pencil className="text-green-800 text-[5px]" /></button>
@@ -190,7 +190,7 @@ export default function ProviderProfilePage({ userdata }: { userdata: TUser }) {
                                             </div>
 
                                             {editfield !== 'phone' ? (<div className="flex items-center shadow-sm justify-between px-6 py-4">
-                                                <Label className="text-gray-800 font-semibold">phone</Label>
+                                                <Label className="text-gray-600 text-sm">phone</Label>
                                                 <div className="flex gap-1 pr-1">
                                                     <p className="text-gray-900">{userinfo?.phone || '017********'}</p>
                                                     <button className="w-[5px]" onClick={() => seteditfield('phone')}><Pencil className="text-green-800 text-[5px]" /></button>
@@ -217,7 +217,7 @@ export default function ProviderProfilePage({ userdata }: { userdata: TUser }) {
 
 
                                             <div className="flex items-center justify-between shadow-sm px-6 py-4">
-                                                <Label className="text-gray-800 font-semibold">status</Label>
+                                                <Label className="text-gray-600 text-sm">status</Label>
                                                 <h4>{userinfo.status == "activate" ?
                                                     (<div className="">
                                                         <Status variant="success">
@@ -236,7 +236,7 @@ export default function ProviderProfilePage({ userdata }: { userdata: TUser }) {
 
 
                                             <div className="flex items-center justify-between px-6 py-4 shadow-sm">
-                                                <Label className="text-gray-800 font-semibold">emailVerified</Label>
+                                                <Label className="text-gray-600 text-sm">emailVerified</Label>
                                                 <h4>{userinfo.emailVerified ?
                                                     (<div className="">
                                                         <Status variant="success">
@@ -255,7 +255,7 @@ export default function ProviderProfilePage({ userdata }: { userdata: TUser }) {
 
 
                                             <div className="flex items-center justify-between shadow-sm px-6 py-4">
-                                                <Label className="text-gray-800 font-semibold">isActive</Label>
+                                                <Label className="text-gray-600 text-sm">isActive</Label>
 
                                                 {editfield !== 'isActive' ? (<div className="flex gap-1">
 

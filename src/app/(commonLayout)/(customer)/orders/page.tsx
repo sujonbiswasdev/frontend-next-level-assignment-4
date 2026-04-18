@@ -42,7 +42,7 @@ const MyOrders = async ({
           />
         }
       >
-        <div>
+        <div className='mt-6 md:mt-10 lg:mt-14 xl:mt-20'>
           <CustomerOrderTable role={role as string} initialorder={orders} />
         </div>
       </ErrorBoundary>

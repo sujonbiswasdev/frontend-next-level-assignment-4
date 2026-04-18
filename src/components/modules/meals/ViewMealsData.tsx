@@ -54,8 +54,9 @@ const ViewMealsData = ({
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="mb-1 font-bold text-2xl text-indigo-900 truncate">
-              {viewData.meals_name}
+              {viewData.meals_name.slice(0,10)}....
             </h3>
+           
             <div className="flex flex-wrap items-center gap-4 mt-2">
               <div className="flex items-center gap-2">
                 <span className="text-gray-400">
@@ -150,11 +151,17 @@ const ViewMealsData = ({
           </div>
           <div>
             <span className="text-gray-500 font-medium">Description:</span>
-            <span className="block mt-0.5 text-gray-800 font-semibold">{viewData.description}</span>
+            <span className="block mt-0.5 text-gray-800 font-semibold">{viewData.description?.slice(0,10)}...</span>
           </div>
           <div>
             <span className="text-gray-500 font-medium">Price:</span>
             <span className="block mt-0.5 font-semibold text-gray-800">৳{viewData.price}</span>
+          </div>
+          <div>
+          <span className="text-gray-500 font-medium">deliverycharge:</span>
+          <h3 className="mb-1 font-bold text-2xl text-indigo-900 truncate">
+              {viewData.deliverycharge}
+            </h3>
           </div>
           <div>
             <span className="text-gray-500 font-medium">Available:</span>

@@ -118,7 +118,7 @@ export function CreateCategoryForm() {
               name="image"
               children={(field) => (
                 <Field>
-                  <FieldLabel>profile Image *</FieldLabel>
+                  <FieldLabel>category Image *</FieldLabel>
 
                   <Input
                     type="file"

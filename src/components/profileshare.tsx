@@ -11,7 +11,7 @@ interface Props {
 export default function ShareProfileButton({ userId, userName }: Props) {
 
   const handleShare = async () => {
-    const profileUrl = `${window.location.origin}/profile/${userId}`
+    const profileUrl = `${window.location.origin}/profile/user/${userId}`
 
     try {
       if (navigator.share) {

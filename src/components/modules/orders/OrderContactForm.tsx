@@ -14,8 +14,10 @@ import { FormEvent, useState } from "react"
 import { toast } from "react-toastify"
 
 export function OrderForm({
+    deliveryCharge,
     setactiveButton,
 }: {
+    deliveryCharge:any,
     setactiveButton: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
     const router=useRouter()
@@ -94,7 +96,7 @@ export function OrderForm({
                     <Button type="button" variant="outline">
                         Cancel
                     </Button>
-                    <Button type="submit">Submit & pay</Button>
+                    <Button type="submit">{deliveryCharge==0?"submit":"Submit & pay"}</Button>
                 </Field>
             </FieldGroup>
         </form>

@@ -21,7 +21,7 @@ const CustomerLayout = ({
   else if (pathname === '/checkout') page = checkout
 
   return (
-    <div className='mt-6 md:mt-10 lg:mt-14 xl:mt-20'>
+    <div className='mt-14 md:mt-20 lg:mt-24 xl:mt-26'>
 
       {page?(<>
       <div className="flex items-center justify-between max-w-xl mx-auto text-sm md:text-base font-medium">

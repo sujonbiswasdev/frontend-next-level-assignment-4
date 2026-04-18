@@ -48,7 +48,7 @@ export const createCategoryColumns = () => [
       <div className={tdClass}>
         <CopyableId
           id={row.adminId}
-          href={`/profile/${row.adminId}`}
+          href={`/profile/user/${row.adminId}`}
           className="rounded px-1 py-0.5 text-cyan-700 dark:text-cyan-200 font-mono hover:bg-cyan-100 dark:hover:bg-cyan-900 transition"
           showShort={row.adminId ? row.adminId.slice(0, 8) + "..." : "" as any}
           key={row.adminId}

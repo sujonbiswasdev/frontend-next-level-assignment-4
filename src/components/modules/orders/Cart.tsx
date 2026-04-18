@@ -50,7 +50,7 @@ export default function CartComponent() {
                     </h3>
                        <div className="flex justify-between font-semibold text-lg text-gray-800">
                         <span>subtotal</span>
-                        <span>${subtotal}</span>
+                        <span>৳{subtotal}</span>
                     </div>
                       <div className="flex justify-between font-semibold text-lg text-gray-800">
                         <span>delivery charge</span>
@@ -62,7 +62,7 @@ export default function CartComponent() {
 
                     <div className="flex justify-between font-semibold text-lg text-gray-800">
                         <span>Total</span>
-                        <span>${total}</span>
+                        <span>৳{total}</span>
                     </div>
 
                     <button onClick={()=>router.push("/checkout")} className="mt-6 w-full bg-black text-white py-3 rounded-xl font-medium hover:bg-gray-900 transition-all duration-300 active:scale-95">
@@ -121,7 +121,7 @@ function CartItem({
                     <div className="text-sm text-gray-600">
                         Delivery Charge: 
                         <span className="font-semibold ml-1 text-amber-700">
-                            ${deliverycharge?.toFixed ? deliverycharge.toFixed(2) : deliverycharge}
+                        ৳{deliverycharge?.toFixed ? deliverycharge.toFixed(2) : deliverycharge}
                         </span>
                     </div>
                
@@ -141,7 +141,7 @@ function CartItem({
 
                 {/* Price */}
                 <div className="text-lg font-semibold text-gray-800">
-                    ${price}.00
+                ৳{price}.00
                 </div>
             </div>
         </div>

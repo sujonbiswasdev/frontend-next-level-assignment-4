@@ -17,6 +17,7 @@ export default async function ProfilePage() {
   }
 
   const userinfo = session.data;
+  console.log(userinfo,'userinfo')
 
   return (
     <ErrorBoundary

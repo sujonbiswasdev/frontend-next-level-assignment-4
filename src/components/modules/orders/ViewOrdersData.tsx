@@ -205,7 +205,7 @@ const ViewOrdersData = ({
             <span className="text-gray-500">Customer ID: </span>
             <span className="font-mono text-sm text-gray-700 select-all">
               <Link
-                href={`/profile/${viewData.customerId}`}
+                href={`/profile/user/${viewData.customerId}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 hover:underline"

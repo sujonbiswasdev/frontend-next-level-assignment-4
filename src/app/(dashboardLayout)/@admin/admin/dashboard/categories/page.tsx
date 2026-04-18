@@ -42,7 +42,7 @@ const CreateCategory = async ({
         />
       }
     >
-      <div>
+      <div className="">
         <CategoryTable
           pagination={categories.pagination as Ipagination}
           category={categories.data as TResponseCategoryData[]}
