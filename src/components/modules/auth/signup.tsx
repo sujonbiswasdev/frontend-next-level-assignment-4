@@ -54,8 +54,10 @@ export function SignupForm() {
           toast.error(data.message || "User creation failed.");
           return;
         }
+
         toast.dismiss(toastId);
         toast.success(data.message || "Signup successful!");
+        alert("The OTP is valid for only 10 minutes. Please check your email.");
         localStorage.removeItem("foodhub-cart");
         router.push(`/verify-email?email=${value.email}`);
       } catch (error: any) {
