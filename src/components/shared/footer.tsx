@@ -109,7 +109,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/provider/menu"
+                  href="/provider/dashboard/my-menu"
                   className="hover:text-primary transition"
                 >
                   Manage Menu
@@ -117,7 +117,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/provider/orders"
+                  href="/provider/dashboard/orders"
                   className="hover:text-primary transition"
                 >
                   Orders
