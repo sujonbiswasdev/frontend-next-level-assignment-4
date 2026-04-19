@@ -148,7 +148,6 @@ export const mealsService = {
     }
   },
   MealStatusUpdate: async (id: string, data: IMealStatus) => {
-    console.log(id,'d')
     try {
       const cookieStore = await cookies();
       const res = await fetch(`${api_url}/api/v1/meal/${id}`, {
@@ -225,7 +224,6 @@ export const mealsService = {
       if (image) {
         formData.append("file", image);
       }
-      console.log(formData,'data')
       revalidateTag("meal",'max')
       const res = await fetch(`${api_url}/api/v1/provider/meal/${id}`, {
         method: "PUT",

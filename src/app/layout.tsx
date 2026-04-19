@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -12,7 +12,6 @@ const mono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
 });
-
 
 export const metadata: Metadata = {
   title: "Foodhub",
@@ -26,14 +25,18 @@ export default function RootLayout({
 }>) {
   return (
     <html
-    suppressHydrationWarning
-    data-scroll-behavior="smooth"
-    lang="en"
-    className={`font-${inter} font-${mono} font-sans h-full antialiased `}>
+      suppressHydrationWarning
+      data-scroll-behavior="smooth"
+      lang="en"
+      className={`font-${inter} font-${mono} font-sans h-full antialiased `}
+    >
       <body
+        suppressHydrationWarning
+        data-new-gr-c-s-check-loaded="..."
+        data-gr-ext-installed=""
         className={`w-full overflow-x-hidden min-h-screen font-sans antialiased bg-background`}
       >
-            {children}
+        {children}
         <Toaster />
         <ToastContainer autoClose={1000} theme="dark" />
       </body>

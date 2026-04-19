@@ -24,6 +24,7 @@ export interface IGetOrderData {
   phone: string;
   address: string;
   createdAt: string;
+  paymentStatus:string;
   updatedAt: string;
   orderitem: {
     id:string,

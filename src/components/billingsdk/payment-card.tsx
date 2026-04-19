@@ -45,14 +45,14 @@ export function PaymentCard({
                 <div className="space-y-3">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">Subtotal</span>
-                    <span className="tabular-nums font-medium text-gray-900">
+                    <span className="font-medium text-gray-900">
                       ৳{subtotal.toFixed(2)}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">Delivery Charge</span>
                     <span className="tabular-nums font-medium text-gray-900">
-                      ৳{deliveryCharge.toFixed(2)}
+                      ৳ {deliveryCharge.toFixed(2)}
                     </span>
                   </div>
                   <div className="border-t pt-3 flex items-center justify-between">

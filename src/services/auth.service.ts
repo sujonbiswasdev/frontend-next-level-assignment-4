@@ -89,7 +89,6 @@ export async function registerUser(registerData: UserCreateInput) {
       method: "POST",
       body: formData
     });
-
     const body= await response.json();
     if (!response.ok || !body.success) {
       const data = body as ApiErrorResponse;

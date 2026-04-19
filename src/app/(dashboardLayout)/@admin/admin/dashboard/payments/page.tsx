@@ -29,7 +29,6 @@ const PaymentPage = async ({
   }
   const role = userinfo.data.role;
   const payments = await getAllPayments(search);
-  console.log(payments,'payments')
   return (
     <div>
       <ErrorBoundary fallback={<ErrorFallback title="Loading payments failed" message="Something went wrong while loading payments." />}>

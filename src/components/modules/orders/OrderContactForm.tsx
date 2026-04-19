@@ -17,14 +17,14 @@ export function OrderForm({
     deliveryCharge,
     setactiveButton,
 }: {
-    deliveryCharge:any,
+    deliveryCharge: any,
     setactiveButton: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-    const router=useRouter()
+    const router = useRouter()
     const [orderdata, setorderdata] = useState<ICreateorderData | {}>({})
     const { removeFromCart, cart, clearCart, getSubtotal, increase, decrease } = manageCartStore()
 
-    const items:IOrderItem[] = cart.map(item => ({
+    const items: IOrderItem[] = cart.map(item => ({
         mealId: item.mealid,
         price: item.price,
         quantity: item.quantity
@@ -38,15 +38,21 @@ export function OrderForm({
         e.preventDefault()
         const toastid = toast.loading("order creating.....")
         const response = await CreateOrder(formData as ICreateorderData)
-        router.push(response.paymentUrl)
         if (response.error || !response.success) {
             toast.dismiss(toastid)
             toast.error(response.message)
-           return
+            return
         }
+
         toast.dismiss(toastid)
         toast.success(response.message || 'order created successfully')
         setactiveButton(true)
+
+        if (response.paymentUrl) {
+            window.location.href = response.paymentUrl
+        } else {
+            router.push(`/payment/${response.data?.id}`)
+        }
 
     }
     return (
@@ -86,7 +92,7 @@ export function OrderForm({
                         required
                         onChange={(e) => setorderdata({ ...orderdata, phone: e.target.value })}
                     />
-              
+
                 </Field>
                 <Field>
                     <FieldLabel htmlFor="form-address">Address</FieldLabel>
@@ -96,7 +102,7 @@ export function OrderForm({
                     <Button type="button" variant="outline">
                         Cancel
                     </Button>
-                    <Button type="submit">{deliveryCharge==0?"submit":"Submit & pay"}</Button>
+                    <Button type="submit">{deliveryCharge == 0 ? "submit" : "Submit & pay"}</Button>
                 </Field>
             </FieldGroup>
         </form>

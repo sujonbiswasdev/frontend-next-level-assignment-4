@@ -28,8 +28,8 @@ export const getsingleorder=async(params?:any)=>{
   
 }
 
-export const getOwnPaymentActions = async (id:string) => {
-  const response = await OrderService.getOwnPayment(id);
+export const getOwnPaymentActions = async (id:string,paymentId:any) => {
+  const response = await OrderService.getOwnPayment(id,paymentId);
   return response;
 };
 

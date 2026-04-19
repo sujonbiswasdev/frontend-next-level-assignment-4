@@ -63,14 +63,12 @@ async function proxy(request: NextRequest) {
         request: { headers },
         headers: response.headers,
       });
-    } catch {}
+    } catch { }
     // fallback to original next
     return response;
   }
 
   const session = await getSession();
-  console.log(session,'session')
-
   if (!session?.data || session.error || !session.success) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
@@ -85,21 +83,21 @@ async function proxy(request: NextRequest) {
   if (status === "suspend") {
     return NextResponse.redirect(new URL("/login", request.url));
   }
-  if(role==="Customer" && pathname.startsWith("/profile")){
-    return NextResponse.redirect(new URL("/profile/user", request.url));
-  }
-
-  if(role!==Roles.Customer && pathname.startsWith("/settings")){
+  if (role !== Roles.Customer && pathname.startsWith("/settings")) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
+  if (role === "Customer" && pathname.startsWith("/profile")) {
+    return NextResponse.redirect(new URL("/profile/user", request.url));
+  }
 
 
-  if(role===Roles.Admin && pathname.startsWith("/profile")){
+
+  if (role === Roles.Admin && pathname.startsWith("/profile")) {
     return NextResponse.redirect(new URL("/admin/dashboard/profile", request.url));
   }
 
-  if(role===Roles.Provider && pathname.startsWith("/profile")){
+  if (role === Roles.Provider && pathname.startsWith("/profile")) {
     return NextResponse.redirect(new URL("/provider/dashboard/profile", request.url));
   }
 
@@ -116,44 +114,42 @@ async function proxy(request: NextRequest) {
       pathname.startsWith("/checkout"))
   ) {
     const error =
-      pathname.startsWith("/orders")   ? "order_access_only_for_customer" :
-      pathname.startsWith("/cart")     ? "cart_access_only_for_customer" :
-      pathname.startsWith("/checkout") ? "checkout_access_only_for_customer" :
-      "access_only_for_customer";
+      pathname.startsWith("/orders") ? "order_access_only_for_customer" :
+        pathname.startsWith("/cart") ? "cart_access_only_for_customer" :
+          pathname.startsWith("/checkout") ? "checkout_access_only_for_customer" :
+            "access_only_for_customer";
     return NextResponse.redirect(new URL(`/login?error=${error}`, request.url));
 
-}
+  }
+  if (
+    pathname.startsWith("/admin") &&
+    role !== Roles.Admin
+  ) {
+    return NextResponse.redirect(new URL("/login?error=admin_access_only", request.url));
+  }
 
+  if (
+    pathname.startsWith("/provider") &&
+    role !== Roles.Provider
+  ) {
+    return NextResponse.redirect(new URL("/login?error=provider_access_only", request.url));
+  }
 
-if (
-  pathname.startsWith("/admin") &&
-  role !== Roles.Admin
-) {
-  return NextResponse.redirect(new URL("/login?error=admin_access_only", request.url));
-}
+  if (role === Roles.Provider && pathname === "/dashboard") {
+    return NextResponse.redirect(new URL("/provider/dashboard", request.url));
+  }
 
-if (
-  pathname.startsWith("/provider") &&
-  role !== Roles.Provider
-) {
-  return NextResponse.redirect(new URL("/login?error=provider_access_only", request.url));
-}
+  if (role === Roles.Provider && pathname === "/provider") {
+    return NextResponse.redirect(new URL("/provider/dashboard", request.url));
+  }
 
-if (role === Roles.Provider && pathname === "/dashboard") {
-  return NextResponse.redirect(new URL("/provider/dashboard", request.url));
-}
+  if (role === Roles.Admin && pathname === "/dashboard") {
+    return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+  }
 
-if (role === Roles.Provider && pathname === "/provider") {
-  return NextResponse.redirect(new URL("/provider/dashboard", request.url));
-}
-
-if (role === Roles.Admin && pathname === "/dashboard") {
-  return NextResponse.redirect(new URL("/admin/dashboard", request.url));
-}
-
-if (role === Roles.Admin && pathname === "/admin") {
-  return NextResponse.redirect(new URL("/admin/dashboard", request.url));
-}
+  if (role === Roles.Admin && pathname === "/admin") {
+    return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+  }
 
 
 }

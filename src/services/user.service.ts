@@ -77,7 +77,6 @@ export const userService={
               body: JSON.stringify(body)
             });
             const data = await res.json();
-            console.log(data,'daat')
             revalidateTag("user",'max')
             if (!res.ok) {
               return { success: false, message: data?.message || "Failed to update user", errors: data?.errors };

@@ -4,6 +4,9 @@ import Link from "next/link";
 import { getOwnPaymentActions } from "@/actions/order.action";
 import ErrorBoundary from "@/components/shared/ErrorBoundary";
 import Notfounddata from "@/components/Notfounddata";
+import { getSession } from "@/services/auth.service";
+import { TResponseOrderData } from "@/types/order/order.type";
+import { TBasePayment } from "@/types/payment.type";
 
 
 const InfoRow = ({
@@ -40,24 +43,18 @@ const InfoRow = ({
   params: Promise<{ id: string }>;
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }) => {
-  try {
-    const { id } = await params;
-    const resolvedSearchParams = searchParams ? await searchParams : undefined;
-    const orderId =
-      (resolvedSearchParams?.OrderId as string | undefined) ?? "-";
+    try {
+      const { id } = await params;
+    const resolvedSearchParams =  await searchParams
     const paymentId =
       (resolvedSearchParams?.paymentId as string | undefined) ?? "-";
-
-    const orderResult = await getOwnPaymentActions(id);
-    const orderList = Array.isArray(orderResult?.data) ? orderResult.data : [];
-    const hasOrderData = orderList.length > 0;
+    const orderResult = await getOwnPaymentActions(id,paymentId);
+    
+    const paymentData=orderResult?.data as TResponseOrderData<{payment:TBasePayment}>
     const isServiceSuccess = Boolean(orderResult?.success);
-    const hasPaidRecord = orderList.some(
-      (item: any) =>
-        String(item?.payment?.status || "").toUpperCase() === "PAID" ||
-        String(item?.paymentStatus || "").toUpperCase() === "PAID",
-    );
-    const isSuccessView = isServiceSuccess && hasOrderData && hasPaidRecord;
+    const paymentStatus=paymentData?.payment?.status==="PAID"
+    const isSuccessView = isServiceSuccess && paymentStatus;
+   
     return (
       <main className="min-h-screen flex items-center justify-center bg-neutral-100 mt-6 sm:mt-10 md:mt-14 lg:mt-20">
         <section className="w-full max-w-xl relative">
@@ -98,29 +95,32 @@ const InfoRow = ({
               <h2 className="text-xs font-medium text-gray-400 uppercase tracking-widest mb-2">
                 Registration Summary
               </h2>
-              {isSuccessView ? (
-                orderList.map((item: any, i: number) => (
+              {isSuccessView || isServiceSuccess!==false? (
                   <div
-                    key={item?.payment?.transactionId || i}
                     className="bg-neutral-50 rounded-xl p-5 border border-gray-100 shadow-inner mb-4"
                   >
                     <InfoRow
                       label="Order ID"
-                      value={item?.id || "-"}
+                      value={paymentData?.id || "-"}
                       mono
                     />
                     <InfoRow
                       label="customer ID"
-                      value={item?.customerId || "-"}
+                      value={paymentData?.customerId || "-"}
+                      mono
+                    />
+                     <InfoRow
+                      label="Privider ID"
+                      value={paymentData?.providerId || "-"}
                       mono
                     />
                      <InfoRow
                       label="first_name"
-                      value={item?.first_name || "-"}
+                      value={paymentData?.first_name || "-"}
                     />
                      <InfoRow
                       label="last_name"
-                      value={item?.last_name || "-"}
+                      value={paymentData?.last_name || "-"}
                     />
 
 <InfoRow
@@ -128,7 +128,7 @@ const InfoRow = ({
                       value={
                         <span className="inline-flex items-center text-base font-semibold text-emerald-700 bg-emerald-50 rounded px-2 py-0.5">
                           <span className="mr-1 text-lg font-bold">৳</span>
-                          {item?.totalPrice ?? "-"}
+                          {paymentData?.totalPrice ?? "-"}
                         </span>
                       }
                  
@@ -136,19 +136,19 @@ const InfoRow = ({
 
 <InfoRow
                       label="phone"
-                      value={item?.phone || "-"}
+                      value={paymentData?.phone || "-"}
                     />
 
 <InfoRow
                       label="address"
-                      value={item?.address || "-"}
+                      value={paymentData?.address || "-"}
                     />
 
                     <InfoRow
                       label="Date"
                       value={
-                        item?.createdAt
-                          ? new Date(item.createdAt).toLocaleString(undefined, {
+                        paymentData?.createdAt
+                          ? new Date(paymentData.createdAt).toLocaleString(undefined, {
                               year: "numeric",
                               month: "short",
                               day: "numeric",
@@ -159,8 +159,8 @@ const InfoRow = ({
                     <InfoRow
                       label="Amount Paid"
                       value={
-                        item?.payment?.amount
-                          ? `৳${item.payment.amount}`
+                        paymentData?.payment?.amount
+                          ? `৳${paymentData.payment.amount}`
                           : "-"
                       }
                       highlight
@@ -170,14 +170,14 @@ const InfoRow = ({
                       value={
                         <span
                           className={`inline-block px-2 py-px rounded-md text-xs font-semibold ${
-                            (item?.status || "").toLowerCase() === "paid" || (item?.status || "").toLowerCase() === "paid"
+                            (paymentData?.status || "").toLowerCase() === "paid" || (paymentData?.status || "").toLowerCase() === "paid"
                               ? "bg-green-100 text-green-700"
-                              : (item?.paymentStatus || "").toLowerCase() === "pending"
+                              : (paymentData?.status || "").toLowerCase() === "pending"
                               ? "bg-yellow-100 text-yellow-700"
                               : "bg-red-100 text-red-700"
                           }`}
                         >
-                          {item?.status || item?.status || "Unknown"}
+                          {paymentData?.status || paymentData?.status || "Unknown"}
                         </span>
                       }
                     />
@@ -186,25 +186,30 @@ const InfoRow = ({
                       value={
                         <span
                           className={`inline-block px-2 py-px rounded-md text-xs font-semibold ${
-                            (item?.paymentStatus || "").toLowerCase() === "paid" || (item?.payment?.status || "").toLowerCase() === "paid"
+                            (paymentData.payment?.status || "").toLowerCase() === "paid" || (paymentData?.payment?.status || "").toLowerCase() === "paid"
                               ? "bg-green-100 text-green-700"
-                              : (item?.paymentStatus || "").toLowerCase() === "pending"
+                              : (paymentData.payment.status || "").toLowerCase() === "pending"
                               ? "bg-yellow-100 text-yellow-700"
                               : "bg-red-100 text-red-700"
                           }`}
                         >
-                          {item?.paymentStatus || item?.payment?.status || "Unknown"}
+                          {paymentData.payment.status || paymentData?.payment?.status || "Unknown"}
                         </span>
                       }
                     />
+                     <InfoRow
+                      label="Payment ID"
+                      value={paymentData?.payment?.id || "-"}
+                      mono
+                    />
                     <InfoRow
                       label="Transaction ID"
-                      value={item?.payment?.transactionId || "-"}
+                      value={paymentData?.payment?.transactionId || "-"}
                       mono
                     />
                   </div>
-                ))
-              ) : (
+                )
+               : (
                 <div className="my-8 space-y-4">
                   <div className="text-center space-y-1">
                     <p className="text-sm font-semibold text-red-700">Payment Verification Failed</p>
@@ -235,7 +240,7 @@ const InfoRow = ({
                     </p>
                   </div>
                 </div>
-              )}
+              )} 
             </div>
             <div className="flex flex-col md:flex-row gap-3 w-full mt-8">
               <Link
@@ -264,17 +269,11 @@ const InfoRow = ({
         </section>
       </main>
     );
-  } catch (error: any) {
-    return (
-      <Notfounddata 
-        content="Sorry, something went wrong while loading your payment information." 
-        btntext="Go Home" 
-        path="/" 
-        emoji="😕"
-      />
-
-    );
+    } catch (error) {
+      console.log(error)
+    return  <Notfounddata content="something went wrong please try again" btntext="Home" path="/"/>
+      
+    }
   }
-};
 
 export default PaymentSuccessPage

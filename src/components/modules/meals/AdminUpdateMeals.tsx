@@ -27,7 +27,6 @@ const AdminMealsUpdate = ({ id }: Props) => {
     try {
       setLoading(true);
       const toastId = toast.loading("Updating meals status...");
-      console.log({status},'sdfs')
 
       const res = await MealStatusUpdate(id, {status} );
 
