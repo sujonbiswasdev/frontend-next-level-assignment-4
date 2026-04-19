@@ -50,8 +50,6 @@ export function OrderForm({
 
         if (response.paymentUrl) {
             window.location.href = response.paymentUrl
-        } else {
-            router.push(`/payment/${response.data?.id}`)
         }
 
     }
