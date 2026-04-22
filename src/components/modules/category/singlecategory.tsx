@@ -2,12 +2,13 @@
 import React, { useMemo, useState } from 'react';
 import { Filter, X, ChevronDown, Star, StarIcon } from 'lucide-react';
 import MealCard from '../meals/MealCard';
-import { cuisines, dietaryPreferences, IGetMealData } from '@/types/meals.type';
+import { cuisines, dietaryPreferences, IGetMealData, TResponseMeals } from '@/types/meals.type';
 import { useRouter } from 'next/navigation';
 import { TGetCategory, TResponseCategoryData } from '@/types/category';
 import { TUser } from '@/types/user.type';
+import { TResponseproviderData } from '@/types/provider.type';
 
-const Singlecategory = ({ category }: { category:TResponseCategoryData<{user:TUser,meals:IGetMealData[]}> }) => {
+const Singlecategory = ({ category }: { category:TResponseCategoryData<{user:TUser,meals:TResponseMeals<{provier:TResponseproviderData<{user:TUser}>}>[]}> }) => {
   
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false);
@@ -70,7 +71,7 @@ const Singlecategory = ({ category }: { category:TResponseCategoryData<{user:TUs
   }
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full mt-6 sm:mt-10 min-h-screen px-4">
 
       {/* Single Category Title & Description (AI Generated) */}
       <div className="mb-8 flex flex-col justify-center text-center items-center mt-4 px-2 mx-auto mt-5 md:mt-10 lg:mt-20">

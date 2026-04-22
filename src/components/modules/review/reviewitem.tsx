@@ -88,7 +88,7 @@ export const ReviewItem = ({
               />
             )}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <h4 className="font-semibold">
               {review.customer?.name || reviewinfo?.customer?.name}
             </h4>

@@ -163,7 +163,7 @@ export const CategoriesService = {
         }
       })
       const data = await res.json();
-      const result = data as ApiResponse<TGetCategory>
+      const result = data as ApiResponse<any>
       if (!res.ok) {
         const error=data as ApiErrorResponse
         return { success: false, message: error.message || "category data retrieve fail" }
